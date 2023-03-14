@@ -1,0 +1,212 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<title>Fcart</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Rokkitt:100,300,400,700" rel="stylesheet">
+
+	<!-- Animate.css -->
+	<link rel="stylesheet" href="css/animate.css">
+	<!-- Icomoon Icon Fonts-->
+	<link rel="stylesheet" href="css/icomoon.css">
+	<!-- Ion Icon Fonts-->
+	<link rel="stylesheet" href="css/ionicons.min.css">
+	<!-- Bootstrap  -->
+	<link rel="stylesheet" href="css/bootstrap.min.css">
+
+	<!-- Magnific Popup -->
+	<link rel="stylesheet" href="css/magnific-popup.css">
+
+	<!-- Flexslider  -->
+	<link rel="stylesheet" href="css/flexslider.css">
+
+	<!-- Owl Carousel -->
+	<link rel="stylesheet" href="css/owl.carousel.min.css">
+	<link rel="stylesheet" href="css/owl.theme.default.min.css">
+
+	<!-- Date Picker -->
+	<link rel="stylesheet" href="css/bootstrap-datepicker.css">
+	<!-- Flaticons  -->
+	<link rel="stylesheet" href="fonts/flaticon/font/flaticon.css">
+
+	<!-- Theme style  -->
+	<link rel="stylesheet" href="css/style.css">
+	
+	<!-- fontawsome link -->
+	<script src="https://kit.fontawesome.com/c8553dfad7.js" crossorigin="anonymous"></script>
+
+</head>
+
+<body>
+
+	<div class="colorlib-loader"></div>
+
+	<div id="page">
+
+
+		<!-- -------------------------------------- -->
+
+		<!-- navbar starts -->
+
+		<%- include ('partials/user-header.ejs' , { categories }) %>
+
+			<!-- navbar ends -->
+
+
+			<div class="breadcrumbs">
+				<div class="container">
+					<div class="row">
+						<div class="col">
+							<p class="bread"><span><a href="/">Home</a></span> / <span>My Account</span></p>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+			<div class="colorlib-about" style="padding-top: 2em;">
+				<div class="container">
+					<div class="row row-pb-lg">
+						<div class="col-sm-3 mb-3">
+							<div class="col-md-8">
+								<div class="form-group">
+									<li class="optionbuttons"><a href="/userprofile">Account Details</a></li>
+								</div>
+							</div>
+							<div class="col-md-8">
+								<div class="form-group">
+									<li class="optionbuttons"><a href="/orderhistory">My orders</a></li>
+								</div>
+							</div>
+							<div class="col-md-8">
+								<div class="form-group">
+									<li class="optionbuttons"><a href="">Wishlist</a></li>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-9" id="accdetailsdiv">
+							<div class="about-wrap">
+								<h4>
+									Wishlist
+								</h4>
+								<div class="mleft">
+									<div class="row row-pb-md">
+										<% for(var i=0 ; i<wishlistdetails.items.length ; i++) { %>
+											<div class="col-lg-4 mb-4 text-center">
+												<div class="product-entry border"
+													onclick="productview('<%= wishlistdetails.items[i]._id %>')">
+													<a href="#"
+														class="prod-img">
+														<img src="/productimages/<%= wishlistdetails.items[i].image[0] %>"
+															class="img-fluid" alt="Free html5 bootstrap 4 template">
+														<div class="desc">
+															<h2>
+																<!-- <a href="/productdetails?id=<%= products[i]._id %>"></a> -->
+																<%= wishlistdetails.items[i].name %>
+															</h2>
+															<span class="price">
+																₹<%= wishlistdetails.items[i].cost %>
+															</span>
+															<i class="fa-solid fa-heart-circle-minus btn btn-primary"></i>
+															<i onclick="event.stopPropagation(); addtocart('<%= wishlistdetails.items[i]._id %>','<%= userdata._id %>')"
+																class="fa-solid fa-cart-plus btn btn-primary"></i>
+														</div>
+													</a>
+												</div>
+											</div>
+										<% } %>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+			<!-- -------------------------------------- -->
+
+			<!-- footer starts -->
+
+			<%- include ('partials/user-footer.ejs') %>
+
+				<!-- foooter ends -->
+
+	</div>
+
+	<div class="gototop js-top">
+		<a href="#" class="js-gotop"><i class="ion-ios-arrow-up"></i></a>
+	</div>
+
+	<style>
+		.mleft {
+			margin-left: 50px;
+		}
+
+		.optionbuttons {
+			padding: 0;
+			margin: 0;
+			list-style: none;
+			display: inline;
+			font-weight: 400;
+			font-family: "Rokkitt", Georgia, serif;
+			text-transform: uppercase;
+			font-size: 15px;
+			letter-spacing: 2px;
+		}
+	</style>
+
+	<script>
+		function productview(id) {
+			location.assign('/productdetails?id=' + id)
+		}
+		// addtocart function-----
+		async function addtocart(productid, userid) {
+			const quantity = 1
+			const res = await fetch('/addtocart',
+				{
+					method: 'POST',
+					body: JSON.stringify({ productid, userid, quantity }),
+					headers: { 'Content-Type': 'application/json' }
+				})
+			const message = await res.json()
+			console.log(message)
+			window.alert(message.succes)
+			if (message.succes) {
+				location.assign('/cart')
+			}
+		}
+	</script>
+
+
+	<!-- jQuery -->
+	<script src="js/jquery.min.js"></script>
+	<!-- popper -->
+	<script src="js/popper.min.js"></script>
+	<!-- bootstrap 4.1 -->
+	<script src="js/bootstrap.min.js"></script>
+	<!-- jQuery easing -->
+	<script src="js/jquery.easing.1.3.js"></script>
+	<!-- Waypoints -->
+	<script src="js/jquery.waypoints.min.js"></script>
+	<!-- Flexslider -->
+	<script src="js/jquery.flexslider-min.js"></script>
+	<!-- Owl carousel -->
+	<script src="js/owl.carousel.min.js"></script>
+	<!-- Magnific Popup -->
+	<script src="js/jquery.magnific-popup.min.js"></script>
+	<script src="js/magnific-popup-options.js"></script>
+	<!-- Date Picker -->
+	<script src="js/bootstrap-datepicker.js"></script>
+	<!-- Stellar Parallax -->
+	<script src="js/jquery.stellar.min.js"></script>
+	<!-- Main -->
+	<script src="js/main.js"></script>
+
+</body>
+
+</html>

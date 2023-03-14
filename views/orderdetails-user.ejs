@@ -1,0 +1,489 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<title>Fcart</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Rokkitt:100,300,400,700" rel="stylesheet">
+
+	<!-- Animate.css -->
+	<link rel="stylesheet" href="css/animate.css">
+	<!-- Icomoon Icon Fonts-->
+	<link rel="stylesheet" href="css/icomoon.css">
+	<!-- Ion Icon Fonts-->
+	<link rel="stylesheet" href="css/ionicons.min.css">
+	<!-- Bootstrap  -->
+	<link rel="stylesheet" href="css/bootstrap.min.css">
+
+	<!-- Magnific Popup -->
+	<link rel="stylesheet" href="css/magnific-popup.css">
+
+	<!-- Flexslider  -->
+	<link rel="stylesheet" href="css/flexslider.css">
+
+	<!-- Owl Carousel -->
+	<link rel="stylesheet" href="css/owl.carousel.min.css">
+	<link rel="stylesheet" href="css/owl.theme.default.min.css">
+
+	<!-- Date Picker -->
+	<link rel="stylesheet" href="css/bootstrap-datepicker.css">
+	<!-- Flaticons  -->
+	<link rel="stylesheet" href="fonts/flaticon/font/flaticon.css">
+
+	<!-- Theme style  -->
+	<link rel="stylesheet" href="css/style.css">
+
+	<!-- pdf generate -->
+	<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.3/jspdf.min.js"></script>
+	<script src="https://html2canvas.hertzen.com/dist/html2canvas.js"></script>
+
+</head>
+
+<body>
+
+	<div class="colorlib-loader"></div>
+
+	<div id="page">
+
+		<!-- navbar starts -->
+
+		<%- include ('partials/user-header.ejs' , { categories }) %>
+
+			<!-- navbar ends -->
+
+
+
+			<div class="breadcrumbs">
+				<div class="container">
+					<div class="row">
+						<div class="col">
+							<p class="bread"><span><a href="/">Home</a></span> / <span>My Account</span></p>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+			<div class="colorlib-product" style="padding-top: 2em;">
+				<div class="container">
+					<div class="row row-pb-lg">
+						<div class="col-sm-4 mb-3">
+							<div class="col-md-8">
+								<div class="form-group">
+									<li class="optionbuttons"><a href="/userprofile">Account Details</a></li>
+								</div>
+							</div>
+							<div class="col-md-8">
+								<div class="form-group">
+									<li class="optionbuttons"><a href="">My orders</a></li>
+								</div>
+							</div>
+							<div class="col-md-8">
+								<div class="form-group">
+									<li class="optionbuttons"><a href="/wishlist">Wishlist</a></li>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-8" id="accdetailsdiv">
+							<div class="about-wrap">
+								<h4>
+									My orders :
+								</h4>
+								<div class="mleft" id="ordersdiv">
+									<% if (!orders[0]) { %>
+										<p>You have no pending orders</p>
+										<a href="/">New collections waiting for you ... Order Now..</a>
+									<% } else { %>
+
+											<% for(var i=0 ; i<orders.length ; i++) { %>
+												<p>
+													Order id : <%= orders[i].orderid %>
+														<br>Ordered At : <%= orders[i].createdAt.toLocaleString() %>
+															<br>Contains : <%= orders[i].items.length %> items
+															<br><% if(orders[i].status=='Delivered'||orders[i].status=='Returned') { %>
+																	Product <%= orders[i].status %> <br>
+																	Delivery Date : <%= orders[i].delivery.toLocaleString() %>
+																<% } else if (orders[i].status=='Cancelled') { %>
+																	Order Cancelled
+																<% } else { %>
+																	<%= orders[i].status %>	<br>
+																	Expected Delivery : Before <%= new Date(orders[i].createdAt.getTime() + 10 * 24 * 60 * 60 * 1000).toLocaleString() %>
+																<% } %>	
+																<br>
+																<button type="button" class="btn btn-primary"
+																	data-toggle="modal" data-target="#exampleModalLong<%=i%>">
+																	Details
+																</button>
+																<button type="button" class="btn btn-primary"
+																	data-toggle="modal" data-target="#exampleModalCenter<%=i%>">
+																	Invoice
+																</button>
+																<!-- Modal --- 1 -->
+																<div class="modal fade" id="exampleModalLong<%=i%>"
+																	tabindex="-1" role="dialog"
+																	aria-labelledby="exampleModalLongTitle"
+																	aria-hidden="true">
+																	<div class="modal-dialog" role="document">
+																		<div class="modal-content">
+																			<div class="modal-header">
+																				<h5 class="modal-title" id="exampleModalLongTitle">Order id : <%= orders[i].orderid %></h5>
+																				<button type="button" class="close"
+																					data-dismiss="modal"
+																					aria-label="Close">
+																					<span
+																						aria-hidden="true">&times;</span>
+																				</button>
+																			</div>
+																			<div class="modal-body">
+																				
+																				<p>
+																					Ordered At : <%= orders[i].createdAt.toLocaleString() %>
+																					<% for(var j=0 ; j<orders[i].items.length ; j++) { %>
+																					<br>Contains : <%= orders[i].item[j].name %> &nbsp; &nbsp; &nbsp;
+																					<img src="/productimages/<%= orders[i].item[j].image[0] %>" style="width: 30px;" alt=""> &nbsp; &nbsp; &nbsp;
+																					<%= orders[i].item[j].cost %> - <%= orders[i].items[j].quantity %> Nos
+																					<% } %>
+																					<br>Order Total : <%= orders[i].totalamount %>
+																					<br>Coupon Discount : <%= orders[i].coupon.amount %>
+																					<br>Final Amount : <%= orders[i].finalamount %>
+																					<br><% if(orders[i].status=='Delivered'||orders[i].status=='Returned') { %>
+																						Delivery Date : <%= orders[i].delivery.toLocaleString() %>
+																					<% } else if (orders[i].status=='Cancelled') { %>
+																						Cancelled
+																					<% } else { %>
+																						Expected Delivery : Before <%= new Date(orders[i].createdAt.getTime() + 10 * 24 * 60 * 60 * 1000).toLocaleString() %>
+																					<% } %>
+																				</p>
+																				<hr>
+																				<h6>Billing Details : </h6>
+																				<p>
+																					Name : <%= orders[i].billingdetails.fname %> <%= orders[i].billingdetails.lname %>
+																					<br><%= orders[i].billingdetails.street %>
+																					<br><%= orders[i].billingdetails.city %> <%= orders[i].billingdetails.zip %> 
+																					<br><%= orders[i].billingdetails.state %> <%= orders[i].billingdetails.country %>
+																					<br>Phone : <%= orders[i].billingdetails.phone %>
+																					<br>Email : <%= orders[i].billingdetails.email %>
+																				</p>
+																				<hr>
+																				<div>
+																					<div style="float: left; width: 40%;">
+																						<h6>Order Status : </h6>
+																						<% if (orders[i].status!='Cancelled') { %>
+																						<p>
+																							Packing --- <% if (orders[i].status!='Pending') { %><span id="packing" class="unicodetick">&#x2714</span><% } else { %><span id="packing" class="unicodetick">&#9203</span><% } %>
+																							<br>shipping --- <% if (orders[i].status!='Pending' && orders[i].status!='Packing') { %><span id="shipping" class="unicodetick">&#x2714</span><% } else { %><span id="packing" class="unicodetick">&#9203</span><% } %>
+																							<br>Delivery --- <% if (orders[i].status!='Pending' && orders[i].status!='Packing' && orders[i].status!='Shipping') { %><span id="delivery" class="unicodetick">&#x2714</span><% } else { %><span id="packing" class="unicodetick">&#9203</span><% } %>
+																							<!-- <%= orders[i].status %> -->
+																						</p>
+																						<% } %>
+																					</div>
+																					<div style="float: left;">
+																						<% if (orders[i].status=='Delivered') { %>
+																						<img width="100%" src="/otherimages/delivered1.jpg" alt="">
+																						<% } else if (orders[i].status=='Cancelled') { %>
+																						<img width="100%" src="/otherimages/cancelled1.png" alt="">
+																						<% } else if (orders[i].status=='Returned') { %>
+																						<img width="100%" src="/otherimages/returned1.jpg" alt="">
+																						<% } %>
+																					</div>
+																				</div>
+																			</div>
+																			<div class="modal-footer">
+																				<% if (orders[i].status=='Pending' || orders[i].status=='Packing' || orders[i].status=='Shipping') { %>
+																				<button type="button" onclick="cancelorder('<%=orders[i].orderid %>')"
+																					class="btn btn-primary">Cancel order</button>
+																				<% } else if (orders[i].status=='Delivered') { %>
+																					<button type="button" onclick="returnproduct('<%=orders[i].orderid %>')"
+																					class="btn btn-primary">Return</button>
+																				<% } %>	
+																				<!-- <button type="button" class="btn btn-primary" onclick="generateinvoice('<%= orders[i].orderid %>')"
+																						data-dismiss="modal">Download invoice</button> -->
+																				<button type="button" 
+																						class="btn btn-primary"
+																						data-dismiss="modal">Close</button>
+																			</div>
+																		</div>
+																	</div>
+																</div>
+																
+																<!-- Modal ---2-------Invoice---->
+																<div class="modal fade" id="exampleModalCenter<%=i%>" tabindex="-1" role="dialog"
+																aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+																<div class="modal-dialog modal-dialog-centered" role="document">
+																	<div class="modal-content">
+																		<div class="modal-header">
+																			<h5 class="modal-title" id="exampleModalLongTitle">Invoice</h5>
+																			<button type="button" class="close" data-dismiss="modal"
+																				aria-label="Close">
+																				<span aria-hidden="true">&times;</span>
+																			</button>
+																		</div>
+																		<div class="modal-body">
+																			<!-- invoice starts ------------------------------->
+																					<!--Add HTML content you want to convert to PDF-->
+																			<div class="canvas_div_pdf">
+																				
+																			<div class="container">
+																				<div class="row">
+																					<div class="col-xs-12">
+																						<div class="invoice-title">
+																							<h2>Invoice</h2>
+																							<h3 class="pull-right">Order id : <%= orders[i].orderid %>
+																							</h3>
+																						</div>
+																						<hr>
+																						<div class="row">
+																							<div class="col-xs-6">
+																								<address>
+																									<strong>Billed To:</strong><br>
+																									<%= orders[i].billingdetails.fname %> <%= orders[i].billingdetails.lname %><br>
+																									<%= orders[i].billingdetails.street %><br>
+																									<%= orders[i].billingdetails.city %> <%= orders[i].billingdetails.zip %>
+																								</address>
+																							</div>
+																							<div class="col-xs-6 text-right">
+																								<!-- <address>
+																									<strong>Shipped To:</strong><br>
+																									Jane Smith<br>
+																									1234 Main<br>
+																									Apt. 4B<br>
+																									Springfield, ST 54321
+																								</address> -->
+																							</div>
+																						</div>
+																						<div class="row">
+																							<div class="col-xs-6">
+																								<address>
+																									<strong>Payment Method :</strong><br>
+																									<%= orders[i].paymentmethod %><br>
+																									<%= orders[i].billingdetails.email%>
+																								</address>
+																							</div>
+																							<div class="col-xs-6 text-right">
+																								<address>
+																									<strong>Order Date :</strong><br>
+																									<%= orders[i].createdAt.toLocaleString() %><br><br>
+																								</address>
+																							</div>
+																						</div>
+																					</div>
+																				</div>
+																		
+																				<div class="row">
+																					<div class="col-md-12">
+																						<div class="panel panel-default">
+																							<div class="panel-heading">
+																								<h3 class="panel-title"><strong>Order summary</strong></h3>
+																							</div>
+																							<div class="panel-body">
+																								<div class="table-responsive">
+																									<table class="table table-condensed">
+																										<thead>
+																											<tr>
+																												<td><strong>Item</strong></td>
+																												<td class="text-center"><strong>Price</strong></td>
+																												<td class="text-center"><strong>Quantity</strong></td>
+																												<td class="text-right"><strong>Totals</strong></td>
+																											</tr>
+																										</thead>
+																										<tbody>
+																											<!-- foreach ($order->lineItems as $line) or some such thing here -->
+																											<% for(var j=0 ; j<orders[i].items.length ; j++) { %>
+																											<tr>
+																												<td> <%= orders[i].item[j].name %></td>
+																												<td class="text-center"><%= orders[i].item[j].cost %></td>
+																												<td class="text-center"><%= orders[i].items[j].quantity %></td>
+																												<td class="text-right"><%= orders[i].items[j].totalcost %></td>
+																											</tr>
+																											<% } %>
+																											<tr>
+																												<td class="thick-line"></td>
+																												<td class="thick-line"></td>
+																												<td class="thick-line text-center"><strong>Subtotal</strong></td>
+																												<td class="thick-line text-right"><%= orders[i].totalamount %></td>
+																											</tr>
+																											<tr>
+																												<td class="no-line"></td>
+																												<td class="no-line"></td>
+																												<td class="no-line text-center"><strong>Coupon</strong></td>
+																												<td class="no-line text-right"><%= orders[i].coupon.amount %></td>
+																											</tr>
+																											<tr>
+																												<td class="no-line"></td>
+																												<td class="no-line"></td>
+																												<td class="no-line text-center"><strong>Total</strong></td>
+																												<td class="no-line text-right"><%= orders[i].finalamount %></td>
+																											</tr>
+																										</tbody>
+																									</table>
+																								</div>
+																							</div>
+																						</div>
+																					</div>
+																				</div>
+																			</div>
+																			</div>
+																			<!-- invoice ends ------------------------------->
+																			
+																		</div>
+																		<div class="modal-footer">
+																			<button onclick="getPDF()" type="button" class="btn btn-primary">Pdf</button>
+																		</div>
+																	</div>
+																</div>
+															</div>
+															<hr>
+												</p>
+											<% } %>
+									<% } %>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- footer starts -->
+
+			<%- include ('partials/user-footer.ejs') %>
+
+				<!-- footer ends -->
+
+	</div>
+
+	<div class="gototop js-top">
+		<a href="#" class="js-gotop"><i class="ion-ios-arrow-up"></i></a>
+	</div>
+
+	<style>
+		.mleft {
+			margin-left: 50px;
+		}
+		.optionbuttons {
+			padding: 0;
+			margin: 0;
+			list-style: none;
+			display: inline;
+			font-weight: 400;
+			font-family: "Rokkitt", Georgia, serif;
+			text-transform: uppercase;
+			font-size: 15px;
+			letter-spacing: 2px;
+		}
+		#addformdiv {
+			display: none;
+		}
+		#editformdiv {
+			display: none;
+		}
+		#accdetailsdiv {
+			display: block;
+		}
+		.detailslink {
+			cursor: pointer;
+		}
+		.unicodetick{
+			font-size: large;
+			color: black;
+			margin-left: 20px;
+		}
+	</style>
+
+	<script>
+		async function cancelorder(orderid) {
+			console.log('cancelling order..')
+			try {
+				const res = await fetch('/cancelorder',
+				{
+					method: 'PUT',
+					body: JSON.stringify({orderid}),
+					headers: {'Content-Type': 'application/json'}
+				})
+				const message = await res.json()
+				console.log(message)
+				if (message.succes) {
+					location.reload()
+				} else {
+					console.log(message.failure)
+				}
+			} catch (error) {
+				console.log(error)
+			}
+		}
+		async function returnproduct(orderid) {
+			console.log('returnig product..')
+			try {
+				const res = await fetch('/returnproduct',
+				{
+					method: 'PUT',
+					body: JSON.stringify({orderid}),
+					headers: {'Content-Type': 'application/json'}
+				})
+				const message = await res.json()
+				console.log(message)
+				if (message.succes) {
+					location.reload()
+				} else {
+					console.log(message.failure)
+				}
+			} catch (error) {
+				console.log(error)
+			}
+		}
+		// function generateinvoice(orderid){
+		// 	window.open('/getinvoice?orderid='+orderid)
+		// }
+		function getPDF(){
+			var HTML_Width = $(".canvas_div_pdf").width();
+			var HTML_Height = $(".canvas_div_pdf").height();
+			var top_left_margin = 15;
+			var PDF_Width = HTML_Width+(top_left_margin*2);
+			var PDF_Height = (PDF_Width*1.5)+(top_left_margin*2);
+			var canvas_image_width = HTML_Width;
+			var canvas_image_height = HTML_Height;
+			var totalPDFPages = Math.ceil(HTML_Height/PDF_Height)-1;
+			html2canvas($(".canvas_div_pdf")[0],{allowTaint:true}).then(function(canvas) {
+				canvas.getContext('2d');
+				console.log(canvas.height+"  "+canvas.width);
+				var imgData = canvas.toDataURL("image/jpeg", 1.0);
+				var pdf = new jsPDF('p', 'pt',  [PDF_Width, PDF_Height]);
+				pdf.addImage(imgData, 'JPG', top_left_margin, top_left_margin,canvas_image_width,canvas_image_height);
+				for (var i = 1; i <= totalPDFPages; i++) { 
+					pdf.addPage(PDF_Width, PDF_Height);
+					pdf.addImage(imgData, 'JPG', top_left_margin, -(PDF_Height*i)+(top_left_margin*4),canvas_image_width,canvas_image_height);
+				}
+				pdf.save("HTML-Document.pdf");
+			});
+		};
+	</script>
+
+	<!-- jQuery -->
+	<script src="js/jquery.min.js"></script>
+	<!-- popper -->
+	<script src="js/popper.min.js"></script>
+	<!-- bootstrap 4.1 -->
+	<script src="js/bootstrap.min.js"></script>
+	<!-- jQuery easing -->
+	<script src="js/jquery.easing.1.3.js"></script>
+	<!-- Waypoints -->
+	<script src="js/jquery.waypoints.min.js"></script>
+	<!-- Flexslider -->
+	<script src="js/jquery.flexslider-min.js"></script>
+	<!-- Owl carousel -->
+	<script src="js/owl.carousel.min.js"></script>
+	<!-- Magnific Popup -->
+	<script src="js/jquery.magnific-popup.min.js"></script>
+	<script src="js/magnific-popup-options.js"></script>
+	<!-- Date Picker -->
+	<script src="js/bootstrap-datepicker.js"></script>
+	<!-- Stellar Parallax -->
+	<script src="js/jquery.stellar.min.js"></script>
+	<!-- Main -->
+	<script src="js/main.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>DASHMIN - Bootstrap Admin Template</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+
+    <!-- Favicon -->
+    <link href="/admin/img/favicon.ico" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="/admin/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+    <link href="/admin/lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css" rel="stylesheet" />
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="/admin/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Template Stylesheet -->
+    <link href="/admin/css/style.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container-xxl position-relative bg-white d-flex p-0">
+        <!-- Spinner Start -->
+        <div id="spinner"
+            class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+            <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+        <!-- Spinner End -->
+
+
+        <!-- Sidebar---------------------------------->
+        <%- include ('partials/admin-sidebar.ejs') %>
+
+
+
+            <!-- Content Start -->
+            <div class="content">
+
+
+                <!-- Navbar  ------------------------------->
+                <%- include ('partials/admin-navbar.ejs') %>
+
+
+
+                    <!-- addcategory form start------->
+
+                    <div class="container-fluid pt-4 px-4">
+
+                        <div class="col-sm-12 col-xl-12">
+                            <div class="bg-light rounded h-100 p-4">
+                                <h6 class="mb-4">Add new coupon</h6>
+                                <form id="couponform">
+                                    <div class="row">
+                                        <div class="row col-md-6 mb-3">
+                                            <label for="inputEmail3" class="col-sm-2 col-form-label">Coupon code</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" name="couponcode" class="form-control" id="inputEmail3">
+                                            </div>
+                                        </div>
+                                        <div class="row col-md-6 mb-3">
+                                            <label for="inputPassword3" class="col-sm-2 col-form-label">Discount</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" name="discount" class="form-control" id="inputPassword3">
+                                            </div>
+                                        </div>
+                                        <div class="row col-md-6 mb-3">
+                                            <label for="inputPassword3" class="col-sm-2 col-form-label">Exipires After</label>
+                                            <div class="col-sm-10 col-lg-4">
+                                                <input type="datetime-local" name="date" class="form-control" id="inputPassword3">
+                                            </div>
+                                            <label for="inputPassword3" class="col-sm-2 col-form-label">days</label>
+                                        </div>
+                                    </div>
+                                   
+                                    <button type="submit" class="btn btn-primary">create</button>
+                                    <button type="button" class="btn btn-secondary ">cancel</button>
+                                </form>
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <!-- Recent Sales End -->
+                    <div class="container-fluid pt-4 px-4">
+                        <div class="col-sm-12 col-xl-12">
+                            <div class="bg-light rounded h-100 p-4">
+                                <div class="col-sm-12 col-xl-12">
+                                    <div class="bg-light rounded h-100 p-4">
+                                        <h6 class="mb-4">Active coupons</h6>
+                                        <table class="table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col">No.</th>
+                                                    <th scope="col">Coupon Name</th>
+                                                    <th scope="col">Coupon Expiry</th>
+                                                    <th scope="col">Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <% if(coupons) { %>
+                                                <% for(var i=0 ; i<coupons.length ; i++) { %>
+            
+                                                    <tr>
+                                                        <th scope="row">
+                                                            <%= i+1 %>
+                                                        </th>
+                                                        <td>
+                                                            <%= coupons[i].code %>
+                                                        </td>
+                                                        <td><%= coupons[i].expiryDate.toLocaleString() %></td>
+                                                        <td><button id="<%= coupons[i].code %>"
+                                                                onclick="myFunction('<%= coupons[i].id %>')"
+                                                                style="border: 0cm; color: gray;">Delete</button></td>
+                                                    </tr>
+            
+                                                <% } %>
+                                                <% } else { %>
+                                                    <tr>There are no Active coupons</tr>
+                                                <% } %> 
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>    
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 000000000000000000000000 -->
+                    
+
+                    <!-- Widgets Start -->
+
+
+
+                    <!-- Footer  ----------------------------------------->
+                    <%- include ('partials/admin-footer.ejs') %>
+
+
+
+            </div>
+            <!-- Content End -->
+
+
+            <!-- Back to Top -->
+            <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+    </div>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/admin/lib/chart/chart.min.js"></script>
+    <script src="/admin/lib/easing/easing.min.js"></script>
+    <script src="/admin/lib/waypoints/waypoints.min.js"></script>
+    <script src="/admin/lib/owlcarousel/owl.carousel.min.js"></script>
+    <script src="/admin/lib/tempusdominus/js/moment.min.js"></script>
+    <script src="/admin/lib/tempusdominus/js/moment-timezone.min.js"></script>
+    <script src="/admin/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
+
+    <!-- Template Javascript -->
+    <script src="/admin/js/main.js"></script>
+
+    <!-- category form js -->
+    <script>
+        const couponform = document.getElementById('couponform')
+
+        couponform.addEventListener('submit', async (event) => {
+            event.preventDefault()
+            const couponcode = couponform.couponcode.value
+            const discount = couponform.discount.value
+            const date = couponform.date.value
+
+            try {
+                const res = await fetch('/admin/addcoupon',
+                    {
+                        method: 'POST',
+                        body: JSON.stringify({couponcode,discount,date}),
+                        headers: {'Content-Type': 'application/json'}
+                    })
+                const message = await res.json()
+                console.log(res.json())
+                if (message.succes) {
+                    window.alert(message.succes)
+                    location.assign('/admin/coupons')
+                }
+                else if (message.failure) {
+                    console.log(message.failure);
+                    window.alert(message.failure)
+                }
+            } catch (Error) {
+                console.log(Error)
+                window.alert(Error)
+            }
+        })
+    </script>
+
+</body>
+
+</html>

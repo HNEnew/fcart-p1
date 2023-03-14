@@ -1,0 +1,492 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<title>Fcart</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Rokkitt:100,300,400,700" rel="stylesheet">
+
+	<!-- Animate.css -->
+	<link rel="stylesheet" href="css/animate.css">
+	<!-- Icomoon Icon Fonts-->
+	<link rel="stylesheet" href="css/icomoon.css">
+	<!-- Ion Icon Fonts-->
+	<link rel="stylesheet" href="css/ionicons.min.css">
+	<!-- Bootstrap  -->
+	<link rel="stylesheet" href="css/bootstrap.min.css">
+
+	<!-- Magnific Popup -->
+	<link rel="stylesheet" href="css/magnific-popup.css">
+
+	<!-- Flexslider  -->
+	<link rel="stylesheet" href="css/flexslider.css">
+
+	<!-- Owl Carousel -->
+	<link rel="stylesheet" href="css/owl.carousel.min.css">
+	<link rel="stylesheet" href="css/owl.theme.default.min.css">
+
+	<!-- Date Picker -->
+	<link rel="stylesheet" href="css/bootstrap-datepicker.css">
+	<!-- Flaticons  -->
+	<link rel="stylesheet" href="fonts/flaticon/font/flaticon.css">
+
+	<!-- Theme style  -->
+	<link rel="stylesheet" href="css/style.css">
+
+</head>
+
+<body>
+
+	<div class="colorlib-loader"></div>
+
+	<div id="page">
+
+		<!-- -------------------------------------- -->
+
+		<!-- navbar starts -->
+
+		<%- include ('partials/user-header.ejs' , { categories }) %>
+
+			<!-- navbar ends -->
+
+
+			<div class="breadcrumbs">
+				<div class="container">
+					<div class="row">
+						<div class="col">
+							<p class="bread"><span><a href="/">Home</a></span> / <span>Shopping Cart</span></p>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+			<div class="colorlib-product">
+				<div class="container">
+					<% if(cartdetails && cartdetails.items.length!=0) { %>
+					<div class="row row-pb-lg">
+						<div class="col-md-10 offset-md-1">
+							<div class="process-wrap">
+								<div class="process text-center active">
+									<p><span>01</span></p>
+									<h3>Shopping Cart</h3>
+								</div>
+								<div class="process text-center">
+									<p><span>02</span></p>
+									<h3>Checkout</h3>
+								</div>
+								<div class="process text-center">
+									<p><span>03</span></p>
+									<h3>Order Complete</h3>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row row-pb-lg">
+						<div class="col-md-12">
+							<div class="product-name d-flex">
+								<div class="one-forth text-left px-4">
+									<span>Product Details</span>
+								</div>
+								<div class="one-eight text-center">
+									<span>Price</span>
+								</div>
+								<div class="one-eight text-center">
+									<span>Quantity</span>
+								</div>
+								<div class="one-eight text-center">
+									<span>Total</span>
+								</div>
+								<div class="one-eight text-center px-4">
+									<span>Remove</span>
+								</div>
+							</div>
+
+							
+								<!-- cart items dynamic div -->
+								<% for (var i=0 ; i<cartdetails.items.length ; i++) { %>
+									<div id="<%= cartdetails.items[i]._id %>" class="product-cart d-flex">
+										<div class="one-forth">
+											<div class="product-img">
+												<img src="/productimages/<%= cartdetails.items[i].product.image[0] %>"
+													style="width: 100px;" alt="">
+											</div>
+											<div class="display-tc">
+												<h3>
+													<%= cartdetails.items[i].product.name %>
+												</h3>
+												<% if (cartdetails.items[i].product.stock < cartdetails.items[i].quantity) { %>
+												<h3 style="color: red;" id="stockmsg<%= i %>">No stock</h3>
+												<% } else { %>
+												<h3 id="stockmsg<%= i %>"></h3>
+												<% } %>
+											</div>
+										</div>
+										<div class="one-eight text-center">
+											<div class="display-tc">
+												<span class="price">₹<span id="cost<%= i %>"><%= cartdetails.items[i].product.cost %></span></span>
+											</div>
+										</div>
+										<div class="one-eight text-center">
+											<div class="display-tc" style="margin: 0 auto;">
+												<form action="#">
+													<!-- 0000000000000000------QUANTITY CONTROL BUTTONS------0000000000000000000 -->
+													<div class="input-group">
+														<span style="width: 25%;" class="input-group-btn">
+															<button onclick="quantityminus('<%= cartdetails.items[i].product._id %>','<%= i %>')" type="button" class="quantitybtn"
+																data-type="minus" data-field="">
+																<i class="icon-minus2"></i>
+															</button>
+														</span>
+														<input style="width: 25%;" type="text"
+															name="quantity" id="quantity<%= i %>"
+															class="form-control input-number text-center"
+															value="<%= cartdetails.items[i].quantity %>" min="1"
+															max="100">
+														<span style="width: 25%;" class="input-group-btn">
+															<button onclick="quantityplus('<%= cartdetails.items[i].product._id %>','<%= i %>')" type="button" class="quantitybtn"
+																data-type="plus" data-field="">
+																<i class="icon-plus2"></i>
+															</button>
+														</span>
+													</div>
+													<!-- 000000000000000000000000------QUANTITY CONTROL BUTTONS----END--00000000000000000000 -->
+												</form>
+											</div>
+										</div>
+										<div class="one-eight text-center">
+											<div class="display-tc">
+												<span class="price">₹<span id="totalcost<%= i %>"><%= cartdetails.items[i].totalcost %></span></span>
+											</div>
+										</div>
+										<div class="one-eight text-center">
+											<div class="display-tc">
+												<a style="cursor: pointer;"
+													onclick="cancelItem('<%= cartdetails._id %>','<%= cartdetails.items[i]._id %>','<%= cartdetails.items[i].totalcost %>')"
+													class="closed"></a>
+											</div>
+										</div>
+									</div>
+
+									<% } %>
+
+						</div>
+					</div>
+					<div class="row row-pb-lg">
+						<div class="col-md-12">
+							<div class="total-wrap">
+								<div class="row">
+									<div class="col-sm-8">
+										<form id="couponform">
+											<div class="row form-group">
+												<div class="col-sm-9">
+													<input type="text" name="couponcode"
+														class="form-control input-number"
+														placeholder="Your Coupon Number...">
+												</div>
+												<div class="col-sm-3">
+													<button type="button"
+														onclick="applyCoupon('<%= userdata._id %>','<%= cartdetails.cartTotal %>')"
+														class="btn btn-primary">Apply Coupon</button>
+												</div>
+											</div>
+										</form>
+									</div>
+									<div class="col-sm-4 text-center">
+										<div class="total">
+											<div class="sub">
+												<p><span>Subtotal:</span> <span>₹<span style="width: 0;" id="subtotal"><%= cartdetails.cartTotal %></span></span></p>
+												<p><span>Delivery:</span> <span>₹<span style="width: 0;">0.00</span></span></p>
+												<p><span>Discount:</span> <span>₹<span style="width: 0;" id="discount">0.00</span></span></p>
+											</div>
+											<div class="grand-total">
+												<p><span><strong>Total:</strong></span> <span>₹<span style="width: 0;" id="carttotal"><%=cartdetails.cartTotal %></span></span></p>
+												<button type="button" onclick="checkout()" class="btn btn-primary">Proceed to Checkout</button>
+											</div>
+											<% } else if (!cartdetails || cartdetails.items.length==0) { %>
+												<!-- 00000000000------cart-empty------00000000000000 -->
+												<div class="product-cart d-flex">
+													<div style="margin: auto;">
+														<img width="100%" src="/otherimages/cartempty5	.jpg" alt="">
+													</div>
+												</div>
+
+										</div>
+									</div>
+									<div class="row row-pb-lg">
+										<div class="col-md-12">
+											<div class="total-wrap">
+												<div class="row">
+													<div class="col-sm-8">
+														<form action="#">
+															<div class="row form-group">
+																<div class="col-sm-9">
+																	
+																</div>
+																<div class="col-sm-3">
+																	
+																</div>
+															</div>
+														</form>
+													</div>
+													<div class="col-sm-4 text-center">
+														<div>
+															
+															<% } %>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+
+									<!-- <div class="row">
+										<div
+											class="col-sm-8 offset-sm-2 text-center colorlib-heading colorlib-heading-sm">
+											<h2>Related Products</h2>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-md-3 col-lg-3 mb-4 text-center">
+											<div class="product-entry border">
+												<a href="#" class="prod-img">
+													<img src="images/item-1.jpg" class="img-fluid"
+														alt="Free html5 bootstrap 4 template">
+												</a>
+												<div class="desc">
+													<h2><a href="#">Women's Boots Shoes Maca</a></h2>
+													<span class="price">$139.00</span>
+												</div>
+											</div>
+										</div>
+										<div class="col-md-3 col-lg-3 mb-4 text-center">
+											<div class="product-entry border">
+												<a href="#" class="prod-img">
+													<img src="images/item-2.jpg" class="img-fluid"
+														alt="Free html5 bootstrap 4 template">
+												</a>
+												<div class="desc">
+													<h2><a href="#">Women's Minam Meaghan</a></h2>
+													<span class="price">$139.00</span>
+												</div>
+											</div>
+										</div>
+										<div class="col-md-3 col-lg-3 mb-4 text-center">
+											<div class="product-entry border">
+												<a href="#" class="prod-img">
+													<img src="images/item-3.jpg" class="img-fluid"
+														alt="Free html5 bootstrap 4 template">
+												</a>
+												<div class="desc">
+													<h2><a href="#">Men's Taja Commissioner</a></h2>
+													<span class="price">$139.00</span>
+												</div>
+											</div>
+										</div>
+										<div class="col-md-3 col-lg-3 mb-4 text-center">
+											<div class="product-entry border">
+												<a href="#" class="prod-img">
+													<img src="images/item-4.jpg" class="img-fluid"
+														alt="Free html5 bootstrap 4 template">
+												</a>
+												<div class="desc">
+													<h2><a href="#">Russ Men's Sneakers</a></h2>
+													<span class="price">$139.00</span>
+												</div>
+											</div>
+										</div>
+									</div> -->
+								</div>
+							</div>
+
+
+							<!-- -------------------------------------- -->
+
+							<!-- footer starts -->
+
+							<%- include ('partials/user-footer.ejs') %>
+
+								<!-- foooter ends -->
+
+						</div>
+
+						<div class="gototop js-top">
+							<a href="#" class="js-gotop"><i class="ion-ios-arrow-up"></i></a>
+						</div>
+
+
+						<!-- style... -->
+						<style>
+							.quantitybtn {
+								cursor: pointer;
+								font-size: 14px !important;
+								font-weight: 400;
+								padding: 8px 8px;
+								border: 1px solid transparent;
+							}
+							#stockmsg{
+								display: block;
+								color: green;
+							}
+						</style>
+
+						<!-- script for buttons actions -->
+						<script>
+							const qnty = document.getElementById('quantity'+i)
+
+							// cancel items from cart
+							async function cancelItem(cartid, productid, totalcost) {
+								const res = await fetch('/cancelitem',
+									{
+										method: 'POST',
+										body: JSON.stringify({ cartid, productid, totalcost }),
+										headers: { 'Content-Type': 'application/json' }
+									})
+								const message = await res.json()
+								console.log(message)
+								if (message.succes) {
+									location.reload()
+								}
+							}
+							// change quantity functions---------------------------------
+							async function quantityminus(productid,i) {
+								try { 
+									const stockmsg = document.getElementById('stockmsg'+i)
+									const totalcost = document.getElementById('totalcost'+i)
+									const cost = document.getElementById('cost'+i)
+									const qnty = document.getElementById('quantity'+i)
+									const quantity = qnty.value
+									const subtotal = document.getElementById('subtotal')
+									const carttotal = document.getElementById('carttotal')
+									const res = await fetch('/quantityminus',
+									{
+										method: 'PUT',
+										body: JSON.stringify({productid	,quantity}),
+										headers: {'Content-Type' : 'application/json'}
+									})
+									console.log(productid)
+									const message = await res.json()
+									console.log(message)
+									if (message.stock||message.nostock) {
+										qnty.value = quantity - 1
+										totalcost.innerText = Number(totalcost.innerText) - Number(cost.innerText)
+										subtotal.innerText = Number(subtotal.innerText) - Number(cost.innerText)
+										document.getElementById('discount').innerText = '0.00'
+										carttotal.innerHTML = Number(carttotal.innerText) - Number(cost.innerText)
+									}
+									if (message.stock) {
+										stockmsg.innerText = 'In Stock'
+										stockmsg.style.color = 'green'
+									} else if (message.nostock) {
+										stockmsg.innerText = 'No Stock'
+										stockmsg.style.color = 'red'
+									} else {
+										window.alert(message.failure)
+									}
+								} catch (error) {
+									console.log(error)
+								}
+							}
+							async function quantityplus(productid,i) {
+								try {
+									const stockmsg = document.getElementById('stockmsg'+i)
+									const totalcost = document.getElementById('totalcost'+i)
+									const cost = document.getElementById('cost'+i)
+									const qnty = document.getElementById('quantity'+i)
+									const quantity = qnty.value
+									const subtotal = document.getElementById('subtotal')
+									const carttotal = document.getElementById('carttotal')
+									const res = await fetch('/quantityplus',
+									{
+										method: 'PUT',
+										body: JSON.stringify({productid, quantity}),
+										headers: {'Content-Type' : 'application/json'}
+									})
+									console.log(productid)
+									console.log(qnty.value)
+									const message = await res.json()
+									console.log(message)
+									if (message.stock||message.nostock) {
+										qnty.value = Number(qnty.value) + 1
+										totalcost.innerText = Number(totalcost.innerText) + Number(cost.innerText)
+										subtotal.innerText = Number(subtotal.innerText) + Number(cost.innerText)
+										document.getElementById('discount').innerText = '0.00'
+										carttotal.innerHTML = Number(carttotal.innerText) + Number(cost.innerText)
+									}
+									if (message.stock) {
+										stockmsg.innerText = 'In Stock'
+										stockmsg.style.color = 'green'
+									} else if(message.nostock) {
+										stockmsg.innerText = 'No Stock'
+										stockmsg.style.color = 'red'
+									} else {
+										window.alert(message.failure)
+									}
+								} catch (error) {
+									console.log(error)
+								}
+							}
+							// apply coupon---------------------------------------------------------
+							async function applyCoupon(userid, totalamount) {
+								const couponform = document.getElementById('couponform')
+								const couponcode = couponform.couponcode.value
+								console.log(couponcode)
+								try {
+									const res = await fetch('/couponcheck',
+										{
+											method: 'POST',
+											body: JSON.stringify({ userid, couponcode }),
+											headers: { 'Content-Type': 'application/json' }
+										})
+
+									var message = await res.json()
+									console.log(message)
+									if (message.succes) {
+										finalamount = parseInt(totalamount) - parseInt(message.coupondetails.discount)
+										document.getElementById('discount').innerHTML = message.coupondetails.discount
+										document.getElementById('carttotal').innerHTML = finalamount
+									} else {
+										window.alert(message.failure)
+									}
+								} catch (Error) {
+									console.log(Error);
+								}
+							}
+							// proceed to checkout
+							function checkout() {
+								const couponform = document.getElementById('couponform')
+								const couponcode = couponform.couponcode.value
+								location.assign('/checkout?coupon=' + couponcode)
+							}
+						</script>
+
+						<!-- jQuery -->
+						<script src="js/jquery.min.js"></script>
+						<!-- popper -->
+						<script src="js/popper.min.js"></script>
+						<!-- bootstrap 4.1 -->
+						<script src="js/bootstrap.min.js"></script>
+						<!-- jQuery easing -->
+						<script src="js/jquery.easing.1.3.js"></script>
+						<!-- Waypoints -->
+						<script src="js/jquery.waypoints.min.js"></script>
+						<!-- Flexslider -->
+						<script src="js/jquery.flexslider-min.js"></script>
+						<!-- Owl carousel -->
+						<script src="js/owl.carousel.min.js"></script>
+						<!-- Magnific Popup -->
+						<script src="js/jquery.magnific-popup.min.js"></script>
+						<script src="js/magnific-popup-options.js"></script>
+						<!-- Date Picker -->
+						<script src="js/bootstrap-datepicker.js"></script>
+						<!-- Stellar Parallax -->
+						<script src="js/jquery.stellar.min.js"></script>
+						<!-- Main -->
+						<script src="js/main.js"></script>
+
+</body>
+
+</html>

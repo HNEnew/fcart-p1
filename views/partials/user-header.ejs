@@ -1,0 +1,155 @@
+<!-- navbar starts -->
+<nav class="colorlib-nav" role="navigation">
+	<div class="top-menu">
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-7 col-md-9">
+					<div id="colorlib-logo"><a href="/">Footwear</a></div>
+				</div>
+				<div class="col-sm-5 col-md-3">
+					<form action="#" class="search-wrap">
+						<div class="form-group">
+							<input type="search" class="form-control search" placeholder="Search">
+							<button class="btn btn-primary submit-search text-center" type="submit"><i
+									class="icon-search"></i></button>
+						</div>
+					</form>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-12 text-left menu-1">
+					<ul>
+						<li class="active"><a href="/">Home</a></li>
+						<li class="has-dropdown">
+							<a href="">Category</a>
+							<ul class="dropdown">
+
+								<% for(var i=0 ; i<categories.length ; i++) { %>
+
+									<li>
+										<a href="/categorycollection?id=<%= categories[i]._id %>" style="cursor: pointer;" >
+											<%= categories[i].name %>
+										</a>
+									</li>
+
+								<% } %>
+										
+							</ul>
+						</li>
+						
+						<li><a href="/about">About</a></li>
+						<li><a href="/contact">Contact</a></li>
+						
+						<% if (userdata) { %>
+							<li class="cart"><a href="/cart"><i class="icon-shopping-cart"></i>[0]</a></li>
+							<div class="dropdown" style="float:right;">
+								<li class="cart"><i class="fa-regular fa-user"></i><a href="#"><%= userdata.uname%></a></li>
+								<div class="dropdown-content">
+									<li><h5 style="text-align: center;margin-top: 10px;"><%= userdata.uname%></h5></li>
+									<li style="text-align: center;"><a href="/userprofile">My account</a></li>
+									<li style="text-align: center;margin-top: 10px;" class=""><a href="/logout">logout</a></li>
+								</div>
+							</div>
+						<% } else { %>
+							<li class="cart"><a href="/login"><i class="icon-shopping-cart"></i>[0]</a></li>
+							<li class="cart"><a href="/login">login</a></li>
+						<% } %>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="sale">
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-8 offset-sm-2 text-center">
+					<div class="row">
+						<div class="owl-carousel2">
+							<div class="item">
+								<div class="col">
+									<h3><a href="#">25% off (Almost) Everything! Use Code: Summer Sale</a></h3>
+								</div>
+							</div>
+							<div class="item">
+								<div class="col">
+									<h3><a href="#">Our biggest sale yet 50% off all summer shoes</a></h3>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</nav>
+
+<!-- navbar ends -->
+
+<!-- dropdown profile bar button -->
+<style>
+	.dropbtn {
+		background-color: gray;
+		color: white;
+		padding: 4px;
+		font-size: 14px;
+		border: none;
+		cursor: pointer;
+	}
+
+	.dropdown {
+		position: relative;
+		display: inline-block;
+	}
+
+	.dropdown-content {
+		display: none;
+		position: absolute;
+		right: 0;
+		background-color: rgb(199, 228, 233);
+		min-width: 160px;
+		box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+		z-index: 10;
+	}
+
+	.dropdown-content a {
+		color: black;
+		padding: 12px 16px;
+		text-decoration: none;
+		display: block;
+	}
+
+	.dropdown-content a:hover {
+		background-color: #f1f1f1;
+	}
+
+	.dropdown:hover .dropdown-content {
+		display: block;
+	}
+
+	.dropdown:hover .dropbtn {
+		background-color: gray;
+	}
+</style>
+
+<!-- script for categorybutton -->
+<!-- <script>
+
+	async function myFunction(name) {
+		console.log(name)
+		try {
+			const res = await fetch('/categorycollectioncheck?name=' + name,
+				{
+					method: 'GET',
+					headers: { 'Content-Type': 'application/json' }
+				})
+			const message = await res.json()
+			console.log(message.succes)
+			if (message.succes) {
+				location.assign('/categorycollection')
+			}
+		} catch (Error) {
+			console.log(Error);
+		}
+	}
+
+</script> -->

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paypal Payment</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script
+        src="https://www.paypal.com/sdk/js?client-id=AW4wqvXv2QJ7VVWzEtJhhtAIhZZ0DRPwzZLSbohfEi2j3buH6nEzhUmA_qMDUHS271FpEMnKYuzy_35q&currency=USD"></script>
+</head>
+
+<body>
+
+
+    <section class="vh-100" style="background-color: #eff2f8;">
+        <div class="container py-5 h-100">
+          <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+              <div class="card shadow-2-strong" style="border-radius: 1rem;">
+                <div class="card-body p-5 text-center">
+      
+                <h3 class="mb-5">PAYPAL PAYMENT GATEWAY</h3>
+                <!-- Set up a container element for the button -->
+                <div id="paypal-button-container"></div>
+                 
+      
+                  <div class="form-outline mb-4">
+                  </div>
+      
+                  <!-- Checkbox -->
+                  <div class="form-check d-flex justify-content-start mb-4">    
+                  </div>
+      
+                  <hr class="my-4">
+      
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+    
+    <script>
+        paypal.Buttons({
+            // Order is created on the server and the order id is returned
+            createOrder() {
+                return fetch("/my-server/create-paypal-order", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    // use the "body" param to optionally pass additional order information
+                    // like product skus and quantities
+                    body: JSON.stringify({
+                        cart: [
+                            {
+                                sku: "YOUR_PRODUCT_STOCK_KEEPING_UNIT",
+                                quantity: "YOUR_PRODUCT_QUANTITY",
+                            },
+                        ],
+                    }),
+                })
+                    .then((response) => response.json())
+                    .then((order) => order.id);
+            },
+            // Finalize the transaction on the server after payer approval
+            onApprove(data) {
+                return fetch("/my-server/capture-paypal-order", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        orderID: data.orderID
+                    })
+                })
+                    .then((response) => response.json())
+                    .then((orderData) => {
+                        // Successful capture! For dev/demo purposes:
+                        console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
+                        const transaction = orderData.purchase_units[0].payments.captures[0];
+                        alert(`Transaction ${transaction.status}: ${transaction.id}\n\nSee console for all available details`);
+                        // When ready to go live, remove the alert and show a success message within this page. For example:
+                        // const element = document.getElementById('paypal-button-container');
+                        // element.innerHTML = '<h3>Thank you for your payment!</h3>';
+                        // Or go to another URL:  window.location.href = 'thank_you.html';
+                    });
+            }
+        }).render('#paypal-button-container');
+        
+    </script>
+</body>
+
+</html>

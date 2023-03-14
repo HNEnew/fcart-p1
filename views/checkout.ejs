@@ -1,0 +1,723 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<title>Fcart</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Rokkitt:100,300,400,700" rel="stylesheet">
+
+	<!-- Animate.css -->
+	<link rel="stylesheet" href="css/animate.css">
+	<!-- Icomoon Icon Fonts-->
+	<link rel="stylesheet" href="css/icomoon.css">
+	<!-- Ion Icon Fonts-->
+	<link rel="stylesheet" href="css/ionicons.min.css">
+	<!-- Bootstrap  -->
+	<link rel="stylesheet" href="css/bootstrap.min.css">
+
+	<!-- Magnific Popup -->
+	<link rel="stylesheet" href="css/magnific-popup.css">
+
+	<!-- Flexslider  -->
+	<link rel="stylesheet" href="css/flexslider.css">
+
+	<!-- Owl Carousel -->
+	<link rel="stylesheet" href="css/owl.carousel.min.css">
+	<link rel="stylesheet" href="css/owl.theme.default.min.css">
+
+	<!-- Date Picker -->
+	<link rel="stylesheet" href="css/bootstrap-datepicker.css">
+	<!-- Flaticons  -->
+	<link rel="stylesheet" href="fonts/flaticon/font/flaticon.css">
+
+	<!-- Theme style  -->
+	<link rel="stylesheet" href="css/style.css">
+
+	<!-- paypal -->
+	<script
+		src="https://www.paypal.com/sdk/js?client-id=AW4wqvXv2QJ7VVWzEtJhhtAIhZZ0DRPwzZLSbohfEi2j3buH6nEzhUmA_qMDUHS271FpEMnKYuzy_35q&currency=USD"></script>
+
+</head>
+
+<body>
+
+	<div class="colorlib-loader"></div>
+
+	<div id="page">
+		<!-- navbar starts -->
+
+		<%- include ('partials/user-header.ejs' , { categories }) %>
+
+			<!-- navbar ends -->
+
+			<div class="breadcrumbs">
+				<div class="container">
+					<div class="row">
+						<div class="col">
+							<p class="bread"><span><a href="/">Home</a></span> / <span>Checkout</span></p>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+			<div class="colorlib-product">
+				<div class="container">
+					<div class="row row-pb-lg">
+						<div class="col-sm-10 offset-md-1">
+							<div class="process-wrap">
+								<div class="process text-center active">
+									<p><span>01</span></p>
+									<h3>Shopping Cart</h3>
+								</div>
+								<div class="process text-center active">
+									<p><span>02</span></p>
+									<h3>Checkout</h3>
+								</div>
+								<div class="process text-center">
+									<p><span>03</span></p>
+									<h3>Order Complete</h3>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-lg-8">
+							<form method="post" class="colorlib-form">
+								<h2>Billing Details</h2>
+								<!-- <div class="col-md-12">
+									<div class="form-group">
+										<div class="radio">
+											
+											<label><input onclick="showaddressform()" type="radio" name="optaddress"
+													value="newaddress">
+												Ship to different address</label>
+										</div>
+									</div>
+								</div>
+								<hr> -->
+
+								<div class="mleft" id="mainaddress">
+									<% if (useraddress) { %>
+										<% for(var i=0 ; i<useraddress.length ; i++) { %>
+											<% if (i==0) { %>
+												<label><input onclick="showaddress()" type="radio" name="optaddress"
+													value="<%= useraddress[i]._id %>" checked> Default address </label>
+												<% } else { %>
+													<label><input onclick="showaddress()" type="radio" name="optaddress"
+														value="<%= useraddress[i]._id %>"> address <%= i %></label>
+												<% } %>
+											<div>
+												<p id="fnameandlname">
+													<%= useraddress[i].fname %>
+														<%= useraddress[i].lname %>
+												</p>
+												<p id="street">
+													<%= useraddress[i].street %>
+												</p>
+												<p id="cityandzip">
+													<%= useraddress[i].city %> , <%= useraddress[i].zip %>
+												</p>
+												<p id="stateandcountry">
+													<%= useraddress[i].state %> , <%= useraddress[i].country %>
+												</p>
+												<!-- <div class="col-md-12 text-center">
+													<button onclick="showeditform()" type="button"
+														class="btn btn-primary">Edit</button>
+												</div> -->
+												<hr>
+											</div>
+										<% } %>	
+										<label><input onclick="showaddressform()" type="radio" name="optaddress"
+											value="newaddress">
+										Ship to different address</label>
+										<div id="addedaddress">
+											<p id="fnameandlname2"></p>
+											<p id="street2"></p>
+											<p id="cityandzip2"></p>
+											<p id="stateandcountry2"></p>
+											<div class="col-md-12 text-center">
+												<!-- <button onclick="showeditform()" type="button"
+													class="btn btn-primary">Delete</button> -->
+											</div>
+											<hr>
+										</div>
+										<% } else { %>
+
+											<p>You did not added any address</p>
+											<div class="col-md-12 text-center">
+												<button onclick="showaddform()" type="submit"
+													class="btn btn-primary">Add Now</button>
+											</div>
+
+										<% } %>
+								</div>
+
+								<!-- address edit form div-------------------------------------------------------- -->
+						<% if (useraddress) { %>
+							<div class="col-sm-8 mb-3" id="editformdiv">
+								<form id="editaddressform" class="colorlib-form">
+									<h2>Edit Address</h2>
+									<div class="row">
+										<div class="col-md-12">
+											<div class="form-group">
+												<label for="country">Select Country</label>
+												<div class="form-field">
+													<i class="icon icon-arrow-down3"></i>
+													<select name="country" id="people" class="form-control">
+														<option><%= useraddress.country %></option>
+														<option>India</option>
+														<option>China</option>
+														<option>Japan</option>
+														<option>Korea</option>
+														<option>Philippines</option>
+													</select>
+												</div>
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="form-group">
+												<label for="fname">First Name</label>
+												<input name="firstname" type="text" id="<%= userdata._id %>"
+													class="form-control" value="<%= useraddress.fname %>" placeholder="Your firstname">
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="form-group">
+												<label for="lname">Last Name</label>
+												<input name="lname" type="text" id="lname" class="form-control" value="<%= useraddress.lname %>"
+													placeholder="Your lastname">
+											</div>
+										</div>
+										<div class="col-md-12">
+											<div class="form-group">
+												<label for="fname">Adress</label>
+												<input name="street" type="text" id="address" class="form-control" value="<%= useraddress.street %>"
+													placeholder="Enter Your Address">
+											</div>
+										</div>
+										<div class="col-md-12">
+											<div class="form-group">
+												<label for="companyname">Town/City</label>
+												<input name="city" type="text" id="towncity" class="form-control" value="<%= useraddress.city %>"
+													placeholder="Town or City">
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="form-group">
+												<label for="stateprovince">State/Province</label>
+												<input name="state" type="text" id="fname" class="form-control" value="<%= useraddress.state %>"
+													placeholder="State Province">
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="form-group">
+												<label for="lname">Zip/Postal Code</label>
+												<input name="zip" type="text" id="zippostalcode" class="form-control" value="<%= useraddress.zip %>"
+													placeholder="Zip / Postal">
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="form-group">
+												<label for="email">E-mail Address</label>
+												<input name="email" type="text" id="email" class="form-control" value="<%= useraddress.email %>"
+													placeholder="Email">
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="form-group">
+												<label for="Phone">Phone Number</label>
+												<input name="phone" type="text" id="zippostalcode" class="form-control" value="<%= useraddress.phone %>"
+													placeholder="">
+											</div>
+										</div>
+										<p id="errmsg"></p>
+										<div class="col-md-12 text-center">
+											<button onclick="cancelEditAddress()" type="button"
+												class="btn btn-primary">Cancel</button>
+											<button onclick="editAddress()" type="submit"
+												class="btn btn-primary">Save changes</button>
+										</div>
+									</div>
+								</form>
+							</div>
+							<% } %>
+
+								<!-- address add form div---------------------------------------------------------- -->
+								<div class="" id="newaddress">
+									<form id="addressform" class="colorlib-form">
+										<div class="row">
+											<div class="col-md-12">
+												<div class="form-group">
+													<label for="country">Select Country</label>
+													<div class="form-field">
+														<i class="icon icon-arrow-down3"></i>
+														<select name="country" id="people" class="form-control">
+															<option></option>
+															<option>India</option>
+															<option>China</option>
+															<option>Japan</option>
+															<option>Korea</option>
+															<option>Philippines</option>
+														</select>
+													</div>
+												</div>
+											</div>
+											<div class="col-md-6">
+												<div class="form-group">
+													<label for="fname">First Name</label>
+													<input name="firstname" type="text" id="<%= userdata._id %>"
+														class="form-control" placeholder="Your firstname">
+												</div>
+											</div>
+											<div class="col-md-6">
+												<div class="form-group">
+													<label for="lname">Last Name</label>
+													<input name="lname" type="text" id="lname" class="form-control"
+														placeholder="Your lastname">
+												</div>
+											</div>
+											<div class="col-md-12">
+												<div class="form-group">
+													<label for="fname">Adress</label>
+													<input name="street" type="text" id="address" class="form-control"
+														placeholder="Enter Your Address">
+												</div>
+											</div>
+											<div class="col-md-12">
+												<div class="form-group">
+													<label for="companyname">Town/City</label>
+													<input name="city" type="text" id="towncity" class="form-control"
+														placeholder="Town or City">
+												</div>
+											</div>
+											<div class="col-md-6">
+												<div class="form-group">
+													<label for="stateprovince">State/Province</label>
+													<input name="state" type="text" id="fname" class="form-control"
+														placeholder="State Province">
+												</div>
+											</div>
+											<div class="col-md-6">
+												<div class="form-group">
+													<label for="lname">Zip/Postal Code</label>
+													<input name="zip" type="text" id="zippostalcode"
+														class="form-control" placeholder="Zip / Postal">
+												</div>
+											</div>
+											<div class="col-md-6">
+												<div class="form-group">
+													<label for="email">E-mail Address</label>
+													<input name="email" type="text" id="email" class="form-control"
+														placeholder="Email">
+												</div>
+											</div>
+											<div class="col-md-6">
+												<div class="form-group">
+													<label for="Phone">Phone Number</label>
+													<input name="phone" type="text" id="zippostalcode"
+														class="form-control" placeholder="">
+												</div>
+											</div>
+											<p id="errmsg2"></p>
+											<div class="col-md-12 text-center">
+												<button onclick="cancelAddressForm()" type="button"
+													class="btn btn-primary">Cancel</button>
+												<button onclick="saveAddress()" type="submit"
+													class="btn btn-primary">Add</button>
+											</div>
+										</div>
+									</form>
+								</div>
+							</form>
+
+						</div>
+
+						<!-- amountdetails and payment methods -->
+						<div class="col-lg-4">
+							<div class="row">
+								<div class="col-md-12">
+									<div class="cart-detail">
+										<h2>Cart Total</h2>
+										<ul>
+											<li>
+												<ul>
+													<% for( var i=0 ; i<cartdetails.items.length ; i++ ) { %>
+														<li><span>
+																<%= cartdetails.items[i].quantity %> x <%=
+																		cartdetails.items[i].product.name %>
+															</span> <span>₹<%= cartdetails.items[i].product.cost %>
+																	</span></li>
+														<% } %>
+												</ul>
+											</li>
+											<li><span>Subtotal</span> <span>₹<span style="all: unset;" id="totalamount">
+														<%= cartdetails.cartTotal %>
+													</span></span> </li>
+											<% if(coupondetails) { %>
+												<li><span>Discount</span> <span>₹<span style="all: unset;"
+															id="discount">
+															<%= coupondetails.discount %>
+														</span></span></li>
+												<% } else { %>
+													<li><span>Discount</span> <span>₹<span style="all: unset;"
+																id="discount">0.00</span></span></li>
+													<% } %>
+														<li><span>Shipping</span> <span>₹0.00</span></li>
+														<li><span>Order Total</span> <span id="ordertotal">₹</span></li>
+										</ul>
+									</div>
+								</div>
+
+								<div class="w-100"></div>
+
+								<div class="col-md-12">
+									<div class="cart-detail">
+										<form action="">
+											<h2>Payment Method</h2>
+											<!-- <div class="form-group">
+												<div class="col-md-12">
+													<div class="radio">
+														<label><input type="radio" name="optpaymethod"
+																value="onlinepayement"> Online Payement</label>
+													</div>
+												</div>
+											</div> -->
+											<div class="form-group">
+												<div class="col-md-12">
+													<div class="radio">
+														<label><input onclick="showPlaceOrder()" checked type="radio" name="optpaymethod" value="COD"> Cash
+															on Deivery</label>
+													</div>
+												</div>
+											</div>
+											<div class="form-group">
+												<div class="col-md-12">
+													<div class="radio">
+														<label><input onclick="showPaypal()" type="radio" name="optpaymethod" value="paypal"> Online Payement</label>
+													</div>
+												</div>
+											</div>
+											<div class="form-group">
+												<div class="col-md-12">
+													<div class="checkbox">
+														<label><input type="checkbox" value="" required> I have read and
+															accept the
+															terms and conditions</label>
+													</div>
+												</div>
+											</div>
+											<div class="row">
+												<div id="placeorderbutton" class="col-md-12 text-center">
+													<p><a onclick="placeorder()" href="#" class="btn btn-primary">Place
+															an order</a></p>
+												</div>
+												<!-- Set up a container element for the button -->
+												<div class="col-md-12 text-center" id="paypal-button-container"></div>
+											</div>
+										</form>
+									</div>
+								</div>
+							</div>
+
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- footer starts -->
+
+			<%- include ('partials/user-footer.ejs') %>
+
+				<!-- footer ends -->
+
+	</div>
+
+	<div class="gototop js-top">
+		<a href="#" class="js-gotop"><i class="ion-ios-arrow-up"></i></a>
+	</div>
+
+	<!-- added styles --------------------->
+	<style>
+		#mainaddress {
+			display: block;
+		}
+		#newaddress {
+			display: none;
+		}
+		#paypal-button-container{
+			display: none;
+		}
+		#placeorderbutton{
+			display: block;
+		}
+		#addformdiv {
+			display: none;
+		}
+		#editformdiv {
+			display: none;
+		}
+		#addedaddress{
+			display: none;
+		}
+	</style>
+
+	<!-- button actions ------------------------>
+
+	<script>
+		const totalamount = document.getElementById('totalamount').textContent
+		const discount = document.getElementById('discount').textContent
+		console.log(discount);
+		if (discount) {
+			const finalamount = parseInt(totalamount) - parseInt(discount)
+			console.log(finalamount);
+			document.getElementById('ordertotal').innerText = '₹' + finalamount
+		} else {
+			const finalamount = parseInt(totalamount)
+			console.log(finalamount);
+			document.getElementById('ordertotal').innerText = '₹' + finalamount
+		}
+
+		// -----------------------
+		function showaddress() {
+			document.getElementById('mainaddress').style.display = 'block'
+			document.getElementById('newaddress').style.display = 'none'
+		}
+		function cancelAddressForm() {
+			document.getElementById('mainaddress').style.display = 'block'
+			document.getElementById('newaddress').style.display = 'none'
+		}
+		function showaddressform() {
+			document.getElementById('mainaddress').style.display = 'none'
+			document.getElementById('newaddress').style.display = 'block'
+		}
+
+		function showPlaceOrder() {
+			document.getElementById('placeorderbutton').style.display = 'block'
+			document.getElementById('paypal-button-container').style.display = 'none'
+		}
+
+		function showPaypal() {
+			document.getElementById('placeorderbutton').style.display = 'none'
+			document.getElementById('paypal-button-container').style.display = 'block'
+		}
+
+		function showeditform(){
+			document.getElementById('editformdiv').style.display = 'block'
+			document.getElementById('mainaddress').style.display = 'none'	
+		}
+		
+		function cancelEditAddress() {
+			document.getElementById('editformdiv').style.display = 'none'
+			document.getElementById('mainaddress').style.display = 'block'
+		}
+		
+		function editAddress(){
+			const addressform = document.getElementById('editaddressform')
+			addressform.addEventListener('submit', async (event) => {
+				event.preventDefault()
+				const userid = addressform.firstname.id
+				const fname = addressform.firstname.value
+				const lname = addressform.lname.value
+				const street = addressform.street.value
+				const city = addressform.city.value
+				const country = addressform.country.value
+				const state = addressform.state.value
+				const zip = addressform.zip.value
+				const email = addressform.email.value
+				const phone = addressform.phone.value
+
+				console.log(userid, fname, lname, street, city, country, state, zip, email, phone);
+				try {
+					const res = await fetch('/editaddress',
+						{
+							method: 'POST',
+							body: JSON.stringify({ userid, fname, lname, street, city, country, state, zip, email, phone }),
+							headers: { 'Content-Type': 'application/json' }
+						})
+					const message = await res.json()
+					console.log(message)
+					const errmsg = document.getElementById('errmsg')
+					if (message.succes) {
+						document.getElementById('fnameandlname').innerText = fname +' '+ lname
+						document.getElementById('street').innerText = street
+						document.getElementById('cityandzip').innerText = city +','+ zip
+						document.getElementById('stateandcountry').innerText = state +','+ country
+						document.getElementById('editformdiv').style.display = 'none'
+						document.getElementById('mainaddress').style.display = 'block'	
+						errmsg.style.display = 'none'
+					} else {
+						errmsg.style.display = 'block'
+						errmsg.style.color = 'red'
+						errmsg.innerText = 'Please fill all the fields'
+					}
+				} catch (Error) {
+					console.log(Error)
+				}
+			})
+		}
+
+		const addressform = document.getElementById('addressform')
+		function saveAddress() {
+			const errmsg = document.getElementById('errmsg2')
+			addressform.addEventListener('submit', async (event) => {
+				event.preventDefault()
+				const userid = addressform.firstname.id
+				const fname = addressform.firstname.value
+				const lname = addressform.lname.value
+				const street = addressform.street.value
+				const city = addressform.city.value
+				const country = addressform.country.value
+				const state = addressform.state.value
+				const zip = addressform.zip.value
+				const email = addressform.email.value
+				const phone = addressform.phone.value
+
+				console.log(userid, fname, lname, street, city, country, state, zip, email, phone);
+				try {
+					const res = await fetch('/addaddress',
+						{
+							method: 'POST',
+							body: JSON.stringify({ userid, fname, lname, street, city, country, state, zip, email, phone }),
+							headers: { 'Content-Type': 'application/json' }
+						})
+					const message = await res.json()
+					console.log(message)
+					if (message.succes) {
+						window.alert(message.succes)
+						errmsg.style.display = 'none'
+						document.getElementById('mainaddress').style.display = 'block'
+						document.getElementById('newaddress').style.display = 'none'
+						document.getElementById('addedaddress').style.display = 'block'
+						document.getElementById('fnameandlname2').innerText = fname+' '+lname
+						document.getElementById('street2').innerText = street
+						document.getElementById('cityandzip2').innerText = city+' , '+zip
+						document.getElementById('stateandcountry2').innerText = state+' , '+country
+					} else {
+						errmsg.style.display = 'block'
+						errmsg.style.color = 'red'
+						errmsg.innerText = 'Please fill all the fields'
+					}
+				} catch (Error) {
+					console.log(Error)
+				}
+			})
+		}
+		// ============================ order placing ==========================
+		async function placeorder() {
+			const paymentmethod = document.querySelector('input[name="optpaymethod"]:checked').value
+			const addressid = document.querySelector('input[name="optaddress"]:checked').value
+			let couponid = 'nil'
+			if (`<%= coupondetails %>`) {
+				couponid = `<%= coupondetails._id %>`
+			} else {
+				couponid = false
+			}
+			console.log(couponid);
+			console.log(paymentmethod);
+			console.log(addressid)
+			if (paymentmethod == 'COD') {
+				const res = await fetch('/placeorder',
+					{
+						method: 'POST',
+						body: JSON.stringify({ paymentmethod, addressid, couponid }),
+						headers: { 'Content-Type': 'application/json' }
+					})
+				const message = await res.json()
+				console.log(message);
+				if (message.succes) {
+					location.assign('/ordercomplete')
+				} else {
+					window.alert(message.failure)
+				}
+			}
+		}
+
+		// -------------------paypal buttons--------==========================================
+
+		paypal.Buttons({
+			// Order is created on the server and the order id is returned
+			createOrder() {
+				const paymentmethod = document.querySelector('input[name="optpaymethod"]:checked').value
+				const addressid = document.querySelector('input[name="optaddress"]:checked').value
+				let couponid = ''
+				if (`<%= coupondetails %>`) {
+					couponid = `<%= coupondetails._id %>`
+				} else {
+					couponid = false
+				}
+				console.log(couponid);
+				console.log(paymentmethod);
+				console.log(addressid)
+				return fetch("/paypalpayment", {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					// use the "body" param to optionally pass additional order information
+					// like product skus and quantities
+					body: JSON.stringify({ paymentmethod, addressid, couponid }),
+				})
+					.then((response) => response.json())
+					.then((order) => order.id);
+			},
+			// Finalize the transaction on the server after payer approval
+			async onApprove(data) {
+				console.log(data)
+				const paymentmethod = document.querySelector('input[name="optpaymethod"]:checked').value
+				const addressid = document.querySelector('input[name="optaddress"]:checked').value
+				let couponid = ''
+				if (`<%= coupondetails %>`) {
+					couponid = `<%= coupondetails._id %>`
+				} else {
+					couponid = false
+				}
+				console.log(couponid);
+				console.log(paymentmethod);
+				console.log(addressid)
+				const res = await  fetch("/placeorder", {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify({ paymentmethod, addressid, couponid }),
+				})
+				const message = await res.json()
+				console.log(message)
+				// return location.assign('/paypalorder')
+				return location.assign('/ordercomplete')
+			}
+		}).render('#paypal-button-container');
+
+	</script>
+
+	<!-- jQuery -->
+	<script src="js/jquery.min.js"></script>
+	<!-- popper -->
+	<script src="js/popper.min.js"></script>
+	<!-- bootstrap 4.1 -->
+	<script src="js/bootstrap.min.js"></script>
+	<!-- jQuery easing -->
+	<script src="js/jquery.easing.1.3.js"></script>
+	<!-- Waypoints -->
+	<script src="js/jquery.waypoints.min.js"></script>
+	<!-- Flexslider -->
+	<script src="js/jquery.flexslider-min.js"></script>
+	<!-- Owl carousel -->
+	<script src="js/owl.carousel.min.js"></script>
+	<!-- Magnific Popup -->
+	<script src="js/jquery.magnific-popup.min.js"></script>
+	<script src="js/magnific-popup-options.js"></script>
+	<!-- Date Picker -->
+	<script src="js/bootstrap-datepicker.js"></script>
+	<!-- Stellar Parallax -->
+	<script src="js/jquery.stellar.min.js"></script>
+	<!-- Main -->
+	<script src="js/main.js"></script>
+
+</body>
+
+</html>
