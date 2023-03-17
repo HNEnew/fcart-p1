@@ -95,8 +95,9 @@
 								</h4>
 								<div class="mleft" id="ordersdiv">
 									<% if (!orders[0]) { %>
-										<p>You have no pending orders</p>
-										<a href="/">New collections waiting for you ... Order Now..</a>
+										<img src="/otherimages/noorders1.jpg" alt="">
+										<!-- <h4>You didn't order anything yet !!!</h4> -->
+										<a href="/"><h4>New collections waiting for you ... <span style="color: blue;">Order Now..</span></h4></a>
 									<% } else { %>
 
 											<% for(var i=0 ; i<orders.length ; i++) { %>

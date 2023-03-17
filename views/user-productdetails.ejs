@@ -86,9 +86,9 @@
 										</div>
 									</div>
 
-								<% } %>
+									<% } %>
 
-									<!-- <div class="item">
+										<!-- <div class="item">
 										<div class="product-entry border">
 											<a href="#" class="prod-img">
 												<img src="" class="img-fluid" alt="Free html5 bootstrap 4 template">
@@ -147,18 +147,29 @@
 									<input type="text" id="quantity" name="quantity" class="form-control input-number"
 										value="1" min="1" max="100">
 									<span class="input-group-btn ml-1">
-										<button type="button"
-											class="quantity-right-plus btn" data-type="plus" data-field="">
+										<button type="button" class="quantity-right-plus btn" data-type="plus"
+											data-field="">
 											<i class="icon-plus2"></i>
 										</button>
 									</span>
 								</div>
 								<div class="row">
 									<div class="col-sm-12 text-center">
-										<p class="addtocart"><a onclick="addtocart('<%= productdetails._id %>','<%= userdata._id %>')" href="#"
-												class="btn btn-primary btn-addtocart"><i class="icon-shopping-cart"></i>
+										<% if(userdata) { %>
+											<p class="addtocart"><a
+													onclick="addtocart('<%= productdetails._id %>','<%= userdata._id %>')"
+													href="#" class="btn btn-primary btn-addtocart"><i
+														class="icon-shopping-cart"></i>
+													Add to Cart</a>
+											</p>
+										<% } else { %>
+											<p class="addtocart"><a
+												onclick="login()"
+												href="#" class="btn btn-primary btn-addtocart"><i
+													class="icon-shopping-cart"></i>
 												Add to Cart</a>
-										</p>
+											</p>
+										<% } %>
 									</div>
 								</div>
 							</div>
@@ -449,14 +460,17 @@
 			});
 
 		});
-
+		// redirect to login page-----
+		function login() {
+			location.assign('/login')
+		}
 		// addtocart function-----
-		async function addtocart(productid , userid) {
+		async function addtocart(productid, userid) {
 			const quantity = document.getElementById('quantity').value
 			const res = await fetch('/addtocart',
 				{
 					method: 'POST',
-					body: JSON.stringify({ productid , userid , quantity }),
+					body: JSON.stringify({ productid, userid, quantity }),
 					headers: { 'Content-Type': 'application/json' }
 				})
 			const message = await res.json()

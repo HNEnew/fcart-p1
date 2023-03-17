@@ -42,7 +42,7 @@ router.get('/productdetails', usermidware.check_token, usercontroller.productdet
 
 /* GET about. */
 router.get('/about', usermidware.check_token, usercontroller.about_get)
-
+ 
 /* GET contact. */
 router.get('/contact', usermidware.check_token, usercontroller.contact_get)
 
@@ -96,6 +96,9 @@ router.get('/wishlist', usermidware.check_token, wishlistcontroller.wishlist_get
 
 /* POST addtowishlist. */
 router.post('/addtowishlist', usermidware.check_token, wishlistcontroller.addtowishlist_post)
+
+/* PUT removefromwishlist. */
+router.put('/removefromwishlist', usermidware.check_token, wishlistcontroller.removefromwishlist_put)
 
 /* PUT cancelorder. */
 router.put('/cancelorder', usermidware.check_token, ordercontroller.cancelorder_put)

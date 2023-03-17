@@ -7,7 +7,7 @@ const wishlist = require('../models/wishlist')
 
 module.exports.wishlist_get = async (req, res) => {
     const userdata = req.userdata
-    const [categories, wishlistdetails, products, cartdetails] = await Promise.all([
+    let [categories, wishlistdetails, products, cartdetails] = await Promise.all([
         category.find({}),
         wishlist.findOne({ user: userdata._id })
             .populate('items'),
@@ -16,6 +16,9 @@ module.exports.wishlist_get = async (req, res) => {
             .populate('items.product')
     ])
     console.log(wishlistdetails)
+    if (wishlistdetails==null) {
+        wishlistdetails = false
+    }
     res.render('wishlist', { categories, wishlistdetails, userdata, products })
 }
 module.exports.addtowishlist_post = async (req, res) => {
@@ -56,3 +59,14 @@ module.exports.addtowishlist_post = async (req, res) => {
         console.log(error)
     }
 }
+module.exports.removefromwishlist_put = async (req, res) => {
+    const productid = req.body.productid
+    const userdata = req.userdata
+    const result = await wishlist.updateOne({ user: userdata._id }, { $pull: { items: productid } })
+    if (result.modifiedCount==1) {
+        res.json({succes: '1 Item removed from wishlist..'})
+    } else {
+        res.json({failure: 'Oops..Something error..'})
+    }
+}
+

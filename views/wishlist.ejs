@@ -35,7 +35,7 @@
 
 	<!-- Theme style  -->
 	<link rel="stylesheet" href="css/style.css">
-	
+
 	<!-- fontawsome link -->
 	<script src="https://kit.fontawesome.com/c8553dfad7.js" crossorigin="anonymous"></script>
 
@@ -95,29 +95,32 @@
 								</h4>
 								<div class="mleft">
 									<div class="row row-pb-md">
-										<% for(var i=0 ; i<wishlistdetails.items.length ; i++) { %>
-											<div class="col-lg-4 mb-4 text-center">
-												<div class="product-entry border"
-													onclick="productview('<%= wishlistdetails.items[i]._id %>')">
-													<a href="#"
-														class="prod-img">
+										<% if (wishlistdetails) { %>
+											<% for(var i=0 ; i<wishlistdetails.items.length ; i++) { %>
+												<div class="col-lg-4 mb-4 text-center">
+													<div style="cursor: pointer;" class="product-entry border"
+														onclick="productview('<%= wishlistdetails.items[i]._id %>')">
 														<img src="/productimages/<%= wishlistdetails.items[i].image[0] %>"
-															class="img-fluid" alt="Free html5 bootstrap 4 template">
-														<div class="desc">
-															<h2>
-																<!-- <a href="/productdetails?id=<%= products[i]._id %>"></a> -->
-																<%= wishlistdetails.items[i].name %>
-															</h2>
-															<span class="price">
-																₹<%= wishlistdetails.items[i].cost %>
-															</span>
-															<i class="fa-solid fa-heart-circle-minus btn btn-primary"></i>
-															<i onclick="event.stopPropagation(); addtocart('<%= wishlistdetails.items[i]._id %>','<%= userdata._id %>')"
-																class="fa-solid fa-cart-plus btn btn-primary"></i>
-														</div>
-													</a>
+																class="img-fluid" alt="Free html5 bootstrap 4 template">
+															<div class="desc">
+																<h2>
+																	<!-- <a href="/productdetails?id=<%= products[i]._id %>"></a> -->
+																	<%= wishlistdetails.items[i].name %>
+																</h2>
+																<span class="price">
+																	₹<%= wishlistdetails.items[i].cost %>
+																</span>
+																<i onclick="event.stopPropagation(); removefromwishlist('<%= wishlistdetails.items[i]._id %>')" class="fa-solid fa-heart-circle-minus btn btn-primary"></i>
+																<i onclick="event.stopPropagation(); addtocart('<%= wishlistdetails.items[i]._id %>','<%= userdata._id %>')"
+																	class="fa-solid fa-cart-plus btn btn-primary"></i>
+															</div>
+													</div>
 												</div>
-											</div>
+											<% } %>
+										<% } else if (!wishlistdetails || wishlistdetails.items[0]) { %>
+											<img src="/otherimages/nowishlist2.png" alt="img1">
+											
+											<a href="/"><h4>No items in your wishlist <span style="color: blue;">Add some..</span></h4></a>
 										<% } %>
 									</div>
 								</div>
@@ -178,6 +181,26 @@
 			window.alert(message.succes)
 			if (message.succes) {
 				location.assign('/cart')
+			}
+		}
+		async function removefromwishlist(productid) {
+			try {
+				const res = await fetch('/removefromwishlist',
+					{
+						method: 'PUT',
+						body: JSON.stringify({ productid }),
+						headers: { 'Content-Type': 'application/json' }
+					})
+				const message = await res.json()
+				console.log(message)
+				if (message.succes) {
+					window.alert(message.succes)
+					location.reload()
+				} else {
+					window.alert(message.failure)
+				}
+			} catch (error) {
+				console.log(error)
 			}
 		}
 	</script>

@@ -37,7 +37,6 @@ module.exports.cart_get = async (req, res) => {
                 .populate('items.product')
         ])
         if (cartdetails == null) { cartdetails = false }
-        console.log(cartdetails)
         if (userdata) {
             res.render('cart', { categories, userdata, cartdetails })
         } else {
@@ -58,7 +57,6 @@ module.exports.addtocart_post = async (req, res) => {
         try {
             const productexistincart = await cart.findOne({ owner: userid, "items.product": productid })
             if (productexistincart) {
-                console.log('----------------------productexistincart');
                 const result = await cart.updateOne({ owner: userid, "items.product": productid }, { $inc: { "items.$.quantity": quantity , cartTotal: totalcost, "items.$.totalcost": totalcost } })
                 console.log(result)
                 if (result.modifiedCount == 0) {
@@ -67,7 +65,6 @@ module.exports.addtocart_post = async (req, res) => {
                     res.json({ succes: 'Product added to cart succesfully..' })
                 }
             } else {
-                console.log('----------------------cartexistsbutnoproduct');
                 const result = await cart.updateOne({ owner: userid }, { $push: { items: [{ product: productid, quantity: quantity, totalcost: totalcost, size: productdetails.size }] }, $inc: { cartTotal: totalcost } })
                 console.log(result)
                 if (result.modifiedCount == 1) {

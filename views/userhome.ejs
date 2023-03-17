@@ -175,11 +175,19 @@
 											<span class="price">
 												₹<%= products[i].cost %>
 											</span>
+											<% if(userdata) { %>
 											<i onclick="event.stopPropagation(); addtowishlist('<%= products[i]._id %>')"
 												class="fa-regular fa-heart btn btn-primary"></i>
 											<!-- <i class="fa-solid fa-heart"></i> -->
 											<i onclick="event.stopPropagation(); addtocart('<%= products[i]._id %>','<%= userdata._id %>')"
 												class="fa-solid fa-cart-plus btn btn-primary"></i>
+											<% } else { %>
+												<i onclick="event.stopPropagation(); login()"
+													class="fa-regular fa-heart btn btn-primary"></i>
+												<!-- <i class="fa-solid fa-heart"></i> -->
+												<i onclick="event.stopPropagation(); login()"
+													class="fa-solid fa-cart-plus btn btn-primary"></i>
+											<% } %>	
 										</div>
 									</a>
 
@@ -241,10 +249,13 @@
 		<a href="#" class="js-gotop"><i class="ion-ios-arrow-up"></i></a>
 	</div>
 
-	<!-- script for productdetails onclick -->
+	<!-- scripts on products onclick -->
 	<script>
 		function productview(id) {
 			location.assign('/productdetails?id=' + id)
+		}
+		function login() {
+			location.assign('/login')
 		}
 		// addtowishlist function-----
 		async function addtowishlist(productid) {
@@ -277,9 +288,10 @@
 				})
 			const message = await res.json()
 			console.log(message)
-			window.alert(message.succes)
 			if (message.succes) {
-				location.assign('/cart')
+				window.alert(message.succes)
+			} else {
+				window.alert(message.failure)
 			}
 		}
 	</script>
