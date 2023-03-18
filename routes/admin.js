@@ -18,6 +18,7 @@ const heandleErrors = (err) => {
 router.get('/login', adminController.login_get)
 router.post('/login', adminController.login_post)
 router.get('/home', adminmidware.check_token, adminController.home_get)
+router.get('/chart', adminmidware.check_token, adminController.chart_get)
 router.get('/users', adminmidware.check_token, adminController.users_get)
 router.get('/products', adminmidware.check_token, productcontroller.products_get)
 router.get('/addproduct', adminmidware.check_token, productcontroller.addproducts_get)
@@ -44,10 +45,8 @@ router.post('/updatestatus', adminmidware.check_token, ordercontroller.updatesta
 
 
 router.get('/logout', function (req, res) {
-  console.log("0000000000000011111")
   res.clearCookie('itsadmin')
     .redirect('/admin/login')
-  console.log("0000000000000000000")    
 })
 
 

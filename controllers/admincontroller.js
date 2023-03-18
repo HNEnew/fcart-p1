@@ -37,8 +37,81 @@ module.exports.login_post = async function (req, res) {
         console.log(error)
     }
 }
-module.exports.home_get = (req, res) => {
-    res.render('adminhomenew')
+module.exports.home_get = async (req, res) => {
+    const salesdetails = await order.find({ status: 'Delivered' }).populate('items.product').populate('user')
+    // console.log(salesdetails)
+    const sales = []
+    const profit = []
+    const date = []
+    for (var i = 0; i < salesdetails.length; i++) {
+        sales.push(salesdetails[i].finalamount)
+        date.push(salesdetails[i].delivery.toDateString())
+        let profitsum = 0
+        for (var j = 0; j < salesdetails[i].items.length ; j++) {
+            profitsum += salesdetails[i].items[j].quantity * salesdetails[i].items[j].product.profit
+        }
+        profit.push(profitsum)
+    }
+    res.render('adminhomenew' , {salesdetails, sales, profit, date})
+}
+module.exports.chart_get = async (req, res) => {
+    console.log('00000000000000000000000000000000000000000000000000000000000000000')
+    const salesdetails = await order.find({ status: 'Delivered' }).populate('items.product')
+    // console.log(salesdetails)
+    const sales = []
+    const profit = []
+    const date = []
+    for (var i = 0; i < salesdetails.length; i++) {
+        sales.push(salesdetails[i].finalamount)
+        // date.push(salesdetails[i].delivery.toDateString())
+        date.push(salesdetails[i].delivery.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }));
+
+        let profitsum = 0
+        for (var j = 0; j < salesdetails[i].items.length ; j++) {
+            profitsum += salesdetails[i].items[j].quantity * salesdetails[i].items[j].product.profit
+        }
+        profit.push(profitsum)
+    }
+    console.log(sales, profit, date)
+    res.json({sales, profit, date})
+}
+module.exports.users_get = async (req, res) => {
+    try {
+        const userdetails = await user.find({})
+        res.render('users', { userdetails })
+    } catch (error) {
+        console.log(error)
+    }
+}
+module.exports.userblock_post = async (req, res) => {
+    console.log(req.body);
+    const id = req.body.id
+    try {
+        const userdetails = await user.find({ _id: id })
+        console.log(userdetails);
+        const result = await user.updateOne({ _id: id }, { $set: { status: false } });
+        console.log(result.updatedCount);
+        if (result.updatedCount == 1) {
+            res.json({ succes: 'user blocked..' })
+        }
+    } catch (err) {
+        res.json({ failure: 'Oops...Something went wrong..' })
+    }
+}
+module.exports.userunblock_post = async (req, res) => {
+    console.log(req.body);
+    const id = req.body.id
+    try {
+        const userdetails = await user.find({ _id: id })
+        console.log(userdetails);
+        const result = await user.updateOne({ _id: id }, { $set: { status: true } });
+        console.log(result.updatedCount);
+        if (result.updatedCount == 1) {
+            res.json({ succes: 'user active..' })
+        }
+    } catch (err) {
+        res.json({ failure: 'Oops...Something went wrong..' })
+    }
 }
 // module.exports.products_get = async (req, res) => {
 //     try {
@@ -125,13 +198,6 @@ module.exports.home_get = (req, res) => {
 //         console.log(Error);
 //     }
 // }
-module.exports.users_get = async (req, res) => {
-    const userdetails = await user.find({})
-
-    console.log('total no of users is..' + userdetails.length);
-    res.render('users', { userdetails })
-    console.log(userdetails);
-}
 // module.exports.category_get = async (req, res) => {
 //     const categories = await category.find({})
 //     console.log(categories)
@@ -192,36 +258,6 @@ module.exports.users_get = async (req, res) => {
 //         res.json({ failure: 'Oops...Something went wrong..' })
 //     }
 // }
-module.exports.userblock_post = async (req, res) => {
-    console.log(req.body);
-    const id = req.body.id
-    try {
-        const userdetails = await user.find({ _id: id })
-        console.log(userdetails);
-        const result = await user.updateOne({ _id: id }, { $set: { status: false } });
-        console.log(result.updatedCount);
-        if (result.updatedCount == 1) {
-            res.json({ succes: 'user blocked..' })
-        }
-    } catch (err) {
-        res.json({ failure: 'Oops...Something went wrong..' })
-    }
-}
-module.exports.userunblock_post = async (req, res) => {
-    console.log(req.body);
-    const id = req.body.id
-    try {
-        const userdetails = await user.find({ _id: id })
-        console.log(userdetails);
-        const result = await user.updateOne({ _id: id }, { $set: { status: true } });
-        console.log(result.updatedCount);
-        if (result.updatedCount == 1) {
-            res.json({ succes: 'user active..' })
-        }
-    } catch (err) {
-        res.json({ failure: 'Oops...Something went wrong..' })
-    }
-}
 // module.exports.addtocart_post = async (req, res) => {
 //     const { owner, product, quantity, size } = await req.body
 //     console.log(req.body)
@@ -328,3 +364,4 @@ module.exports.userunblock_post = async (req, res) => {
 //         console.log(error)
 //     }
 // }
+

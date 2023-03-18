@@ -10,8 +10,8 @@
         }, 1);
     };
     spinner();
-    
-    
+
+
     // Back to top button
     $(window).scroll(function () {
         if ($(this).scrollTop() > 300) {
@@ -21,7 +21,7 @@
         }
     });
     $('.back-to-top').click(function () {
-        $('html, body').animate({scrollTop: 0}, 1500, 'easeInOutExpo');
+        $('html, body').animate({ scrollTop: 0 }, 1500, 'easeInOutExpo');
         return false;
     });
 
@@ -38,7 +38,7 @@
         $('.progress .progress-bar').each(function () {
             $(this).css("width", $(this).attr("aria-valuenow") + '%');
         });
-    }, {offset: '80%'});
+    }, { offset: '80%' });
 
 
     // Calender
@@ -55,7 +55,7 @@
         items: 1,
         dots: true,
         loop: true,
-        nav : false
+        nav: false
     });
 
 
@@ -66,22 +66,22 @@
         data: {
             labels: ["2016", "2017", "2018", "2019", "2020", "2021", "2022"],
             datasets: [{
-                    label: "USA",
-                    data: [15, 30, 55, 65, 60, 80, 95],
-                    backgroundColor: "rgba(0, 156, 255, .7)"
-                },
-                {
-                    label: "UK",
-                    data: [8, 35, 40, 60, 70, 55, 75],
-                    backgroundColor: "rgba(0, 156, 255, .5)"
-                },
-                {
-                    label: "AU",
-                    data: [12, 25, 45, 55, 65, 70, 60],
-                    backgroundColor: "rgba(0, 156, 255, .3)"
-                }
-            ]
+                label: "USA",
+                data: [15, 30, 55, 65, 60, 80, 95],
+                backgroundColor: "rgba(0, 156, 255, .7)"
             },
+            {
+                label: "UK",
+                data: [8, 35, 40, 60, 70, 55, 75],
+                backgroundColor: "rgba(0, 156, 255, .5)"
+            },
+            {
+                label: "AU",
+                data: [12, 25, 45, 55, 65, 70, 60],
+                backgroundColor: "rgba(0, 156, 255, .3)"
+            }
+            ]
+        },
         options: {
             responsive: true
         }
@@ -89,30 +89,65 @@
 
 
     // Salse & Revenue Chart
+    // const datas = (async function salesdetails(){
+    //    const res = await fetch('/admin/chart',
+    //     {
+    //         method: 'GET',
+    //         headers: { 'Content-Type': 'application/json' }
+    //     })
+    //     console.log('00000000000000000000000000111111111111')
+    //    return datas = await res.json()
+    // .then(function (response) {
+    // console.log('00000000000000000000000000111111111111')
+    //     console.log(response)
+    //     return response.json();
+    // })
+    // .catch(function (error) {
+    //     //Something went wrong
+    //     console.log(error);
+    // });
+    // })
+
+    // async function salesdetails() {
+    //     const res = await fetch('/admin/chart', {
+    //         method: 'GET',
+    //         headers: { 'Content-Type': 'application/json' }
+    //     });
+    //     console.log('Fetching data from server...');
+    //     const data = await res.json();
+    //     // console.log('Data retrieved:', data);
+    //     return data;
+    // }
+
+    // const datas = salesdetails(); // Call the function to initiate the data retrieval process
+
+    // const datas = res.json()
+    // console.log(datas)
+    // console.log(datas.sales)
     var ctx2 = $("#salse-revenue").get(0).getContext("2d");
     var myChart2 = new Chart(ctx2, {
         type: "line",
         data: {
             labels: ["2016", "2017", "2018", "2019", "2020", "2021", "2022"],
             datasets: [{
-                    label: "Salse",
-                    data: [15, 30, 55, 45, 70, 65, 85],
-                    backgroundColor: "rgba(0, 156, 255, .5)",
-                    fill: true
-                },
-                {
-                    label: "Revenue",
-                    data: [99, 135, 170, 130, 190, 180, 270],
-                    backgroundColor: "rgba(0, 156, 255, .3)",
-                    fill: true
-                }
-            ]
+                label: "Sales",
+                data: [15, 30, 55, 45, 70, 65, 85],
+                backgroundColor: "rgba(0, 156, 255, .5)",
+                fill: true
             },
+            {
+                label: "Revenue",
+                data: [99, 135, 170, 130, 190, 180, 370],
+                backgroundColor: "rgba(0, 156, 255, .3)",
+                fill: true
+            }
+            ]
+        },
         options: {
             responsive: true
         }
     });
-    
+
 
 
     // Single Line Chart
@@ -202,6 +237,6 @@
         }
     });
 
-    
+
 })(jQuery);
 

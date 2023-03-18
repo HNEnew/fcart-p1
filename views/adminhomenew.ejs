@@ -117,7 +117,8 @@
                                 <h6 class="mb-0">Sales & Revenue</h6>
                                 <a href="">Show All</a>
                             </div>
-                            <canvas id="salse-revenue"></canvas>
+                            <div id="chartDiv" style="width:100%; height:230px; margin:0 auto;"></div>
+                            <!-- <canvas id="salse-revenue"></canvas> -->
                         </div>
                     </div>
                 </div>
@@ -141,56 +142,24 @@
                                     <th scope="col">Invoice</th>
                                     <th scope="col">Customer</th>
                                     <th scope="col">Amount</th>
-                                    <th scope="col">Status</th>
+                                    <th scope="col">Profit</th>
                                     <th scope="col">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td><input class="form-check-input" type="checkbox"></td>
-                                    <td>01 Jan 2045</td>
-                                    <td>INV-0123</td>
-                                    <td>Jhon Doe</td>
-                                    <td>$123</td>
-                                    <td>Paid</td>
-                                    <td><a class="btn btn-sm btn-primary" href="">Detail</a></td>
-                                </tr>
-                                <tr>
-                                    <td><input class="form-check-input" type="checkbox"></td>
-                                    <td>01 Jan 2045</td>
-                                    <td>INV-0123</td>
-                                    <td>Jhon Doe</td>
-                                    <td>$123</td>
-                                    <td>Paid</td>
-                                    <td><a class="btn btn-sm btn-primary" href="">Detail</a></td>
-                                </tr>
-                                <tr>
-                                    <td><input class="form-check-input" type="checkbox"></td>
-                                    <td>01 Jan 2045</td>
-                                    <td>INV-0123</td>
-                                    <td>Jhon Doe</td>
-                                    <td>$123</td>
-                                    <td>Paid</td>
-                                    <td><a class="btn btn-sm btn-primary" href="">Detail</a></td>
-                                </tr>
-                                <tr>
-                                    <td><input class="form-check-input" type="checkbox"></td>
-                                    <td>01 Jan 2045</td>
-                                    <td>INV-0123</td>
-                                    <td>Jhon Doe</td>
-                                    <td>$123</td>
-                                    <td>Paid</td>
-                                    <td><a class="btn btn-sm btn-primary" href="">Detail</a></td>
-                                </tr>
-                                <tr>
-                                    <td><input class="form-check-input" type="checkbox"></td>
-                                    <td>01 Jan 2045</td>
-                                    <td>INV-0123</td>
-                                    <td>Jhon Doe</td>
-                                    <td>$123</td>
-                                    <td>Paid</td>
-                                    <td><a class="btn btn-sm btn-primary" href="">Detail</a></td>
-                                </tr>
+                                <% if(salesdetails) { %>
+                                    <% for(var i=0 ; i<sales.length ; i++) { %>
+                                        <tr>
+                                            <td><input class="form-check-input" type="checkbox"></td>
+                                            <td><%= date[i] %></td>
+                                            <td><%= salesdetails[i].orderid %></td>
+                                            <td><%= salesdetails[i].user.uname %></td>
+                                            <td><%= sales[i] %></td>
+                                            <td><%= profit[i] %></td>
+                                            <td><a class="btn btn-sm btn-primary" href="/admin/editorder?orderid=<%= salesdetails[i]._id %>">Detail</a></td>
+                                        </tr>
+                                    <% } %>
+                                <% } %>
                             </tbody>
                         </table>
                     </div>
@@ -200,7 +169,7 @@
 
 
             <!-- Widgets Start -->
-            <div class="container-fluid pt-4 px-4">
+            <!-- <div class="container-fluid pt-4 px-4">
                 <div class="row g-4">
                     <div class="col-sm-12 col-md-6 col-xl-4">
                         <div class="h-100 bg-light rounded p-4">
@@ -317,7 +286,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
             <!-- Widgets End -->
 
 
@@ -345,6 +314,9 @@
     <script src="/admin/lib/tempusdominus/js/moment-timezone.min.js"></script>
     <script src="/admin/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
 
+    <!-- graph js and cdn link -->
+    <script src="https://code.jscharting.com/2.9.0/jscharting.js"></script>
+    <script src="/admin/js/graph.js"></script>
     <!-- Template Javascript -->
     <script src="/admin/js/main.js"></script>
 </body>
