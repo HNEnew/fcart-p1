@@ -102,7 +102,7 @@
             <!-- Sales Chart Start -->
             <div class="container-fluid pt-4 px-4">
                 <div class="row g-4">
-                    <div class="col-sm-12 col-xl-6">
+                    <!-- <div class="col-sm-12 col-xl-6">
                         <div class="bg-light text-center rounded p-4">
                             <div class="d-flex align-items-center justify-content-between mb-4">
                                 <h6 class="mb-0">Worldwide Sales</h6>
@@ -110,12 +110,12 @@
                             </div>
                             <canvas id="worldwide-sales"></canvas>
                         </div>
-                    </div>
-                    <div class="col-sm-12 col-xl-6">
+                    </div> -->
+                    <div class="col-sm-12 col-xl-12">
                         <div class="bg-light text-center rounded p-4">
                             <div class="d-flex align-items-center justify-content-between mb-4">
                                 <h6 class="mb-0">Sales & Revenue</h6>
-                                <a href="">Show All</a>
+                                <a href="/admin/allsales">Show All</a>
                             </div>
                             <div id="chartDiv" style="width:100%; height:230px; margin:0 auto;"></div>
                             <!-- <canvas id="salse-revenue"></canvas> -->
@@ -131,13 +131,13 @@
                 <div class="bg-light text-center rounded p-4">
                     <div class="d-flex align-items-center justify-content-between mb-4">
                         <h6 class="mb-0">Recent Sales</h6>
-                        <a href="">Show All</a>
+                        <a href="/admin/allsales">Show All</a>
                     </div>
                     <div class="table-responsive">
                         <table class="table text-start align-middle table-bordered table-hover mb-0">
                             <thead>
                                 <tr class="text-dark">
-                                    <th scope="col"><input class="form-check-input" type="checkbox"></th>
+                                    <!-- <th scope="col"><input class="form-check-input" type="checkbox"></th> -->
                                     <th scope="col">Date</th>
                                     <th scope="col">Invoice</th>
                                     <th scope="col">Customer</th>
@@ -148,9 +148,9 @@
                             </thead>
                             <tbody>
                                 <% if(salesdetails) { %>
-                                    <% for(var i=0 ; i<sales.length ; i++) { %>
+                                    <% for(var i=0 ; i<4 ; i++) { %>
                                         <tr>
-                                            <td><input class="form-check-input" type="checkbox"></td>
+                                            <!-- <td><input class="form-check-input" type="checkbox"></td> -->
                                             <td><%= date[i] %></td>
                                             <td><%= salesdetails[i].orderid %></td>
                                             <td><%= salesdetails[i].user.uname %></td>
@@ -317,6 +317,7 @@
     <!-- graph js and cdn link -->
     <script src="https://code.jscharting.com/2.9.0/jscharting.js"></script>
     <script src="/admin/js/graph.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <!-- Template Javascript -->
     <script src="/admin/js/main.js"></script>
 </body>

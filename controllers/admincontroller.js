@@ -38,7 +38,7 @@ module.exports.login_post = async function (req, res) {
     }
 }
 module.exports.home_get = async (req, res) => {
-    const salesdetails = await order.find({ status: 'Delivered' }).populate('items.product').populate('user')
+    const salesdetails = await order.find({ status: 'Delivered' }).populate('items.product').populate('user').sort({ createdAt: -1 })
     // console.log(salesdetails)
     const sales = []
     const profit = []
@@ -47,33 +47,56 @@ module.exports.home_get = async (req, res) => {
         sales.push(salesdetails[i].finalamount)
         date.push(salesdetails[i].delivery.toDateString())
         let profitsum = 0
-        for (var j = 0; j < salesdetails[i].items.length ; j++) {
-            profitsum += salesdetails[i].items[j].quantity * salesdetails[i].items[j].product.profit
-        }
-        profit.push(profitsum)
-    }
-    res.render('adminhomenew' , {salesdetails, sales, profit, date})
-}
-module.exports.chart_get = async (req, res) => {
-    console.log('00000000000000000000000000000000000000000000000000000000000000000')
-    const salesdetails = await order.find({ status: 'Delivered' }).populate('items.product')
-    // console.log(salesdetails)
-    const sales = []
-    const profit = []
-    const date = []
-    for (var i = 0; i < salesdetails.length; i++) {
-        sales.push(salesdetails[i].finalamount)
-        // date.push(salesdetails[i].delivery.toDateString())
-        date.push(salesdetails[i].delivery.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }));
-
-        let profitsum = 0
-        for (var j = 0; j < salesdetails[i].items.length ; j++) {
+        for (var j = 0; j < salesdetails[i].items.length; j++) {
             profitsum += salesdetails[i].items[j].quantity * salesdetails[i].items[j].product.profit
         }
         profit.push(profitsum)
     }
     console.log(sales, profit, date)
-    res.json({sales, profit, date})
+    res.render('adminhomenew', { salesdetails, sales, profit, date })
+}
+module.exports.chart_get = async (req, res) => {
+    try {
+        const salesdetails = await order.find({ status: 'Delivered' }).populate('items.product')
+        const sales = []
+        const profit = []
+        const date = []
+        for (var i = 0; i < salesdetails.length; i++) {
+            sales.push(salesdetails[i].finalamount)
+            date.push(salesdetails[i].delivery.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }));
+            let profitsum = 0
+            for (var j = 0; j < salesdetails[i].items.length; j++) {
+                profitsum += salesdetails[i].items[j].quantity * salesdetails[i].items[j].product.profit
+            }
+            profit.push(profitsum)
+        }
+        console.log(sales, profit, date)
+        res.json({ sales, profit, date })
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+module.exports.allsales_get = async (req, res) => {
+    try {
+        const salesdetails = await order.find({ status: 'Delivered' }).populate('items.product').populate('user').sort({ createdAt: -1 })
+        // console.log(salesdetails)
+        const sales = []
+        const profit = []
+        const date = []
+        for (var i = 0; i < salesdetails.length; i++) {
+            sales.push(salesdetails[i].finalamount)
+            date.push(salesdetails[i].delivery.toDateString())
+            let profitsum = 0
+            for (var j = 0; j < salesdetails[i].items.length; j++) {
+                profitsum += salesdetails[i].items[j].quantity * salesdetails[i].items[j].product.profit
+            }
+            profit.push(profitsum)
+        }
+        res.render('allsales', { salesdetails, sales, profit, date })
+    } catch (error) {
+        console.log(error)
+    }
 }
 module.exports.users_get = async (req, res) => {
     try {
