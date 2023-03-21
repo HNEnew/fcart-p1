@@ -93,6 +93,7 @@ module.exports.home_get = async (req, res) => {
 }
 module.exports.categorycollection_get = async (req, res) => {
     try {
+        let page = parseInt(req.query.page || 1)
         const categoryid = req.query.id
         const categories = await category.find({})
         const categorydoc = categories.find((doc) => doc._id == categoryid)
@@ -100,9 +101,18 @@ module.exports.categorycollection_get = async (req, res) => {
         if (categorydoc) {
             categoryname = categorydoc.name
         }
+        console.log(page)
+        const limit = 3
+        const count = await product.countDocuments({ category: categoryname })
+        console.log(count)
+        let totalpages = Math.ceil(count/limit)
+        console.log(totalpages)
         const categorycollection = await product.find({ category: categoryname })
+        .skip((page-1)*limit)
+        .limit(limit)
+        console.log(categorycollection)
         const userdata = req.userdata
-        res.render('categorycollection', { categories, categoryname, categorycollection, userdata })
+        res.render('categorycollection', { categories, categoryid, categoryname, categorycollection, userdata, totalpages, page })
     } catch (err) {
         console.log(err);
     }
