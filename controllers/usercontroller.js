@@ -105,17 +105,29 @@ module.exports.categorycollection_get = async (req, res) => {
         const limit = 3
         const count = await product.countDocuments({ category: categoryname })
         console.log(count)
-        let totalpages = Math.ceil(count/limit)
+        let totalpages = Math.ceil(count / limit)
         console.log(totalpages)
         const categorycollection = await product.find({ category: categoryname })
-        .skip((page-1)*limit)
-        .limit(limit)
+            .skip((page - 1) * limit)
+            .limit(limit)
         console.log(categorycollection)
         const userdata = req.userdata
         res.render('categorycollection', { categories, categoryid, categoryname, categorycollection, userdata, totalpages, page })
     } catch (err) {
         console.log(err);
     }
+}
+module.exports.searchresult_get = async (req, res) => {
+    try {
+        const text = req.query.text
+        console.log(text)
+        const result = await product.find({$or : [ { name: { $regex: text } } , { category: { $regex: text } } ] });
+        console.log(result)
+        res.json({result})
+    } catch (error) {
+        console.log(error)
+    }
+
 }
 module.exports.productdetails_get = async (req, res) => {
     try {
@@ -164,300 +176,6 @@ module.exports.userprofile_get = async (req, res) => {
         console.log(error);
     }
 }
-// module.exports.addaddress_post = async (req, res) => {
-//     const { userid, fname, lname, street, city, state, country, zip, email, phone } = req.body
-//     const useraddress = new address({
-//         user: userid,
-//         fname: fname,
-//         lname: lname,
-//         street: street,
-//         city: city,
-//         state: state,
-//         country: country,
-//         zip: zip,
-//         email: email,
-//         phone: phone
-//     })
-//     try {
-//         const result = await useraddress.save(err => {
-//             if (err) {
-//                 res.json({ failure: 'Something error..Data not saved' })
-//             } else {
-//                 res.json({ succes: 'Data saved succesfully' })
-//             }
-//         })
-//     } catch (Error) {
-//         console.log(Error);
-//     }
-// }
-// module.exports.editaddress_post = async (req, res) => {
-//     const { userid, fname, lname, street, city, state, country, zip, email, phone } = req.body
-//     try {
-//         const result = await address.updateMany({ user: userid }, { $set: { fname: fname, lname: lname, street: street, city: city, state: state, country: country, zip: zip, email: email, phone: phone } })
-//         if (result.modifiedCount != 0) {
-//             res.json({ succes: 'Data updated succesfully' })
-//         } else {
-//             res.json({ failure: 'Something error..Data not saved' })
-//         }
-//     } catch (Error) {
-//         console.log(Error);
-//     }
-// }
-// module.exports.couponcheck_post = async (req, res) => {
-//     const { userid, couponcode } = req.body
-//     try {
-//         const coupondetails = await coupon.findOne({ code: couponcode })
-//         if (coupondetails) {
-//             if (coupondetails.usedusers.includes(userid)) {
-//                 res.json({ failure: 'Coupon not added ... This coupon is not valid..' })
-//             } else {
-//                 res.json({ succes: 'coupon added succesfully', coupondetails })
-//             }
-//         } else {
-//             res.json({ failure: 'Coupon not added ... This coupon is not valid..' })
-//         }
-//     } catch (Error) {
-//         console.log(Error);
-//     }
-// }
-// module.exports.checkout_get = async (req, res) => {
-//     const categories = await category.find({})
-//     const userdata = req.userdata
-//     let couponcode = req.query.coupon
-//     if (!couponcode) {
-//         couponcode = false
-//     }
-//     console.log(couponcode)
-//     const [useraddress, coupondetails, cartdetails] = await Promise.all([
-//         address.find({ user: userdata._id }),
-//         coupon.findOne({ code: couponcode }),
-//         cart.findOne({ owner: userdata._id })
-//             .populate('items.product')
-//     ])
-//     console.log(useraddress)
-//     console.log(coupondetails)
-//     if (coupondetails) {
-//         console.log(coupondetails.usedusers.includes(userdata._id))
-//         if (coupondetails.usedusers.includes(userdata._id)) {
-//             console.log('1111111111111111111111')
-//             res.render('checkout', { categories, userdata, useraddress, cartdetails })
-//         } else {
-//             res.render('checkout', { categories, userdata, useraddress, cartdetails, coupondetails })
-//             console.log('2222222222222222222222')
-//         }
-//     } else {
-//         const coupondetails = false
-//         res.render('checkout', { categories, userdata, useraddress, cartdetails, coupondetails })
-//         console.log('33333333333333333333333333')
-//     }
-// }
-// module.exports.placeorder_post = async (req, res) => {
-//     console.log('reached checkout')
-//     const userdata = req.userdata
-//     const { paymentmethod, addressid, couponid } = req.body
-//     console.log(req.body)
-//     const cartdetails = await cart.findOne({ owner: userdata._id })
-//         .populate('items.product')
-//     console.log('checking1')
-//     let billingaddress =  await address.findOne({ user: userdata._id , _id: addressid})
-//     let coupondetails = ''
-//     console.log('checking2')
-//     let finalamount = cartdetails.cartTotal
-//     let discount = 0
-//     if (couponid) {
-//         coupondetails = await coupon.findOne({ _id: couponid })
-//         finalamount = cartdetails.cartTotal - Number(coupondetails.discount)
-//         discount = Number(coupondetails.discount)
-//     }
-//     console.log('checking3')
-//     // making a rendom orderid
-//     let min = 100000;
-//     let max = 999999;
-//     let randomInt = Math.floor(Math.random() * (max - min + 1)) + min;
-//     console.log(randomInt);
-//     // ---------------------
-//     const neworder = new order({
-//         user: userdata._id,
-//         items: cartdetails.items,
-//         totalamount: cartdetails.cartTotal,
-//         coupon: { code: coupondetails.code, amount: discount },
-//         finalamount: finalamount,
-//         paymentmethod: paymentmethod,
-//         billingdetails: billingaddress,
-//         orderid: randomInt,
-//         status: 'Pending'
-//     })
-//     if (paymentmethod == 'COD') {
-//         try {
-//             const result = await neworder.save(err => {
-//                 if (err) {
-//                     res.json({ failure: 'Something error..Order not placed' })
-//                 } else {
-//                     res.json({ succes: 'New Order placed succesfully' })
-//                 }
-//             })
-//             const removeitemsfromcart = await cart.updateOne({ _id: cartdetails._id }, { $set: { items: [], cartTotal: 0 } })
-//             console.log(removeitemsfromcart);
-//         } catch (Error) {
-//             console.log(Error);
-//         }
-//     } else if (paymentmethod == 'paypal') {
-//         console.log('paypal order');
-//         try {
-//             const result = await neworder.save(err => {
-//                 if (err) {
-//                     res.json({ failure: 'Something error..Order not placed' })
-//                 } else {
-//                     res.json({ succes: 'New Order placed succesfully' })
-//                 }
-//             })
-//             const removeitemsfromcart = await cart.updateOne({ _id: cartdetails._id }, { $set: { items: [], cartTotal: 0 } })
-//             console.log(removeitemsfromcart);
-//         } catch (e) {
-//             res.status(500).json({ error: e.message })
-//             console.log(e);
-//         }
-//     }
-// }
-// module.exports.paypalpayement_post = async (req, res) => {
-//     const userdata = req.userdata
-//     const { paymentmethod, addressid, couponid } = req.body
-//     const cartdetails = await cart.findOne({ owner: userdata._id })
-//         .populate('items.product')
-//     let coupondetails = ''
-//     let finalamount = cartdetails.cartTotal
-//     let discount = 0
-//     if (couponid) {
-//         coupondetails = await coupon.findOne({ _id: couponid })
-//         finalamount = cartdetails.cartTotal - Number(coupondetails.discount)
-//         discount = Number(coupondetails.discount)
-//     }
-//     try {
-//         console.log('paypaltransaction started');
-//         const request = new paypal.orders.OrdersCreateRequest()
-//         const total = finalamount
-//         request.prefer('return=representation')
-//         request.requestBody({
-//             intent: 'CAPTURE',
-//             purchase_units: [
-//                 {
-//                     amount: {
-//                         currency_code: 'USD',
-//                         value: total,
-//                         breakdown: {
-//                             item_total: {
-//                                 currency_code: 'USD',
-//                                 value: cartdetails.cartTotal
-//                             },
-//                             discount: {
-//                                 currency_code: 'USD',
-//                                 value: discount
-//                             }
-//                         }
-//                     },
-//                     items: cartdetails.items.map(item => {
-//                         return {
-//                             name: item.product.name,
-//                             unit_amount: {
-//                                 currency_code: 'USD',
-//                                 value: item.product.cost
-//                             },
-//                             quantity: item.quantity
-//                         }
-//                     })
-//                 }
-//             ]
-//         })
-//         console.log('000000000000')
-//         const order = await paypalClient.execute(request)
-//         res.json({ succes: 'Payment succesful', id: order.result.id })
-//     } catch (e) {
-//         res.status(500).json({ error: e.message })
-//         console.log(e);
-//     }
-// }
-// module.exports.ordercomplete_get = async (req, res) => {
-//     try {
-//         const userdata = req.userdata
-//         const [categories, useraddress, cartdetails] = await Promise.all([
-//             category.find({}),
-//             address.findOne({ user: userdata._id }),
-//             cart.findOne({ owner: userdata._id })
-//                 .populate('items.product')
-//         ])
-//         res.render('order-complete', { categories, userdata, useraddress, cartdetails })
-//     } catch (error) {
-//         console.log(error);
-//     }
-// }
-// module.exports.orderhistory_get = async (req, res) => {
-//     const userdata = req.userdata
-//     const [categories, useraddress, cartdetails, orders] = await Promise.all([
-//         category.find({}),
-//         address.findOne({ user: userdata._id }),
-//         cart.findOne({ owner: userdata._id })
-//             .populate('items.product'),
-//         order.aggregate([
-//             { $match: { user: userdata._id } },
-//             { $lookup: { from: 'users', localField: 'user', foreignField: '_id', as: 'client' } },
-//             { $unwind: '$client' },
-//             { $lookup: { from: 'products', localField: 'items.product', foreignField: '_id', as: 'item' } }
-//         ]).sort({ createdAt: -1 })
-//     ])
-//     // console.log(orders)
-//     // for(var i=0;i<orders.length;i++){
-//     //     console.log(orders[i].delivery)
-//     // }
-//     res.render('orderdetails-user', { categories, userdata, useraddress, cartdetails, orders })
-// }
-// module.exports.invoice_get = async (req, res) => {
-//     const userdata = req.userdata
-//     const orderid = req.query.orderid
-//     console.log(orderid)
-//     const [useraddress, orders] = await Promise.all([
-//         address.findOne({ user: userdata._id }),
-//         order.aggregate([
-//             { $match: { orderid: orderid } },
-//             { $lookup: { from: 'users', localField: 'user', foreignField: '_id', as: 'client' } },
-//             { $unwind: '$client' },
-//             { $lookup: { from: 'products', localField: 'items.product', foreignField: '_id', as: 'item' } }
-//         ])
-//     ])
-//     console.log(orders)
-//     res.render('invoice', { useraddress, orders })
-// }
-// module.exports.cancelorder_put = async (req, res) => {
-//     const orderid = req.body.orderid
-//     const userdata = req.userdata
-//     console.log(req.body)
-//     try {
-//         const result = await order.updateOne({ orderid: orderid, user: userdata._id }, { $set: { status: 'Cancelled' } })
-//         console.log(result)
-//         if (result.modifiedCount == 1){
-//             res.json({ succes: 'Order cancelled succesfully..' })    
-//         } else {
-//             res.json({ failure: 'Oops something wrong..' })
-//         }
-//     } catch (error) {
-//         console.log(error)
-//     }
-// }
-// module.exports.returnproduct_put = async (req, res) => {
-//     const orderid = req.body.orderid
-//     const userdata = req.userdata
-//     console.log(req.body)
-//     try {
-//         const result = await order.updateOne({ orderid: orderid, user: userdata._id }, { $set: { status: 'Returned' } })
-//         console.log(result)
-//         if (result.modifiedCount == 1){
-//             res.json({ succes: 'Product return in process..' })
-//         } else {
-//             res.json({ failure: 'Oops something wrong..' })
-//         }
-//     } catch (error) {
-//         console.log(error)
-//     }
-// }
 
 
 

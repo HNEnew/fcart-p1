@@ -54,9 +54,13 @@
 		<%- include ('partials/user-header.ejs' , { categories }) %>
 
 			<!-- navbar ends -->
+			<div class="colorlib-product" id="searchresultdiv">
+				<div class="container">
+					<div class="row row-pb-md" id="searchedproducts"></div>
+				</div>
+			</div>
 
-			<!-- ---------------------------------------------------- -->
-
+			<div id="allproducts">
 			<div class="breadcrumbs">
 				<div class="container">
 					<div class="row">
@@ -78,47 +82,10 @@
 									<%= categoryname %>'s
 								</h2>
 							</div>
-							<!-- <div class="menu text-center">
-								<p><a href="#">New Arrivals</a> <a href="#">Best Sellers</a> <a href="#">Extended
-										Widths</a> <a href="#">Sale</a></p>
-							</div> -->
 						</div>
 					</div>
 				</div>
 			</div>
-
-			<!-- <div class="colorlib-featured">
-				<div class="container">
-					<div class="row">
-						<div class="col-sm-4 text-center">
-							<div class="featured">
-								<div class="featured-img featured-img-2" style="background-image: url(images/men.jpg);">
-									<h2>Casuals</h2>
-									<p><a href="#" class="btn btn-primary btn-lg">Shop now</a></p>
-								</div>
-							</div>
-						</div>
-						<div class="col-sm-4 text-center">
-							<div class="featured">
-								<div class="featured-img featured-img-2"
-									style="background-image: url(images/women.jpg);">
-									<h2>Dress</h2>
-									<p><a href="#" class="btn btn-primary btn-lg">Shop now</a></p>
-								</div>
-							</div>
-						</div>
-						<div class="col-sm-4 text-center">
-							<div class="featured">
-								<div class="featured-img featured-img-2"
-									style="background-image: url(images/item-11.jpg);">
-									<h2>Sports</h2>
-									<p><a href="#" class="btn btn-primary btn-lg">Shop now</a></p>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div> -->
 
 			<div class="colorlib-product">
 				<div class="container">
@@ -190,6 +157,7 @@
 					</div>
 				</div>
 			</div>
+			</div>
 
 			<div class="colorlib-partner">
 				<div class="container">
@@ -232,6 +200,73 @@
 	<div class="gototop js-top">
 		<a href="#" class="js-gotop"><i class="ion-ios-arrow-up"></i></a>
 	</div>
+
+	<style>
+		#searchresultdiv{
+			display: none;
+		}
+		#allproducts {
+			display: block;
+		}
+	</style>
+	<!-- script for searchbutton -->
+	<script>
+		const searchinput = document.getElementById('searchinput')
+		searchinput.addEventListener('input', async (event) => {
+			const text = event.target.value
+			console.log(text)
+			try {
+				const res = await fetch('/search?text=' + text,
+					{
+						method: 'GET',
+						headers: { 'Content-Type': 'application/json' }
+					})
+				const searchresult = await res.json()
+				console.log(searchresult)
+				let searchedproducts = document.getElementById('searchedproducts')
+				let allproducts = document.getElementById('allproducts')
+				const searchinput = document.getElementById('searchinput')
+				const searchresultdiv = document.getElementById('searchresultdiv')
+				if (searchinput.value == '') {
+					console.log('first condition...')
+					searchresultdiv.style.display = 'none'
+					allproducts.style.display = 'block'
+				} else if (searchresult.result.length == 0) {
+					console.log('second condition...')
+					allproducts.style.display = 'none'
+					searchresultdiv.style.display = 'flex'
+					searchedproducts.style.justifyContent = 'center'
+					searchedproducts.innerHTML = `<img style="align-items: center; justify-content: center;" src="/otherimages/noresult.png" alt="">`
+				} else {
+					console.log('third condition...')
+					allproducts.style.display = 'none'
+					searchresultdiv.style.display = 'block'
+					searchedproducts.innerHTML = ''
+					for (var i=0 ; i<searchresult.result.length ; i++) { 
+						searchedproducts.innerHTML += `
+						<div class="col-lg-3 mb-4 text-center">
+							<div class="product-entry border" onclick="productview(${searchresult.result[i]._id})">
+								<a href="/productdetails?id=${searchresult.result[i]._id}" class="prod-img">
+									<img src="/productimages/${searchresult.result[i].image[0]}" class="img-fluid" alt="Free html5 bootstrap 4 template">
+									<div class="desc">
+										<h2><a href="/productdetails?id=${searchresult.result[i]._id}">
+											${searchresult.result[i].name}
+											</a>
+										</h2>
+										<span class="price">
+											₹${searchresult.result[i].cost}
+										</span>
+									</div>
+								</a>
+							</div>
+						</div>`
+					}
+				}
+			} catch (Error) {
+				console.log(Error);
+			}
+		})
+	</script>
 
 	<!-- script for productdetails onclick -->
 	<script>

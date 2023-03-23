@@ -37,6 +37,9 @@ router.get('/', usermidware.check_token, usercontroller.home_get)
 /* GET category collection. */
 router.get('/categorycollection', usermidware.check_token, usercontroller.categorycollection_get)
 
+/* GET search result. */
+router.get('/search', usermidware.check_token, usercontroller.searchresult_get)
+
 /* GET productdetails. */
 router.get('/productdetails', usermidware.check_token, usercontroller.productdetails_get)
 
