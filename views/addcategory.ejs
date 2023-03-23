@@ -170,18 +170,16 @@
                         body: formdata
                     })
                 const message = await res.json()
-                console.log(res.json())
+                console.log(message)
                 if (message.succes) {
                     window.alert(message.succes)
                     location.assign('/admin/category')
                 }
                 else if (message.failure) {
-                    console.log(message.failure);
                     window.alert(message.failure)
                 }
             } catch (Error) {
                 console.log(Error)
-                window.alert(Error)
             }
         })
     </script>

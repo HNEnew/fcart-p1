@@ -9,8 +9,8 @@
 				<div class="col-sm-5 col-md-3">
 					<form action="#" class="search-wrap">
 						<div class="form-group">
-							<input type="search" class="form-control search" placeholder="Search">
-							<button class="btn btn-primary submit-search text-center" type="submit"><i
+							<input type="search" id="searchinput" class="form-control search" placeholder="Search">
+							<button class="btn btn-primary submit-search text-center" type="button"><i
 									class="icon-search"></i></button>
 						</div>
 					</form>
@@ -67,12 +67,12 @@
 						<div class="owl-carousel2">
 							<div class="item">
 								<div class="col">
-									<h3><a href="#">25% off (Almost) Everything! Use Code: Summer Sale</a></h3>
+									<h3><a>25% off (Almost) Everything! Use Code: Summer Sale</a></h3>
 								</div>
 							</div>
 							<div class="item">
 								<div class="col">
-									<h3><a href="#">Our biggest sale yet 50% off all summer shoes</a></h3>
+									<h3><a>Our biggest sale yet 50% off all summer shoes</a></h3>
 								</div>
 							</div>
 						</div>
@@ -84,6 +84,7 @@
 </nav>
 
 <!-- navbar ends -->
+
 
 <!-- dropdown profile bar button -->
 <style>
@@ -130,26 +131,3 @@
 		background-color: gray;
 	}
 </style>
-
-<!-- script for categorybutton -->
-<!-- <script>
-
-	async function myFunction(name) {
-		console.log(name)
-		try {
-			const res = await fetch('/categorycollectioncheck?name=' + name,
-				{
-					method: 'GET',
-					headers: { 'Content-Type': 'application/json' }
-				})
-			const message = await res.json()
-			console.log(message.succes)
-			if (message.succes) {
-				location.assign('/categorycollection')
-			}
-		} catch (Error) {
-			console.log(Error);
-		}
-	}
-
-</script> -->
