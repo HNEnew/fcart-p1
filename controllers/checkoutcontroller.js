@@ -39,14 +39,14 @@ const paypalClient = new paypal.core.PayPalHttpClient(new Environment
             console.log(coupondetails.usedusers.includes(userdata._id))
             if (coupondetails.usedusers.includes(userdata._id)) {
                 console.log('1111111111111111111111')
-                res.render('checkout', { categories, userdata, useraddress, cartdetails })
+                res.render('checkout', { categories, userdata, useraddress, cartdetails, cartquantity: req.cartquantity })
             } else {
-                res.render('checkout', { categories, userdata, useraddress, cartdetails, coupondetails })
+                res.render('checkout', { categories, userdata, useraddress, cartdetails, coupondetails, cartquantity: req.cartquantity })
                 console.log('2222222222222222222222')
             }
         } else {
             const coupondetails = false
-            res.render('checkout', { categories, userdata, useraddress, cartdetails, coupondetails })
+            res.render('checkout', { categories, userdata, useraddress, cartdetails, coupondetails, cartquantity: req.cartquantity })
             console.log('33333333333333333333333333')
         }
     }

@@ -138,7 +138,6 @@
                         <table class="table text-start align-middle table-bordered table-hover mb-0">
                             <thead>
                                 <tr class="text-dark">
-                                    <!-- <th scope="col"><input class="form-check-input" type="checkbox"></th> -->
                                     <th scope="col">Date</th>
                                     <th scope="col">Invoice</th>
                                     <th scope="col">Customer</th>
@@ -148,10 +147,9 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <% if(salesdetails) { %>
-                                    <% for(var i=0 ; i<4 ; i++) { %>
+                                <% if(salesdetails.length<4) { %>
+                                    <% for(var i=0 ; i<salesdetails.length ; i++) { %>
                                         <tr>
-                                            <!-- <td><input class="form-check-input" type="checkbox"></td> -->
                                             <td><%= date[i] %></td>
                                             <td><%= salesdetails[i].orderid %></td>
                                             <td><%= salesdetails[i].user.uname %></td>
@@ -160,6 +158,17 @@
                                             <td><a class="btn btn-sm btn-primary" href="/admin/editorder?orderid=<%= salesdetails[i]._id %>">Detail</a></td>
                                         </tr>
                                     <% } %>
+                                <% } else { %>
+                                    <% for(var i=0 ; i<4 ; i++) { %>
+                                        <tr>
+                                            <td><%= date[i] %></td>
+                                            <td><%= salesdetails[i].orderid %></td>
+                                            <td><%= salesdetails[i].user.uname %></td>
+                                            <td><%= sales[i] %></td>
+                                            <td><%= profit[i] %></td>
+                                            <td><a class="btn btn-sm btn-primary" href="/admin/editorder?orderid=<%= salesdetails[i]._id %>">Detail</a></td>
+                                        </tr>
+                                    <% } %>      
                                 <% } %>
                             </tbody>
                         </table>

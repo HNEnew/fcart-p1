@@ -41,7 +41,7 @@
 						<li><a href="/contact">Contact</a></li>
 						
 						<% if (userdata) { %>
-							<li class="cart"><a href="/cart"><i class="icon-shopping-cart"></i>[0]</a></li>
+							<li class="cart"><a href="/cart"><i class="icon-shopping-cart"></i>[<%=cartquantity%>]</a></li>
 							<div class="dropdown" style="float:right;">
 								<li class="cart"><i class="fa-regular fa-user"></i><a href="#"><%= userdata.uname%></a></li>
 								<div class="dropdown-content">

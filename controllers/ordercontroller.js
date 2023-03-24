@@ -19,7 +19,7 @@ module.exports.ordercomplete_get = async (req, res) => {
             cart.findOne({ owner: userdata._id })
                 .populate('items.product')
         ])
-        res.render('order-complete', { categories, userdata, useraddress, cartdetails })
+        res.render('order-complete', { categories, userdata, useraddress, cartdetails, cartquantity: req.cartquantity })
     } catch (error) {
         console.log(error);
     }
@@ -38,27 +38,18 @@ module.exports.orderhistory_get = async (req, res) => {
             { $lookup: { from: 'products', localField: 'items.product', foreignField: '_id', as: 'item' } }
         ]).sort({ createdAt: -1 })
     ])
-    // console.log(orders)
-    // for(var i=0;i<orders.length;i++){
-    //     console.log(orders[i].delivery)
-    // }
-    res.render('orderdetails-user', { categories, userdata, useraddress, cartdetails, orders })
+    res.render('orderdetails-user', { categories, userdata, useraddress, cartdetails, orders, cartquantity: req.cartquantity })
 }
 module.exports.invoice_get = async (req, res) => {
     const userdata = req.userdata
     const orderid = req.query.orderid
     console.log(orderid)
-    const [useraddress, orders] = await Promise.all([
+    const [useraddress, orderdetails] = await Promise.all([
         address.findOne({ user: userdata._id }),
-        order.aggregate([
-            { $match: { orderid: orderid } },
-            { $lookup: { from: 'users', localField: 'user', foreignField: '_id', as: 'client' } },
-            { $unwind: '$client' },
-            { $lookup: { from: 'products', localField: 'items.product', foreignField: '_id', as: 'item' } }
-        ])
+        order.findOne({ user: userdata._id, orderid: orderid }).populate('items.product').populate('user')
     ])
-    console.log(orders)
-    res.render('invoice', { useraddress, orders })
+    console.log(orderdetails)
+    res.render('invoice', { useraddress, orderdetails })
 }
 module.exports.cancelorder_put = async (req, res) => {
     const orderid = req.body.orderid
@@ -67,8 +58,8 @@ module.exports.cancelorder_put = async (req, res) => {
     try {
         const result = await order.updateOne({ orderid: orderid, user: userdata._id }, { $set: { status: 'Cancelled' } })
         console.log(result)
-        if (result.modifiedCount == 1){
-            res.json({ succes: 'Order cancelled succesfully..' })    
+        if (result.modifiedCount == 1) {
+            res.json({ succes: 'Order cancelled succesfully..' })
         } else {
             res.json({ failure: 'Oops something wrong..' })
         }
@@ -81,19 +72,24 @@ module.exports.returnproduct_put = async (req, res) => {
     const userdata = req.userdata
     console.log(req.body)
     try {
-        const result = await order.updateOne({ orderid: orderid, user: userdata._id }, { $set: { status: 'Returned' } })
-        console.log(result)
-        if (result.modifiedCount == 1){
-            res.json({ succes: 'Product return in process..' })
+        const orderdetails = await order.findOne({ orderid: orderid, user: userdata._id })
+        const timedifference = new Date().getTime() - orderdetails.delivery.getTime()
+        const daysafterdelivery = Math.round(timedifference / (24 * 60 * 60 * 1000))
+        if (daysafterdelivery <= 7) {
+            const result = await order.updateOne({ orderid: orderid, user: userdata._id }, { $set: { status: 'Returned' } })
+            if (result.modifiedCount == 1) {
+                res.json({ succes: 'Your request for return is accepted . Product return is in process..' })
+            } else {
+                res.json({ failure: 'Oops something wrong..' })
+            }
         } else {
-            res.json({ failure: 'Oops something wrong..' })
+            res.json({ failure: 'Sorry..Product cannot return after 7 days..' })
         }
     } catch (error) {
         console.log(error)
     }
 }
 module.exports.updatestatus_post = async (req, res) => {
-    // const orderid = req.query.orderid
     const { newstatus, orderid } = req.body
     console.log(req.body)
     try {
@@ -103,7 +99,7 @@ module.exports.updatestatus_post = async (req, res) => {
             deliverydate = new Date()
             result = await order.updateOne({ _id: orderid }, { $set: { status: newstatus, delivery: deliverydate } })
         } else {
-            result = await order.updateOne({ _id: orderid }, { $set: { status: newstatus} })
+            result = await order.updateOne({ _id: orderid }, { $set: { status: newstatus } })
         }
         console.log(result)
         if (result.modifiedCount == 1) {

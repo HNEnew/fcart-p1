@@ -39,7 +39,7 @@ module.exports.login_post = async function (req, res) {
 }
 module.exports.home_get = async (req, res) => {
     const salesdetails = await order.find({ status: 'Delivered' }).populate('items.product').populate('user').sort({ createdAt: -1 })
-    // console.log(salesdetails)
+    console.log(salesdetails)
     const sales = []
     const profit = []
     const date = []

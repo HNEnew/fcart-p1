@@ -68,7 +68,7 @@
                                                 <tr>
                                                     <th scope="col">Ordered At</th>
                                                     <th scope="col">User</th>
-                                                    <th scope="col">Order Amount</th>
+                                                    <th scope="col">Order ID</th>
                                                     <th scope="col">Payement</th>
                                                     <th scope="col">Status</th>
                                                     <th scope="col">Action</th>
@@ -86,7 +86,7 @@
                                                                 <%= orders[i].user.uname %>
                                                             </td>
                                                             <td>
-                                                                <%= orders[i].finalamount %>
+                                                                <%= orders[i].orderid %>
                                                             </td>
                                                             <td>
                                                                 <%= orders[i].paymentmethod %>
@@ -95,13 +95,14 @@
                                                                 <%= orders[i].status %>
                                                             </td>
                                                             <td>
-                                                                <div class="dropdown">
+                                                                <button class="dropbtn"><a style="color: white;" href="/admin/editorder?orderid=<%= orders[i]._id %>">Details</a></button>
+                                                                <!-- <div class="dropdown">
                                                                     <button class="dropbtn">Options</button>
                                                                     <div class="dropdown-content">
                                                                       <a href="/admin/editorder?orderid=<%= orders[i]._id %>">Details</a>
                                                                       <a onclick="deleteorder('<%= orders[i]._id %>')" style="cursor: pointer;">Delete</a>
                                                                     </div>
-                                                                </div>
+                                                                </div> -->
                                                             </td>
                                                         </tr>
 
@@ -188,26 +189,26 @@
 
     <!--  js -->
     <script>
-        async function deleteorder(orderid){
-            console.log(orderid);
-            try {
-                const res = await fetch('/admin/deleteorder',
-            {
-                method: 'DELETE',
-                body: JSON.stringify({orderid}),
-                headers: {'Content-Type':'application/json'}
-            })
-            const message = await res.json()
-            console.log(message);
-            if(message.succes){
-                location.reload()
-            }else{
-                window.alert(message.failure)
-            }
-            } catch (error) {
-                console.log(error);
-            }
-        }
+        // async function deleteorder(orderid){
+        //     console.log(orderid);
+        //     try {
+        //         const res = await fetch('/admin/deleteorder',
+        //     {
+        //         method: 'DELETE',
+        //         body: JSON.stringify({orderid}),
+        //         headers: {'Content-Type':'application/json'}
+        //     })
+        //     const message = await res.json()
+        //     console.log(message);
+        //     if(message.succes){
+        //         location.reload()
+        //     }else{
+        //         window.alert(message.failure)
+        //     }
+        //     } catch (error) {
+        //         console.log(error);
+        //     }
+        // }
     </script>
 
 </body>
