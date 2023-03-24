@@ -120,10 +120,7 @@
 																	data-toggle="modal" data-target="#exampleModalLong<%=i%>">
 																	Details
 																</button>
-																<button type="button" class="btn btn-primary"
-																	data-toggle="modal" data-target="#exampleModalCenter<%=i%>">
-																	Invoice
-																</button>
+																
 																<!-- Modal --- 1 -->
 																<div class="modal fade" id="exampleModalLong<%=i%>"
 																	tabindex="-1" role="dialog"
@@ -202,8 +199,8 @@
 																					<button type="button" onclick="returnproduct('<%=orders[i].orderid %>')"
 																					class="btn btn-primary">Return</button>
 																				<% } %>	
-																				<!-- <button type="button" class="btn btn-primary" onclick="generateinvoice('<%= orders[i].orderid %>')"
-																						data-dismiss="modal">Download invoice</button> -->
+																				<button type="button" class="btn btn-primary" onclick="generateinvoice('<%= orders[i].orderid %>')"
+																						data-dismiss="modal">Download invoice</button>
 																				<button type="button" 
 																						class="btn btn-primary"
 																						data-dismiss="modal">Close</button>
@@ -212,132 +209,7 @@
 																	</div>
 																</div>
 																
-																<!-- Modal ---2-------Invoice---->
-																<div class="modal fade" id="exampleModalCenter<%=i%>" tabindex="-1" role="dialog"
-																aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-																<div class="modal-dialog modal-dialog-centered" role="document">
-																	<div class="modal-content">
-																		<div class="modal-header">
-																			<h5 class="modal-title" id="exampleModalLongTitle">Invoice</h5>
-																			<button type="button" class="close" data-dismiss="modal"
-																				aria-label="Close">
-																				<span aria-hidden="true">&times;</span>
-																			</button>
-																		</div>
-																		<div class="modal-body">
-																			<!-- invoice starts ------------------------------->
-																					<!--Add HTML content you want to convert to PDF-->
-																			<div class="canvas_div_pdf">
-																				
-																			<div class="container">
-																				<div class="row">
-																					<div class="col-xs-12">
-																						<div class="invoice-title">
-																							<h2>Invoice</h2>
-																							<h3 class="pull-right">Order id : <%= orders[i].orderid %>
-																							</h3>
-																						</div>
-																						<hr>
-																						<div class="row">
-																							<div class="col-xs-6">
-																								<address>
-																									<strong>Billed To:</strong><br>
-																									<%= orders[i].billingdetails.fname %> <%= orders[i].billingdetails.lname %><br>
-																									<%= orders[i].billingdetails.street %><br>
-																									<%= orders[i].billingdetails.city %> <%= orders[i].billingdetails.zip %>
-																								</address>
-																							</div>
-																							<div class="col-xs-6 text-right">
-																								<!-- <address>
-																									<strong>Shipped To:</strong><br>
-																									Jane Smith<br>
-																									1234 Main<br>
-																									Apt. 4B<br>
-																									Springfield, ST 54321
-																								</address> -->
-																							</div>
-																						</div>
-																						<div class="row">
-																							<div class="col-xs-6">
-																								<address>
-																									<strong>Payment Method :</strong><br>
-																									<%= orders[i].paymentmethod %><br>
-																									<%= orders[i].billingdetails.email%>
-																								</address>
-																							</div>
-																							<div class="col-xs-6 text-right">
-																								<address>
-																									<strong>Order Date :</strong><br>
-																									<%= orders[i].createdAt.toLocaleString() %><br><br>
-																								</address>
-																							</div>
-																						</div>
-																					</div>
-																				</div>
-																		
-																				<div class="row">
-																					<div class="col-md-12">
-																						<div class="panel panel-default">
-																							<div class="panel-heading">
-																								<h3 class="panel-title"><strong>Order summary</strong></h3>
-																							</div>
-																							<div class="panel-body">
-																								<div class="table-responsive">
-																									<table class="table table-condensed">
-																										<thead>
-																											<tr>
-																												<td><strong>Item</strong></td>
-																												<td class="text-center"><strong>Price</strong></td>
-																												<td class="text-center"><strong>Quantity</strong></td>
-																												<td class="text-right"><strong>Totals</strong></td>
-																											</tr>
-																										</thead>
-																										<tbody>
-																											<!-- foreach ($order->lineItems as $line) or some such thing here -->
-																											<% for(var j=0 ; j<orders[i].items.length ; j++) { %>
-																											<tr>
-																												<td> <%= orders[i].item[j].name %></td>
-																												<td class="text-center"><%= orders[i].item[j].cost %></td>
-																												<td class="text-center"><%= orders[i].items[j].quantity %></td>
-																												<td class="text-right"><%= orders[i].items[j].totalcost %></td>
-																											</tr>
-																											<% } %>
-																											<tr>
-																												<td class="thick-line"></td>
-																												<td class="thick-line"></td>
-																												<td class="thick-line text-center"><strong>Subtotal</strong></td>
-																												<td class="thick-line text-right"><%= orders[i].totalamount %></td>
-																											</tr>
-																											<tr>
-																												<td class="no-line"></td>
-																												<td class="no-line"></td>
-																												<td class="no-line text-center"><strong>Coupon</strong></td>
-																												<td class="no-line text-right"><%= orders[i].coupon.amount %></td>
-																											</tr>
-																											<tr>
-																												<td class="no-line"></td>
-																												<td class="no-line"></td>
-																												<td class="no-line text-center"><strong>Total</strong></td>
-																												<td class="no-line text-right"><%= orders[i].finalamount %></td>
-																											</tr>
-																										</tbody>
-																									</table>
-																								</div>
-																							</div>
-																						</div>
-																					</div>
-																				</div>
-																			</div>
-																			</div>
-																			<!-- invoice ends ------------------------------->
-																			
-																		</div>
-																		<div class="modal-footer">
-																			<button onclick="getPDF()" type="button" class="btn btn-primary">Pdf</button>
-																		</div>
-																	</div>
-																</div>
-															</div>
+																
 															<hr>
 												</p>
 											<% } %>
@@ -396,8 +268,10 @@
 
 	<script>
 		async function cancelorder(orderid) {
+			const confirmed = window.confirm('Are you sure to cancel the order ?')
 			console.log('cancelling order..')
-			try {
+			if (confirmed) {
+				try {
 				const res = await fetch('/cancelorder',
 				{
 					method: 'PUT',
@@ -414,10 +288,12 @@
 			} catch (error) {
 				console.log(error)
 			}
+			}
 		}
 		async function returnproduct(orderid) {
-			console.log('returnig product..')
-			try {
+			const confirmed = window.confirm('Are you sure to return the product ?')
+			if(confirmed){
+				try {
 				const res = await fetch('/returnproduct',
 				{
 					method: 'PUT',
@@ -427,39 +303,21 @@
 				const message = await res.json()
 				console.log(message)
 				if (message.succes) {
+					window.alert(message.succes)
 					location.reload()
 				} else {
 					console.log(message.failure)
+					window.alert(message.failure)
 				}
 			} catch (error) {
 				console.log(error)
 			}
+			}
 		}
-		// function generateinvoice(orderid){
-		// 	window.open('/getinvoice?orderid='+orderid)
-		// }
-		function getPDF(){
-			var HTML_Width = $(".canvas_div_pdf").width();
-			var HTML_Height = $(".canvas_div_pdf").height();
-			var top_left_margin = 15;
-			var PDF_Width = HTML_Width+(top_left_margin*2);
-			var PDF_Height = (PDF_Width*1.5)+(top_left_margin*2);
-			var canvas_image_width = HTML_Width;
-			var canvas_image_height = HTML_Height;
-			var totalPDFPages = Math.ceil(HTML_Height/PDF_Height)-1;
-			html2canvas($(".canvas_div_pdf")[0],{allowTaint:true}).then(function(canvas) {
-				canvas.getContext('2d');
-				console.log(canvas.height+"  "+canvas.width);
-				var imgData = canvas.toDataURL("image/jpeg", 1.0);
-				var pdf = new jsPDF('p', 'pt',  [PDF_Width, PDF_Height]);
-				pdf.addImage(imgData, 'JPG', top_left_margin, top_left_margin,canvas_image_width,canvas_image_height);
-				for (var i = 1; i <= totalPDFPages; i++) { 
-					pdf.addPage(PDF_Width, PDF_Height);
-					pdf.addImage(imgData, 'JPG', top_left_margin, -(PDF_Height*i)+(top_left_margin*4),canvas_image_width,canvas_image_height);
-				}
-				pdf.save("HTML-Document.pdf");
-			});
-		};
+		function generateinvoice(orderid){
+			window.open('/getinvoice?orderid='+orderid)
+		}
+		
 	</script>
 
 	<!-- jQuery -->

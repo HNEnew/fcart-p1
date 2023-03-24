@@ -19,7 +19,7 @@ module.exports.wishlist_get = async (req, res) => {
     if (wishlistdetails==null) {
         wishlistdetails = false
     }
-    res.render('wishlist', { categories, wishlistdetails, userdata, products })
+    res.render('wishlist', { categories, wishlistdetails, userdata, products, cartquantity: req.cartquantity })
 }
 module.exports.addtowishlist_post = async (req, res) => {
     const productid = req.body.productid

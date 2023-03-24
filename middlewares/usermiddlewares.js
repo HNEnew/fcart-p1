@@ -1,6 +1,6 @@
 const user = require('../models/usersmodel')
 const jwt = require('jsonwebtoken');
-const address = require('../models/address')
+const cart = require('../models/cart')
 // middleware to check user token:
 
 module.exports.check_token = async (req,res,next) => {
@@ -10,6 +10,13 @@ module.exports.check_token = async (req,res,next) => {
         const decoded = jwt.verify(token, "mysecretkey");
         email = decoded.userid
         const userdata = await user.findOne({email})
+        const cartitems = await cart.findOne({owner: userdata._id})
+        let cartquantity = 0
+        for (let i=0 ; i<cartitems.items.length ; i++) {
+            cartquantity += cartitems.items[i].quantity
+        }
+        console.log(cartquantity,'items...')
+        req.cartquantity = cartquantity
         req.userdata = userdata
         console.log('user have token ..')
         next()
@@ -19,3 +26,4 @@ module.exports.check_token = async (req,res,next) => {
     }
 }
 
+ 

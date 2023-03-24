@@ -8,26 +8,7 @@ const order = require('../models/order')
 
 
 
-module.exports.cart_get = async (req, res) => {
-    try {
-        const userdata = req.userdata
-        let [categories, cartdetails] = await Promise.all([
-            category.find({}),
-            cart.findOne({ owner: userdata._id })
-                .populate('items.product')
-        ])
-        if (cartdetails == null) { cartdetails = false }
-        console.log(cartdetails)
-        console.log(cartdetails.items[0].product)
-        if (userdata) {
-            res.render('cart', { categories, userdata, cartdetails })
-        } else {
-            res.redirect('/login')
-        }
-    } catch (error) {
-        console.log(error)
-    }
-}
+
 module.exports.cart_get = async (req, res) => {
     try {
         const userdata = req.userdata
@@ -38,7 +19,7 @@ module.exports.cart_get = async (req, res) => {
         ])
         if (cartdetails == null) { cartdetails = false }
         if (userdata) {
-            res.render('cart', { categories, userdata, cartdetails })
+            res.render('cart', { categories, userdata, cartdetails, cartquantity: req.cartquantity })
         } else {
             res.redirect('/login')
         }

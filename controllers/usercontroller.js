@@ -86,7 +86,7 @@ module.exports.home_get = async (req, res) => {
             category.find({}),
             product.find({})
         ])
-        res.render('userhome', { products, categories, userdata })
+        res.render('userhome', { products, categories, userdata, cartquantity: req.cartquantity })
     } catch (error) {
         console.log(error);
     }
@@ -102,7 +102,7 @@ module.exports.categorycollection_get = async (req, res) => {
             categoryname = categorydoc.name
         }
         console.log(page)
-        const limit = 3
+        const limit = 8
         const count = await product.countDocuments({ category: categoryname })
         console.log(count)
         let totalpages = Math.ceil(count / limit)
@@ -112,7 +112,7 @@ module.exports.categorycollection_get = async (req, res) => {
             .limit(limit)
         console.log(categorycollection)
         const userdata = req.userdata
-        res.render('categorycollection', { categories, categoryid, categoryname, categorycollection, userdata, totalpages, page })
+        res.render('categorycollection', { categories, categoryid, categoryname, categorycollection, userdata, totalpages, page, cartquantity: req.cartquantity })
     } catch (err) {
         console.log(err);
     }
@@ -137,7 +137,7 @@ module.exports.productdetails_get = async (req, res) => {
             category.find({}),
             product.findOne({ _id: productid })
         ])
-        res.render('user-productdetails', { categories, productdetails, userdata })
+        res.render('user-productdetails', { categories, productdetails, userdata, cartquantity: req.cartquantity })
     } catch (err) {
         console.log(err);
     }
@@ -146,7 +146,7 @@ module.exports.about_get = async (req, res) => {
     try {
         const categories = await category.find({})
         const userdata = req.userdata
-        res.render('about', { categories, userdata })
+        res.render('about', { categories, userdata, cartquantity: req.cartquantity })
     } catch (error) {
         console.log(error);
     }
@@ -155,7 +155,7 @@ module.exports.contact_get = async (req, res) => {
     try {
         const categories = await category.find({})
         const userdata = req.userdata
-        res.render('contact', { categories, userdata })
+        res.render('contact', { categories, userdata, cartquantity: req.cartquantity })
     } catch (error) {
         console.log(error);
     }
@@ -168,7 +168,7 @@ module.exports.userprofile_get = async (req, res) => {
                 address.findOne({ user: userdata._id }),
                 category.find({})
             ])
-            res.render('userprofile', { categories, userdata, useraddress })
+            res.render('userprofile', { categories, userdata, useraddress, cartquantity: req.cartquantity })
         } else {
             res.redirect('/login')
         }
