@@ -350,25 +350,25 @@
 														<li><span>
 																<%= cartdetails.items[i].quantity %> x <%=
 																		cartdetails.items[i].product.name %>
-															</span> <span>₹<%= cartdetails.items[i].product.cost %>
+															</span> <span>$<%= cartdetails.items[i].product.cost %>
 																	</span></li>
 														<% } %>
 												</ul>
 											</li>
-											<li><span>Subtotal</span> <span>₹<span style="all: unset;" id="totalamount">
+											<li><span>Subtotal</span> <span>$<span style="all: unset;" id="totalamount">
 														<%= cartdetails.cartTotal %>
 													</span></span> </li>
 											<% if(coupondetails) { %>
-												<li><span>Discount</span> <span>₹<span style="all: unset;"
+												<li><span>Discount</span> <span>$<span style="all: unset;"
 															id="discount">
 															<%= coupondetails.discount %>
 														</span></span></li>
 												<% } else { %>
-													<li><span>Discount</span> <span>₹<span style="all: unset;"
+													<li><span>Discount</span> <span>$<span style="all: unset;"
 																id="discount">0.00</span></span></li>
 													<% } %>
-														<li><span>Shipping</span> <span>₹0.00</span></li>
-														<li><span>Order Total</span> <span id="ordertotal">₹</span></li>
+														<li><span>Shipping</span> <span>$0.00</span></li>
+														<li><span>Order Total</span> <span id="ordertotal">$</span></li>
 										</ul>
 									</div>
 								</div>
@@ -475,11 +475,11 @@
 		if (discount) {
 			const finalamount = parseInt(totalamount) - parseInt(discount)
 			console.log(finalamount);
-			document.getElementById('ordertotal').innerText = '₹' + finalamount
+			document.getElementById('ordertotal').innerText = '$' + finalamount
 		} else {
 			const finalamount = parseInt(totalamount)
 			console.log(finalamount);
-			document.getElementById('ordertotal').innerText = '₹' + finalamount
+			document.getElementById('ordertotal').innerText = '$' + finalamount
 		}
 
 		// -----------------------

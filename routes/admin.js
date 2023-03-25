@@ -13,7 +13,7 @@ const heandleErrors = (err) => {
 }
 
    
-/* GET admin routes*/
+/* GET admin routes*/ 
 
 router.get('/login', adminController.login_get)
 router.post('/login', adminController.login_post)
@@ -30,11 +30,10 @@ router.get('/category', adminmidware.check_token, categorycontroller.category_ge
 router.post('/editproduct', adminmidware.check_token, upload.array('image',5), productcontroller.editproducts_post)
 router.get('/addcategory', adminmidware.check_token, categorycontroller.categoryadd_get)
 router.post('/addcategory', adminmidware.check_token,uploadcategory.single('image') , categorycontroller.categoryadd_post)
-router.delete('/deletecategory', adminmidware.check_token , categorycontroller.category_delete)
-router.delete('/deleteproduct', adminmidware.check_token , productcontroller.product_delete)
+router.post('/editcategory', adminmidware.check_token,uploadcategory.single('image') , categorycontroller.editcategory_put)
+router.put('/deleteproduct', adminmidware.check_token , productcontroller.product_delete)
 router.post('/userblock', adminmidware.check_token, adminController.userblock_post)
 router.post('/userunblock', adminmidware.check_token, adminController.userunblock_post)
-// router.post('/addtocart', adminmidware.check_token, adminController.addtocart_post)
 router.get('/coupons', adminmidware.check_token, couponcontroller.coupons_get)
 router.post('/addcoupon', adminmidware.check_token, couponcontroller.addcoupon_post)
 router.get('/orders', adminmidware.check_token, ordercontroller.orders_get)
@@ -43,6 +42,8 @@ router.get('/editorder', adminmidware.check_token, ordercontroller.editorder_get
 router.post('/updatestatus', adminmidware.check_token, ordercontroller.updatestatus_post)
 
 
+// router.post('/addtocart', adminmidware.check_token, adminController.addtocart_post)
+// router.delete('/deletecategory', adminmidware.check_token , categorycontroller.category_delete)
 
 
 router.get('/logout', function (req, res) {

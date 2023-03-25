@@ -98,7 +98,13 @@
                                         <td><%= userdetails[i].createdAt.toLocaleString() %></td>
                                         <td>
                                             <div class="w3-container">
-                                                <div class="w3-dropdown-click">
+                                                <% if (userdetails[i].status) { %>
+                                                    <p onclick="block('<%= userdetails[i].id %>')" style="cursor: pointer; color: red; background-color: aquamarine;">Block</p>
+                                                <% } else { %>
+                                                    <p onclick="unblock('<%= userdetails[i].id %>')" style="cursor: pointer; color: green; background-color: aquamarine;">Unblock</p>
+                                                <% } %>
+                                                
+                                                <!-- <div class="w3-dropdown-click">
                                                     <button onclick="myFunction('<%= i %>')"
                                                         class="w3-button w3-grey">Options</button>
                                                     <div id="Demo<%= i %>"
@@ -107,8 +113,8 @@
                                                             class="w3-bar-item w3-button">Block</a>
                                                         <a href="" onclick="unblock('<%= userdetails[i].id %>')"
                                                             class="w3-bar-item w3-button">Unblock</a>
-                                                        <!-- <a href="" class="w3-bar-item w3-button" >Delete</a>     -->
-                                                    </div>
+                                                        <a href="" class="w3-bar-item w3-button" >Delete</a>    
+                                                    </div> -->
                                                 </div>
                                             </div>
                                         </td>
@@ -171,10 +177,13 @@
                     body: JSON.stringify({id}),
                     headers:{'Content-Type':'application/json'}
                 })
-                const message = res.json()
+                const message = await res.json()
                 if(message.succes) {
+                    window.alert(message.succes)
                     console.log(message)
+                    location.reload()
                 }else{
+                    window.alert(message.failure)
                     console.log(message)
                 }
             } catch (Error) {
@@ -189,10 +198,13 @@
                     body: JSON.stringify({id}),
                     headers:{'Content-Type':'application/json'}
                 })
-                const message = res.json()
+                const message = await res.json()
                 if(message.succes) {
+                    window.alert(message.succes)
                     console.log(message)
+                    location.reload()
                 }else{
+                    window.alert(message.failure)
                     console.log(message)
                 }
             } catch (Error) {

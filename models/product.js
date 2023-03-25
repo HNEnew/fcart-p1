@@ -9,7 +9,8 @@ const productSchema = new mongoose.Schema({
     size: {type: String, reuired: false}, 
     stock: {type: String, required: true}, 
     category: {type: String, required: true},
-    image: {type: Array, required: true}
+    image: {type: Array, required: true},
+    deleted: {type: Boolean, default: false}
 })
 const newproduct = mongoose.model('product',productSchema)
 

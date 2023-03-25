@@ -105,15 +105,20 @@
 									<%= productdetails.name %>
 								</h3>
 								<p class="price">
-									<span>₹<%= productdetails.cost %></span>
-									<span class="rate">
+									<span>$<%= productdetails.cost %></span>
+									<% if (productdetails.stock>0) { %>
+										<span>In stock</span>
+										<% } else { %>
+											<span>No stock</span>
+											<% } %>
+									<!-- <span class="rate">
 										<i class="icon-star-full"></i>
 										<i class="icon-star-full"></i>
 										<i class="icon-star-full"></i>
 										<i class="icon-star-full"></i>
 										<i class="icon-star-half"></i>
 										(74 Rating)
-									</span>
+									</span> -->
 								</p>
 								<p>Even the all-powerful Pointing has no control about the blind texts it is an almost
 									unorthographic life One day however a small line of blind text by the name of Lorem
@@ -122,12 +127,12 @@
 									<div class="block-26 mb-2">
 										<h4>Size</h4>
 										<ul>
-											<li><a href="#">7</a></li>
-											<li><a href="#">8</a></li>
+											<li><a href="#"><%= productdetails.size %></a></li>
+											<!-- <li><a href="#">8</a></li>
 											<li><a href="#">9</a></li>
 											<li><a href="#">10</a></li>
 											<li><a href="#">11</a></li>
-											<li><a href="#">12</a></li>
+											<li><a href="#">12</a></li> -->
 										</ul>
 									</div>
 									<!-- <div class="block-26 mb-4">

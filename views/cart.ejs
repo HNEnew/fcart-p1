@@ -128,7 +128,7 @@
 										</div>
 										<div class="one-eight text-center">
 											<div class="display-tc">
-												<span class="price">₹<span id="cost<%= i %>"><%= cartdetails.items[i].product.cost %></span></span>
+												<span class="price">$<span id="cost<%= i %>"><%= cartdetails.items[i].product.cost %></span></span>
 											</div>
 										</div>
 										<div class="one-eight text-center">
@@ -137,7 +137,7 @@
 													<!-- 0000000000000000------QUANTITY CONTROL BUTTONS------0000000000000000000 -->
 													<div class="input-group">
 														<span style="width: 25%;" class="input-group-btn">
-															<button onclick="quantityminus('<%= cartdetails.items[i].product._id %>','<%= i %>')" type="button" class="quantitybtn"
+															<button onclick="quantityminus('<%= cartdetails.items[i].product._id %>','<%= i %>')" id="minusbutton<%= i %>" type="button" class="quantitybtn"
 																data-type="minus" data-field="">
 																<i class="icon-minus2"></i>
 															</button>
@@ -148,7 +148,7 @@
 															value="<%= cartdetails.items[i].quantity %>" min="1"
 															max="100">
 														<span style="width: 25%;" class="input-group-btn">
-															<button onclick="quantityplus('<%= cartdetails.items[i].product._id %>','<%= i %>')" type="button" class="quantitybtn"
+															<button onclick="quantityplus('<%= cartdetails.items[i].product._id %>','<%= i %>')" id="plusbutton<%= i %>" type="button" class="quantitybtn"
 																data-type="plus" data-field="">
 																<i class="icon-plus2"></i>
 															</button>
@@ -160,7 +160,7 @@
 										</div>
 										<div class="one-eight text-center">
 											<div class="display-tc">
-												<span class="price">₹<span id="totalcost<%= i %>"><%= cartdetails.items[i].totalcost %></span></span>
+												<span class="price">$<span id="totalcost<%= i %>"><%= cartdetails.items[i].totalcost %></span></span>
 											</div>
 										</div>
 										<div class="one-eight text-center">
@@ -199,12 +199,12 @@
 									<div class="col-sm-4 text-center">
 										<div class="total">
 											<div class="sub">
-												<p><span>Subtotal:</span> <span>₹<span style="width: 0;" id="subtotal"><%= cartdetails.cartTotal %></span></span></p>
-												<p><span>Delivery:</span> <span>₹<span style="width: 0;">0.00</span></span></p>
-												<p><span>Discount:</span> <span>₹<span style="width: 0;" id="discount">0.00</span></span></p>
+												<p><span>Subtotal:</span> <span>$<span style="width: 0;" id="subtotal"><%= cartdetails.cartTotal %></span></span></p>
+												<p><span>Delivery:</span> <span>$<span style="width: 0;">0.00</span></span></p>
+												<p><span>Discount:</span> <span>$<span style="width: 0;" id="discount">0.00</span></span></p>
 											</div>
 											<div class="grand-total">
-												<p><span><strong>Total:</strong></span> <span>₹<span style="width: 0;" id="carttotal"><%=cartdetails.cartTotal %></span></span></p>
+												<p><span><strong>Total:</strong></span> <span>$<span style="width: 0;" id="carttotal"><%=cartdetails.cartTotal %></span></span></p>
 												<button type="button" onclick="checkout()" class="btn btn-primary">Proceed to Checkout</button>
 											</div>
 											<% } else if (!cartdetails || cartdetails.items.length==0) { %>
@@ -336,7 +336,6 @@
 
 						<!-- script for buttons actions -->
 						<script>
-							// const qnty = document.getElementById('quantity'+i)
 
 							// cancel items from cart
 							async function cancelItem(cartid, productid, totalcost) {
@@ -355,6 +354,8 @@
 							// change quantity functions---------------------------------
 							async function quantityminus(productid,i) {
 								try { 
+									const minusbutton = document.getElementById('minusbutton'+i)
+									minusbutton.disabled = true
 									const stockmsg = document.getElementById('stockmsg'+i)
 									const totalcost = document.getElementById('totalcost'+i)
 									const cost = document.getElementById('cost'+i)
@@ -387,12 +388,15 @@
 									} else {
 										window.alert(message.failure)
 									}
+									minusbutton.disabled = false
 								} catch (error) {
 									console.log(error)
 								}
 							}
 							async function quantityplus(productid,i) {
 								try {
+									const plusbutton = document.getElementById('plusbutton'+i)
+									plusbutton.disabled = true
 									const stockmsg = document.getElementById('stockmsg'+i)
 									const totalcost = document.getElementById('totalcost'+i)
 									const cost = document.getElementById('cost'+i)
@@ -426,6 +430,7 @@
 									} else {
 										window.alert(message.failure)
 									}
+									plusbutton.disabled = false
 								} catch (error) {
 									console.log(error)
 								}

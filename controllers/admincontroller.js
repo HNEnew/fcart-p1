@@ -113,8 +113,8 @@ module.exports.userblock_post = async (req, res) => {
         const userdetails = await user.find({ _id: id })
         console.log(userdetails);
         const result = await user.updateOne({ _id: id }, { $set: { status: false } });
-        console.log(result.updatedCount);
-        if (result.updatedCount == 1) {
+        console.log(result.modifiedCount);
+        if (result.modifiedCount == 1) {
             res.json({ succes: 'user blocked..' })
         }
     } catch (err) {
@@ -128,9 +128,9 @@ module.exports.userunblock_post = async (req, res) => {
         const userdetails = await user.find({ _id: id })
         console.log(userdetails);
         const result = await user.updateOne({ _id: id }, { $set: { status: true } });
-        console.log(result.updatedCount);
-        if (result.updatedCount == 1) {
-            res.json({ succes: 'user active..' })
+        console.log(result);
+        if (result.modifiedCount == 1) {
+            res.json({ succes: 'user Unblocked..' })
         }
     } catch (err) {
         res.json({ failure: 'Oops...Something went wrong..' })
