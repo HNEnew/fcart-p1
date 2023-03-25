@@ -82,6 +82,9 @@ router.get('/checkout', usermidware.check_token, checkoutcontroller.checkout_get
 /* GET placeorder. */
 router.post('/placeorder', usermidware.check_token, checkoutcontroller.placeorder_post)
 
+/* DELETE deleteaddress. */
+router.delete('/deleteaddress', usermidware.check_token, checkoutcontroller.deleteaddress_delete)
+
 /* GET placeorder. */
 router.get('/ordercomplete', usermidware.check_token, ordercontroller.ordercomplete_get)
 

@@ -102,15 +102,15 @@
 								<hr> -->
 
 								<div class="mleft" id="mainaddress">
-									<% if (useraddress) { %>
+									<% if (useraddress!=null) { %>
 										<% for(var i=0 ; i<useraddress.length ; i++) { %>
 											<% if (i==0) { %>
 												<label><input onclick="showaddress()" type="radio" name="optaddress"
 													value="<%= useraddress[i]._id %>" checked> Default address </label>
-												<% } else { %>
+											<% } else { %>
 													<label><input onclick="showaddress()" type="radio" name="optaddress"
 														value="<%= useraddress[i]._id %>"> address <%= i %></label>
-												<% } %>
+											<% } %>
 											<div>
 												<p id="fnameandlname">
 													<%= useraddress[i].fname %>
@@ -125,6 +125,8 @@
 												<p id="stateandcountry">
 													<%= useraddress[i].state %> , <%= useraddress[i].country %>
 												</p>
+												<button onclick="deleteaddress('<%= useraddress[i]._id %>')" type="button"
+														class="btn btn-primary">Delete</button>
 												<!-- <div class="col-md-12 text-center">
 													<button onclick="showeditform()" type="button"
 														class="btn btn-primary">Edit</button>
@@ -146,15 +148,15 @@
 											</div>
 											<hr>
 										</div>
-										<% } else { %>
+									<% } else { %>
 
-											<p>You did not added any address</p>
 											<div class="col-md-12 text-center">
-												<button onclick="showaddform()" type="submit"
+												<p>You did not added any address</p>
+												<button onclick="showaddressform()" type="button"
 													class="btn btn-primary">Add Now</button>
 											</div>
 
-										<% } %>
+									<% } %>
 								</div>
 
 								<!-- address edit form div-------------------------------------------------------- -->
@@ -327,7 +329,7 @@
 											<div class="col-md-12 text-center">
 												<button onclick="cancelAddressForm()" type="button"
 													class="btn btn-primary">Cancel</button>
-												<button onclick="saveAddress()" type="submit"
+												<button onclick="saveAddress()" type="button"
 													class="btn btn-primary">Add</button>
 											</div>
 										</div>
@@ -404,11 +406,11 @@
 											</div>
 											<div class="form-group">
 												<div class="col-md-12">
-													<div class="checkbox">
+													<!-- <div class="checkbox">
 														<label><input type="checkbox" value="" required> I have read and
 															accept the
 															terms and conditions</label>
-													</div>
+													</div> -->
 												</div>
 											</div>
 											<div class="row">
@@ -515,6 +517,26 @@
 			document.getElementById('editformdiv').style.display = 'none'
 			document.getElementById('mainaddress').style.display = 'block'
 		}
+		async function deleteaddress(id){
+			try {
+				const res = await fetch('/deleteaddress',
+				{
+					method: 'DELETE',
+					body: JSON.stringify({id}),
+					headers: {'Content-Type': 'application/json'}
+				})
+				const message = await res.json()
+				console.log(message)
+				if (message.succes) {
+					window.alert(message.succes)
+					location.reload()
+				} else {
+					window.alert(message.failure)
+				}
+			} catch (error) {
+				console.log(error)
+			}
+		}
 		
 		function editAddress(){
 			const addressform = document.getElementById('editaddressform')
@@ -562,10 +584,8 @@
 		}
 
 		const addressform = document.getElementById('addressform')
-		function saveAddress() {
+		async function saveAddress() {
 			const errmsg = document.getElementById('errmsg2')
-			addressform.addEventListener('submit', async (event) => {
-				event.preventDefault()
 				const userid = addressform.firstname.id
 				const fname = addressform.firstname.value
 				const lname = addressform.lname.value
@@ -577,7 +597,14 @@
 				const email = addressform.email.value
 				const phone = addressform.phone.value
 
-				console.log(userid, fname, lname, street, city, country, state, zip, email, phone);
+			if (userid==''||fname==''||lname==''||street==''||city==''||country==''||state==''||zip==''||email==''||phone=='') {
+					console.log('fields are empty....')
+					console.log(userid, fname, lname, street, city, country, state, zip, email, phone);
+					errmsg.style.display = 'block'
+						errmsg.style.color = 'red'
+						errmsg.innerText = 'Please fill all the fields'
+			}else{
+					console.log(userid, fname, lname, street, city, country, state, zip, email, phone);
 				try {
 					const res = await fetch('/addaddress',
 						{
@@ -605,7 +632,7 @@
 				} catch (Error) {
 					console.log(Error)
 				}
-			})
+			}
 		}
 		// ============================ order placing ==========================
 		async function placeorder() {
