@@ -192,3 +192,18 @@ const paypalClient = new paypal.core.PayPalHttpClient(new Environment
             console.log(Error);
         }
     }
+    module.exports.deleteaddress_delete = async (req, res) => {
+        const addressid = req.body.id
+        const userdata = req.userdata
+        try {
+            const result = await address.deleteOne({_id: addressid })
+            console.log(result)
+            if (result.deletedCount==1) {
+                res.json({ succes: 'address deleted succesfully'})
+            } else {
+                res.json({ failure: 'Oops...Something went wrong...' })
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
