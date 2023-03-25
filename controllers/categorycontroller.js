@@ -34,18 +34,23 @@ module.exports.categoryadd_post = async (req, res) => {
         }
     })
 }
-module.exports.category_delete = async (req, res) => {
+module.exports.editcategory_put = async (req, res) => {
     console.log(req.body);
-    const id = req.body.id
+    const id = req.query.id
+    console.log(id)
+    const image = req.file.originalname
+    console.log(image)
+    const name = req.body.name
     try {
         const categories = await category.find({ _id: id })
         console.log(categories);
-        const result = await category.deleteOne({ _id: id });
-        console.log(result.deletedCount);
-        if (result.deletedCount == 1) {
+        const result = await category.updateOne({ _id: id } , {$set: {name: name , image: image } });
+        console.log(result)
+        if (result) {
             res.json({ succes: 'category deleted succesfully..' })
         }
     } catch (err) {
+        console.log(err.message)
         res.json({ failure: 'Oops...Something went wrong..' })
     }
 }

@@ -112,7 +112,7 @@
 												<%= categorycollection[i].name %>
 											</a>
 										</h2>
-										<span class="price">₹<%= categorycollection[i].cost %></span>
+										<span class="price">$<%= categorycollection[i].cost %></span>
 										<% if(userdata) { %>
 											<i onclick="event.stopPropagation(); addtowishlist('<%= categorycollection[i]._id %>')"
 												class="fa-regular fa-heart btn btn-primary"></i>
@@ -254,7 +254,7 @@
 											</a>
 										</h2>
 										<span class="price">
-											₹${searchresult.result[i].cost}
+											$${searchresult.result[i].cost}
 										</span>
 									</div>
 								</a>

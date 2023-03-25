@@ -74,6 +74,7 @@
                                         <th scope="col">cost</th>
                                         <th scope="col">Profit</th>
                                         <th scope="col">Stock</th>
+                                        <th scope="col">Status</th>
                                         <th scope="col">Action</th>
                                     </tr>
                                 </thead>
@@ -99,6 +100,15 @@
                                             <td>
                                                 <%= products[i].stock %>
                                             </td>
+                                            <% if (products[i].deleted) { %>
+                                            <td>
+                                                Deleted
+                                            </td>
+                                            <% } else { %>
+                                            <td>
+                                                Active
+                                            </td> 
+                                            <% } %>
                                             <td>
                                                 <div class="w3-container">
                                                     <div class="w3-dropdown-click dropdown">
@@ -109,7 +119,11 @@
                                                             <a href="/admin/productdetails?code=<%= products[i].code %>"
                                                                 class="w3-bar-item w3-button">Details</a>
                                                             <a  class="w3-bar-item w3-button" href="/admin/editproduct?code=<%= products[i].code %>" onclick="editfunction('<%= products[i].code %>')">Edit</a>
-                                                            <a href="" class="w3-bar-item w3-button" onclick="deletefunction('<%= products[i].id %>')">Delete</a>    
+                                                            <% if (!products[i].deleted) { %>
+                                                            <a href="#" class="w3-bar-item w3-button" onclick="deletefunction('<%= products[i].id %>')">Delete</a>
+                                                            <% } else { %>
+                                                                <a href="#" class="w3-bar-item w3-button" onclick="deletefunction('<%= products[i].id %>')">Undo Delete</a>
+                                                            <% }  %>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -181,40 +195,21 @@
             try {
                 const res = await fetch('/admin/deleteproduct',
                 {
-                    method: 'DELETE',
+                    method: 'PUT',
                     body: JSON.stringify({id}),
                     headers: {'Content-Type': 'application/json'}
                 })
                 const message = await res.json()
                 if (message.succes) {
-                    console.log(message)
+                    window.alert(message.succes)
+                    location.reload()
                 }else{
-                    console.log(message.failure);
+                    window.alert(message.failure);
                 }
             }catch (Error) {
                 console.log(Error);
             }
         }
-        // editbutton................................
-        // async function editfunction(code) {
-        //     try {
-        //         const res = await fetch('/admin/editproduct?code=' + code,
-        //         {
-        //             method: 'GET',
-        //             // body: JSON.stringify({id}),
-        //             headers: {'Content-Type': 'application/json'}
-        //         })
-        //         const message = await res.json()
-        //         if (message.succes) {
-        //             console.log(message)
-        //             location.assign('/admin/prodcteditpage')
-        //         }else{
-        //             console.log(message.failure);
-        //         }
-        //     }catch (Error) {
-        //         console.log(Error);
-        //     }
-        // }
 
     </script>
 

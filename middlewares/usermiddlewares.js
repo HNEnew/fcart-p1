@@ -12,8 +12,12 @@ module.exports.check_token = async (req,res,next) => {
         const userdata = await user.findOne({email})
         const cartitems = await cart.findOne({owner: userdata._id})
         let cartquantity = 0
-        for (let i=0 ; i<cartitems.items.length ; i++) {
-            cartquantity += cartitems.items[i].quantity
+        if (cartitems){
+            if (cartitems.items){
+                for (let i=0 ; i<cartitems.items.length ; i++) {
+                    cartquantity += cartitems.items[i].quantity
+                }
+            }
         }
         console.log(cartquantity,'items...')
         req.cartquantity = cartquantity

@@ -97,12 +97,17 @@ module.exports.product_delete = async (req, res) => {
     console.log(req.body);
     const id = req.body.id
     try {
-        const productdetails = await product.find({ _id: id })
+        const productdetails = await product.findOne({ _id: id })
         console.log(productdetails);
-        const result = await product.deleteOne({ _id: id });
-        console.log(result.deletedCount);
-        if (result.deletedCount == 1) {
-            res.json({ succes: 'product deleted succesfully..' })
+        let result
+        if (productdetails.deleted) {
+            result = await product.updateOne({ _id: id },{$set: {deleted: false}});    
+        } else {
+            result = await product.updateOne({ _id: id },{$set: {deleted: true}});
+        }
+        console.log(result);
+        if (result.modifiedCount == 1) {
+            res.json({ succes: 'product status updated succesfully..' })
         }
     } catch (err) {
         res.json({ failure: 'Oops...Something went wrong..' })

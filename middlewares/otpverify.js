@@ -1,15 +1,17 @@
 
-// const accountSid = process.env.TWILIO_ACCOUNT_SID
-// const authToken = process.env.TWILIO_AUTH_TOKEN
-const accountSid = "AC1a55837f2d1450c60adda04e88fcf905"
-const authToken = "cfcf6b2fd04801bc22fbdafefdb73acf"
-
-const verifySid = "VA841fee427989aad85960b5358b9ba3b3";
+const accountSid = process.env.TWILIO_ACCOUNT_SID
+const authToken = process.env.TWILIO_AUTH_TOKEN
+// const accountSid = "AC1a55837f2d1450c60adda04e88fcf905"
+// const authToken = "cfcf6b2fd04801bc22fbdafefdb73acf"
+let userphone
+const verifySid = "VA4fd96d19d8a0ded60b863c490ece9914";
 const client = require("twilio")(accountSid, authToken);
 module.exports.senduser_otp = (req, res, next) => {
+    userphone = req.userphone
+    console.log(userphone)
     client.verify.v2
         .services(verifySid)
-        .verifications.create({ to: "+919400078881", channel: "sms" })
+        .verifications.create({ to: "+91"+userphone, channel: "sms" })
         .then((verification) => console.log(verification.status))
 }
 
@@ -19,7 +21,7 @@ module.exports.verifyuserlogin_otp = async (req, res, next) => {
     try{
         const verifiedresponse = await client.verify.v2
         .services(verifySid)
-        .verificationChecks.create({ to: "+919400078881", code: otpcode })
+        .verificationChecks.create({ to: "+91"+userphone, code: otpcode })
         .then((verification_check) => {
             console.log(verification_check.status)
             if(verification_check.status == 'approved'){

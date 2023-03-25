@@ -30,6 +30,8 @@ module.exports.login_post = async (req, res, next) => {
     const { email, password } = await req.body
     console.log(req.body)
     const usercheck = await user.findOne({ email })
+    req.userphone = usercheck.phone
+    console.log(usercheck.phone)
     if (!usercheck) {
         console.log('no user found')
         res.json({ message: 'invalid email or password' })
@@ -84,7 +86,7 @@ module.exports.home_get = async (req, res) => {
         const userdata = req.userdata
         const [categories, products] = await Promise.all([
             category.find({}),
-            product.find({})
+            product.find({deleted: false})
         ])
         res.render('userhome', { products, categories, userdata, cartquantity: req.cartquantity })
     } catch (error) {
@@ -107,7 +109,7 @@ module.exports.categorycollection_get = async (req, res) => {
         console.log(count)
         let totalpages = Math.ceil(count / limit)
         console.log(totalpages)
-        const categorycollection = await product.find({ category: categoryname })
+        const categorycollection = await product.find({ category: categoryname , deleted: false})
             .skip((page - 1) * limit)
             .limit(limit)
         console.log(categorycollection)
