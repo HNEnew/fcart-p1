@@ -205,15 +205,24 @@
 											</div>
 											<div class="grand-total">
 												<p><span><strong>Total:</strong></span> <span>$<span style="width: 0;" id="carttotal"><%=cartdetails.cartTotal %></span></span></p>
-												<button type="button" onclick="checkout()" class="btn btn-primary">Proceed to Checkout</button>
+												<% for (var i=0 ; i<cartdetails.items.length ; i++) { %>
+													<% if (cartdetails.items[i].product.stock < cartdetails.items[i].quantity) { %>
+														<p id="checkoutstockmsg">Some items are not in stock .Please remove it from cart or decrease quantity</p>
+														<button style="display: none;" id="checkoutbutton" type="button" onclick="checkout()" class="btn btn-primary">Proceed to Checkout</button>
+														<% break %>
+													<% } else { %>
+														<button id="checkoutbutton" type="button" onclick="checkout()" class="btn btn-primary">Proceed to Checkout</button>
+														<p style="display: none;" id="checkoutstockmsg">Some items are not in stock .Please remove it from cart or decrease quantity</p>
+													<% } %>
+												<% } %>
 											</div>
 											<% } else if (!cartdetails || cartdetails.items.length==0) { %>
 												<!-- 00000000000------cart-empty------00000000000000 -->
-												<div class="product-cart d-flex">
-													<div style="margin: auto;">
-														<img width="100%" src="/otherimages/cartempty5	.jpg" alt="">
-													</div>
+											<div class="product-cart d-flex">
+												<div style="margin: auto;">
+													<img width="100%" src="/otherimages/cartempty5	.jpg" alt="">
 												</div>
+											</div>
 
 										</div>
 									</div>
@@ -332,6 +341,13 @@
 								display: block;
 								color: green;
 							}
+							#checkoutstockmsg{
+								/* display: block; */
+								color: red;
+							}
+							/* #checkoutbutton{
+								display: inline-block;
+							} */
 						</style>
 
 						<!-- script for buttons actions -->
@@ -353,9 +369,9 @@
 							}
 							// change quantity functions---------------------------------
 							async function quantityminus(productid,i) {
-								try { 
 									const minusbutton = document.getElementById('minusbutton'+i)
 									minusbutton.disabled = true
+								try { 
 									const stockmsg = document.getElementById('stockmsg'+i)
 									const totalcost = document.getElementById('totalcost'+i)
 									const cost = document.getElementById('cost'+i)
@@ -363,6 +379,8 @@
 									const quantity = qnty.value
 									const subtotal = document.getElementById('subtotal')
 									const carttotal = document.getElementById('carttotal')
+									const checkoutbutton = document.getElementById('checkoutbutton')
+									const checkoutstockmsg = document.getElementById('checkoutstockmsg')
 									const res = await fetch('/quantityminus',
 									{
 										method: 'PUT',
@@ -382,21 +400,25 @@
 									if (message.stock) {
 										stockmsg.innerText = 'In Stock'
 										stockmsg.style.color = 'green'
+										checkoutstockmsg.style.display = 'none'
+										checkoutbutton.style.display = 'inline-block'
 									} else if (message.nostock) {
 										stockmsg.innerText = 'No Stock'
 										stockmsg.style.color = 'red'
+										checkoutstockmsg.style.display = 'block'
+										checkoutbutton.style.display = 'none'
 									} else {
 										window.alert(message.failure)
 									}
-									minusbutton.disabled = false
 								} catch (error) {
 									console.log(error)
 								}
+									minusbutton.disabled = false
 							}
 							async function quantityplus(productid,i) {
-								try {
 									const plusbutton = document.getElementById('plusbutton'+i)
 									plusbutton.disabled = true
+								try {
 									const stockmsg = document.getElementById('stockmsg'+i)
 									const totalcost = document.getElementById('totalcost'+i)
 									const cost = document.getElementById('cost'+i)
@@ -404,6 +426,8 @@
 									const quantity = qnty.value
 									const subtotal = document.getElementById('subtotal')
 									const carttotal = document.getElementById('carttotal')
+									const checkoutbutton = document.getElementById('checkoutbutton')
+									const checkoutstockmsg = document.getElementById('checkoutstockmsg')
 									const res = await fetch('/quantityplus',
 									{
 										method: 'PUT',
@@ -424,16 +448,20 @@
 									if (message.stock) {
 										stockmsg.innerText = 'In Stock'
 										stockmsg.style.color = 'green'
+										checkoutstockmsg.style.display = 'none'
+										checkoutbutton.style.display = 'inline-block'
 									} else if(message.nostock) {
 										stockmsg.innerText = 'No Stock'
 										stockmsg.style.color = 'red'
+										checkoutstockmsg.style.display = 'block'
+										checkoutbutton.style.display = 'none'
 									} else {
 										window.alert(message.failure)
 									}
-									plusbutton.disabled = false
 								} catch (error) {
 									console.log(error)
 								}
+									plusbutton.disabled = false
 							}
 							// apply coupon---------------------------------------------------------
 							async function applyCoupon(userid, totalamount) {

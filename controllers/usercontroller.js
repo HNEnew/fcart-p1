@@ -86,7 +86,7 @@ module.exports.home_get = async (req, res) => {
         const userdata = req.userdata
         const [categories, products] = await Promise.all([
             category.find({}),
-            product.find({deleted: false})
+            product.find({deleted: false}).sort({createdAt: -1})
         ])
         res.render('userhome', { products, categories, userdata, cartquantity: req.cartquantity })
     } catch (error) {
@@ -179,7 +179,13 @@ module.exports.userprofile_get = async (req, res) => {
     }
 }
 
-
+module.exports.pageunderconstruction_get = (req, res) => {
+    try {
+        res.render('construction')
+    } catch (error) {
+        console.log(error)
+    }
+}
 
 
 

@@ -69,13 +69,13 @@
                                     <div class="row mb-3">
                                         <label for="inputEmail3" class="col-sm-2 col-form-label">Category Name</label>
                                         <div class="col-sm-10">
-                                            <input type="text" name="name" class="form-control" id="inputEmail3">
+                                            <input type="text" name="name" class="form-control" id="inputEmail3" required>
                                         </div>
                                     </div>
                                     <div class="row mb-3">
                                         <label for="inputPassword3" class="col-sm-2 col-form-label">Image</label>
                                         <div class="col-sm-10">
-                                            <input type="file" name="image" class="form-control" id="inputPassword3">
+                                            <input type="file" name="image" class="form-control" id="inputPassword3" accept=".jpg, .jpeg, .png" required>
                                         </div>
                                     </div>
                                     
@@ -166,25 +166,26 @@
             if (categoryform.image.files[0]) {
                 console.log(categoryform.image.files)
                 formdata.append('image', categoryform.image.files[0])
-            }
-            try {
-                const res = await fetch('/admin/addcategory',
-                    {
-                        method: 'POST',
-                        body: formdata
-                    })
-                const message = await res.json()
-                console.log(message)
-                if (message.succes) {
-                    window.alert(message.succes)
-                    location.assign('/admin/category')
+                try {
+                    const res = await fetch('/admin/addcategory',
+                        {
+                            method: 'POST',
+                            body: formdata
+                        })
+                    const message = await res.json()
+                    console.log(message)
+                    if (message.succes) {
+                        window.alert(message.succes)
+                        location.assign('/admin/category')
+                    }
+                    else if (message.failure) {
+                        window.alert(message.failure)
+                    }
+                } catch (Error) {
+                    console.log(Error)
                 }
-                else if (message.failure) {
-                    window.alert(message.failure)
-                }
-            } catch (Error) {
-                console.log(Error)
             }
+            
         })
     </script>
 

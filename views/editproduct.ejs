@@ -69,7 +69,7 @@
                                     <div class="modal-header">
                                         <h3 class="modal-title" id="formModalLabel">Product details</h3>
 
-                                        <button type="button" onclick="redirectBack()" class="btn btn-secondary close"
+                                        <button type="button" onclick="window.history.back()" class="btn btn-secondary close"
                                             data-dismiss="modal" aria-label="close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
@@ -102,7 +102,7 @@
                                                     Cost
                                                 </label>
                                                 <div class="col-sm-6">
-                                                    <input type="text" name="cost" value="<%= productdetails.cost %>"
+                                                    <input type="number" name="cost" value="<%= productdetails.cost %>"
                                                         class="form-control" id="lastName">
                                                 </div>
                                             </div>
@@ -112,7 +112,7 @@
                                                     Profit
                                                 </label>
                                                 <div class="col-sm-6">
-                                                    <input type="text" name="profit"
+                                                    <input type="number" name="profit"
                                                         value="<%= productdetails.profit %>" class="form-control"
                                                         id="lastName">
                                                 </div>
@@ -123,7 +123,7 @@
                                                     Size
                                                 </label>
                                                 <div class="col-sm-6">
-                                                    <input type="text" name="size" value="<%= productdetails.size %>"
+                                                    <input type="number" name="size" value="<%= productdetails.size %>"
                                                         class="form-control" id="lastName">
                                                 </div>
                                             </div>
@@ -133,7 +133,7 @@
                                                     Stock
                                                 </label>
                                                 <div class="col-sm-6">
-                                                    <input type="text" name="stock" value="<%= productdetails.stock %>"
+                                                    <input type="number" name="stock" value="<%= productdetails.stock %>"
                                                         class="form-control" id="lastName">
                                                 </div>
                                             </div>
@@ -165,26 +165,37 @@
                                                 <label for="lastName" class="col-sm-6 col-form-label">
                                                     Images
                                                 </label>
-                                                <div class="col-sm-6">
+                                                <div class="col-sm-6 col-form-label">
                                                     <% for(var i=0 ; i<productdetails.image.length ; i++) { %>
-                                                        <img width="50px"
-                                                            src="/productimages/<%= productdetails.image[i] %>" alt="">
+                                                        <label for="<%= i %>" id="productimage">
+                                                            <img src="/productimages/<%= productdetails.image[i] %>" id="preview<%= i %>" alt="Select image" width="80" height="80">
+                                                        </label>
+                                                        <input class="imageinput" type="file" name="image" id="<%= i %>" onchange="previewImage(this)" style="display: none;" accept=".jpg, .jpeg, .png" >
+                                                        
+                                                        <% } %>
+                                                        <% if (productdetails.image.length<5) { %>
+                                                            <label for="image-input" id="productimage">
+                                                                <img src="/otherimages/addbutton.jpg" id="preview<%= productdetails.image.length %>" alt="Select image" width="80" height="80">
+                                                            </label>
+                                                            <input class="imageinput" type="file" name="image" id="image-input" onchange="previewImage(this)" style="display: none;" accept=".jpg, .jpeg, .png" >
                                                         <% } %>
                                                 </div>
+                                                <output></output>
                                                 <hr>
-                                                <label for="lastName" class="col-sm-6 col-form-label">
+                                                
+                                                <!-- <label for="lastName" class="col-sm-6 col-form-label">
                                                     Change Images
                                                 </label>
-                                                <div class="col-sm-6">
+                                                <div class="col-sm-6"><%= productdetails.image[i] %>
                                                     <input type="file" name="image" multiple class="form-control"
                                                         id="lastName">
-                                                </div>
+                                                </div> -->
                                             </div>
-                                            <hr>
+                                            <!-- <hr> -->
 
                                         </div>
                                         <div class="modal-footer">
-                                            <button onclick="redirectBack()" type="button" class="btn btn-secondary"
+                                            <button onclick="window.history.back()" type="button" class="btn btn-secondary"
                                                 data-dismiss="modal">Close</button>
                                             <button type="submit" class="btn btn-primary">Save Changes</button>
                                         </div>
@@ -253,12 +264,52 @@
 
     <!-- productform js -->
     <script>
-
+        const output = document.querySelector("output")
+        let imagesArray = ('<%= productdetails.image %>').split(',')
+        let files = []
+        console.log(imagesArray)
+        const input = document.querySelectorAll(".imageinput")
+        input.forEach(function(element) {
+            element.addEventListener("input", function() {
+                let index = element.id
+                const value = element.files[0].name
+                files.push(element.files)
+                if(index >= '<%= productdetails.image.length %>'){
+                    imagesArray.push(value)
+                    index = '<%= productdetails.image.length %>'
+                } else{
+                    updateImage(index, value)
+                }
+                console.log(imagesArray)
+                previewImage(element , index)
+            })
+        })
+        function updateImage(index, value) {
+            imagesArray.splice(index, 1, value);
+        }
+        function previewImage(input , index) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                const previewid = 'preview'+index
+                console.log('preview function..')
+                reader.onload = function (e) {
+                    let preview = document.getElementById(previewid);
+                    // Create the img element if it doesn't exist
+                    if (!preview) {
+                        preview = document.createElement('img');
+                        preview.id = previewid;
+                        // document.body.appendChild(preview); // Append to the DOM wherever you want
+                    }
+                    preview.src = e.target.result;
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
         const productform = document.getElementById('formAwesome')
-
         productform.addEventListener('submit', async (event) => {
             event.preventDefault();
             const formData = new FormData();
+            console.log(formData.getAll('image'))
             formData.append('id', productform.name.id)
             formData.append('name', productform.name.value);
             formData.append('code', productform.code.value);
@@ -267,25 +318,36 @@
             formData.append('size', productform.size.value);
             formData.append('stock', productform.stock.value);
             formData.append('category', productform.category.value);
-            for (let i = 0; i < productform.image.files.length; i++) {
-                formData.append('image', productform.image.files[i])
+            for (let i = 0; i < input.length; i++) {
+                const file = input[i].files[0];
+                formData.append("image", file);
             }
-            try {
-                const res = await fetch('/admin/editproduct',
-                    {
-                        method: 'POST',
-                        body: formData
-                    });
-                const message = await res.json()
-                console.log(message);
-                if (message.succes) {
-                    location.assign('/admin/products')
-                } else {
-                    window.alert(message.failure)
+            if (productform.cost.value<0) {
+                window.alert('Cost must be greater zero')
+            } else if (productform.profit.value<0) {
+                window.alert('Profit must be greater zero')
+            } else if (productform.size.value<0) {
+                window.alert('Size must be greater zero')
+            } else if (productform.stock.value<0) {
+                window.alert('Stock must be greater zero')
+            } else {
+                try {
+                    const res = await fetch('/admin/editproduct?imagearr='+imagesArray,
+                        {
+                            method: 'POST',
+                            body: formData
+                        });
+                    const message = await res.json()
+                    console.log(message);
+                    if (message.succes) {
+                        location.assign('/admin/products')
+                    } else {
+                        window.alert(message.failure)
+                    }
+                } catch (Error) {
+                    console.log(Error);
                 }
-            } catch (Error) {
-                console.log(Error);
-            }
+            }            
         });
 
         // closebutton switch

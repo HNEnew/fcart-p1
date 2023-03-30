@@ -11,7 +11,7 @@ const productSchema = new mongoose.Schema({
     category: {type: String, required: true},
     image: {type: Array, required: true},
     deleted: {type: Boolean, default: false}
-})
+},{timestamps: true})
 const newproduct = mongoose.model('product',productSchema)
 
 module.exports = newproduct
