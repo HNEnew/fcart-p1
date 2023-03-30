@@ -66,50 +66,26 @@
                             <div class="bg-light rounded h-100 p-4">
                                 <h6 class="mb-4">Add new category</h6>
                                 <form id="categoryform">
-                                    <div class="row mb-3">
+                                    <div class="row col-md-6 mb-3">
                                         <label for="inputEmail3" class="col-sm-2 col-form-label">Category Name</label>
                                         <div class="col-sm-10">
-                                            <input type="text" name="name" class="form-control" id="inputEmail3" required>
+                                            <input type="text" name="name" class="form-control" id="inputEmail3" >
                                         </div>
                                     </div>
                                     <div class="row mb-3">
                                         <label for="inputPassword3" class="col-sm-2 col-form-label">Image</label>
-                                        <div class="col-sm-10">
-                                            <input type="file" name="image" class="form-control" id="inputPassword3" accept=".jpg, .jpeg, .png" required>
+                                        <div class="row col-md-6 mb-3">
+                                            <label for="0" id="productimage">
+                                                <img src="/otherimages/addbutton.jpg" id="preview" alt="Select image" width="80" height="80">
+                                            </label>
+                                            <input class="imageinput" type="file" name="image" id="0"  style="display: none;" accept=".jpg, .jpeg, .png">
+                                            
+                                            <!-- <input type="file" name="image" class="form-control" id="inputPassword3" accept=".jpg, .jpeg, .png" > -->
                                         </div>
                                     </div>
-                                    <!-- <fieldset class="row mb-3">
-                                <legend class="col-form-label col-sm-2 pt-0">Radios</legend>
-                                <div class="col-sm-10">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="gridRadios"
-                                            id="gridRadios1" value="option1" checked>
-                                        <label class="form-check-label" for="gridRadios1">
-                                            First radio
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="gridRadios"
-                                            id="gridRadios2" value="option2">
-                                        <label class="form-check-label" for="gridRadios2">
-                                            Second radio
-                                        </label>
-                                    </div>
-                                </div>
-                            </fieldset>
-                            <div class="row mb-3">
-                                <legend class="col-form-label col-sm-2 pt-0">Checkbox</legend>
-                                <div class="col-sm-10">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="gridCheck1">
-                                        <label class="form-check-label" for="gridCheck1">
-                                            Check me out
-                                        </label>
-                                    </div>
-                                </div>
-                            </div> -->
+                                    
                                     <button type="submit" class="btn btn-primary">create</button>
-                                    <button type="button" class="btn btn-secondary">cancel</button>
+                                    <button onclick="window.history.back()" type="button" class="btn btn-secondary">cancel</button>
                                 </form>
                             </div>
                         </div>
@@ -159,10 +135,8 @@
             const formdata = new FormData()
 
             formdata.append('name', categoryform.name.value)
-            if (categoryform.image.files[0]) {
                 console.log(categoryform.image.files)
                 formdata.append('image', categoryform.image.files[0])
-            }
             try {
                 const res = await fetch('/admin/addcategory',
                     {
@@ -177,11 +151,32 @@
                 }
                 else if (message.failure) {
                     window.alert(message.failure)
+                    console.log(message.failure)
                 }
             } catch (Error) {
                 console.log(Error)
             }
         })
+        
+        const input = document.querySelectorAll(".imageinput")
+        input.forEach(function(element) {
+            element.addEventListener("input", function() {
+            previewImage(element)
+            })
+            function previewImage(input) {
+                if (input.files && input.files[0]) {
+                    const reader = new FileReader()
+                    reader.onload = function (e) {
+                        let preview = document.getElementById('preview')
+                        preview.src = e.target.result;
+                    }
+                    reader.readAsDataURL(input.files[0]);
+                }
+                console.log('preview function   end..')
+            }
+        })
+        
+        
     </script>
 
 </body>

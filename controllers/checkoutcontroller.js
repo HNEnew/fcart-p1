@@ -20,18 +20,18 @@ const paypalClient = new paypal.core.PayPalHttpClient(new Environment
 
 
     module.exports.checkout_get = async (req, res) => {
-        const categories = await category.find({})
         const userdata = req.userdata
         let couponcode = req.query.coupon
         if (!couponcode) {
             couponcode = false
         }
         console.log(couponcode)
-        const [useraddress, coupondetails, cartdetails] = await Promise.all([
+        const [useraddress, coupondetails, cartdetails, categories] = await Promise.all([
             address.find({ user: userdata._id }),
             coupon.findOne({ code: couponcode }),
             cart.findOne({ owner: userdata._id })
-                .populate('items.product')
+                .populate('items.product'),
+                category.find({})
         ])
         console.log(useraddress)
         console.log(coupondetails)

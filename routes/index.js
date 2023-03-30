@@ -112,6 +112,10 @@ router.put('/cancelorder', usermidware.check_token, ordercontroller.cancelorder_
 /* PUT returnproduct. */
 router.put('/returnproduct', usermidware.check_token, ordercontroller.returnproduct_put)
 
+/* GET pageunderconstruction. */
+router.get('/pageunderconstruction', usercontroller.pageunderconstruction_get)
+
+
 
 
 

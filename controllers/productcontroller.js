@@ -77,12 +77,14 @@ module.exports.productedit_get = async (req, res) => {
     }
 }
 module.exports.editproducts_post = async (req, res) => {
-    const { id, name, code, cost, profit, size, stock, category } = await req.body
+    const { id, name, code, cost, profit, size, stock, category } = req.body
     console.log(req.body)
     const image = req.files.map(file => file.originalname)
-    console.log(image);
+    console.log(image)
+    const imagesArray = (req.query.imagearr).split(',')
+    console.log(imagesArray);
     try {
-        const result = await product.updateMany({ _id: id }, { $set: { name: name, code: code, cost: cost, profit: profit, size: size, stock: stock, category: category, image: image } })
+        const result = await product.updateMany({ _id: id }, { $set: { name: name, code: code, cost: cost, profit: profit, size: size, stock: stock, category: category, image: imagesArray } })
         console.log(result)
         if (result.modifiedCount == 1) {
             res.json({ succes: 'productdetails updated...' })

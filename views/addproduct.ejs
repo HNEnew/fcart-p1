@@ -75,7 +75,7 @@
                             <div class="modal-header">
                                 <h3 class="modal-title" id="formModalLabel">Product details</h3>
                                 
-                                <button type="button" class="close" data-dismiss="modal" aria-label="close">
+                                <button type="button" onclick="window.history.back()" class="close" data-dismiss="modal" aria-label="close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
@@ -104,7 +104,7 @@
                                             Cost
                                         </label>
                                         <div class="col-sm-6">
-                                            <input type="text" name="cost" class="form-control" id="lastName" required>
+                                            <input type="number" name="cost" class="form-control" id="lastName" required>
                                         </div>
                                     </div>
                                     <hr>
@@ -113,7 +113,7 @@
                                             Profit
                                         </label>
                                         <div class="col-sm-6">
-                                            <input type="text" name="profit" class="form-control" id="lastName"
+                                            <input type="number" name="profit" class="form-control" id="lastName"
                                                 required>
                                         </div>
                                     </div>
@@ -123,7 +123,7 @@
                                             Size
                                         </label>
                                         <div class="col-sm-6">
-                                            <input type="text" name="size" class="form-control" id="lastName" required>
+                                            <input type="number" name="size" class="form-control" id="lastName" required>
                                         </div>
                                     </div>
                                     <hr>
@@ -132,7 +132,7 @@
                                             Stock
                                         </label>
                                         <div class="col-sm-6">
-                                            <input type="text" name="stock" class="form-control" id="lastName" required>
+                                            <input type="number" name="stock" class="form-control" id="lastName" required>
                                         </div>
                                     </div>
                                     <hr>
@@ -152,19 +152,29 @@
                                     </div>
                                     <hr>
                                     <div class="form-group row">
+                                        
                                         <label for="lastName" class="col-sm-6 col-form-label">
                                             Images
                                         </label>
                                         <div class="col-sm-6">
-                                            <input type="file" name="image" multiple class="form-control" id="lastName"
-                                                required>
+                                            <label for="0" id="productimage">
+                                                <img src="/otherimages/addbutton.jpg" id="preview0" alt="Select image" width="80" height="80">
+                                            </label>
+                                            <input class="imageinput" type="file" name="image" id="0"  style="display: none;" accept=".jpg, .jpeg, .png" required>
+                                            <% for(var i=1 ; i<5 ; i++) { %>
+                                                <label for="<%= i %>" id="productimage">
+                                                    <img src="/otherimages/addbutton.jpg" id="preview<%= i %>" alt="Select image" width="80" height="">
+                                                </label>
+                                                <input class="imageinput" type="file" name="image" id="<%= i %>"  style="display: none;" accept=".jpg, .jpeg, .png">
+                                            <% } %>
+                                            <!-- <input type="file" name="image" multiple class="form-control" id="lastName" accept=".jpg, .jpeg, .png" required> -->
                                         </div>
                                     </div>
                                     <hr>
                                     
                                 </div>
                                 <div class="modal-footer">
-                                    <button onclick="redirectBack()" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button onclick="window.history.back()" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                     <button type="submit" class="btn btn-primary">Add Now</button>
                                 </div>
                             </form>
@@ -233,8 +243,37 @@
     <!-- productform js -->
     <script>
 
-        const productform = document.getElementById('formAwesome')
+        const input = document.querySelectorAll(".imageinput")
+        input.forEach(function(element) {
+            element.addEventListener("input", function() {
+            let index = element.id
+            previewImage(element , index)
+            console.log(index)
+            })
+        })
 
+        function previewImage(input , index) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                const previewid = 'preview'+index
+                console.log('preview function..')
+                reader.onload = function (e) {
+                    let preview = document.getElementById(previewid);
+                    // Create the img element if it doesn't exist
+                    // if (!preview) {
+                    //     preview = document.createElement('img');
+                    //     preview.id = previewid;
+                    //     // document.body.appendChild(preview); // Append to the DOM wherever you want
+                    // }
+                    preview.src = e.target.result;
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+                console.log('preview function   end..')
+        }
+
+
+        const productform = document.getElementById('formAwesome')
         productform.addEventListener('submit', async (event) => {
             event.preventDefault();
             const formData = new FormData();
@@ -246,23 +285,39 @@
             formData.append('size', productform.size.value);
             formData.append('stock', productform.stock.value);
             formData.append('category', productform.category.value);
-            for (let i = 0; i < productform.image.files.length; i++) {
-                formData.append('image', productform.image.files[i])
+            for (let i = 0; i < input.length; i++) {
+                const file = input[i].files[0];
+                formData.append("image", file);
             }
-            try {
+            // for (let i = 0; i < productform.image.files.length; i++) {
+            //     formData.append('image', productform.image.files[i])
+            // }
+            if (productform.cost.value<0) {
+                window.alert('Please enter a valid cost amount')
+            } else if (productform.profit.value<0) {
+                window.alert('Please enter a valid profit amount')
+            } else if (productform.size.value<0) {
+                window.alert('Please enter a valid size')
+            } else if (productform.stock.value<0) {
+                window.alert('Please enter a valid stock amount')
+            } else {
+                try {
                 const res = await fetch('/admin/addproduct',
                     {
                         method: 'POST',
                         body: formData
                     });
-                const message = res.json()
+                const message = await res.json()
                 if (message.succes){
+                    console.log(message.succes)
+                    window.alert(message.succes)
                     location.assign('/admin/products')
                 }else{
                     console.log(message.failure)
                 }
             } catch (Error) {
                 console.log(Error);
+            }   
             }
         });
         

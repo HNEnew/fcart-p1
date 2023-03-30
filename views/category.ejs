@@ -123,10 +123,14 @@
                                     </div>
                                 </div>
                                 <div class="row col-md-6 mb-3">
-                                    <label for="image-input" id="categoryimage">
-                                        <img src="" alt="Select image" width="150" height="150">
+                                    <label for="0" id="categoryimage">
+                                        <img src="/otherimages/addbutton.jpg" id="preview" alt="Select image" width="80" height="80">
                                     </label>
-                                    <input type="file" name="image" id="image-input" style="display: block;" accept=".jpg, .jpeg, .png" required>
+                                    <input class="imageinput" type="file" name="image" id="0"  style="display: none;" accept=".jpg, .jpeg, .png">
+                                    <!-- <label for="image-input" id="categoryimage">
+                                        <imga src="" id="previewimg" alt="Select image" width="150" height="150">
+                                    </label>
+                                    <input type="file" name="image" id="image-input" style="display: block;"  accept=".jpg, .jpeg, .png" required> -->
                                 </div>
                                 <!-- <div class="row col-md-6 mb-3">
                                     <label for="inputPassword3" class="col-sm-2 col-form-label">Exipires After</label>
@@ -171,57 +175,81 @@
     </style>
     <!-- script for actions -->
     <script>
+
         let category
         function editcategory(id, name, image,i) {
-            category =id
+            category = {id, name, image,i}
             document.getElementById('allcategoriesdiv').style.display = 'none'
             document.getElementById('edicategorydiv').style.display = 'block'
             document.getElementById('categoryid').innerText = id
             document.getElementById('categoryname').value = name
-            document.getElementById('categoryimage').innerHTML = `<img src="/categoryimages/${image}" alt="Select image" width="150" height="150">`
+            document.getElementById('categoryimage').innerHTML = `<img src="/categoryimages/${image}" id="preview" alt="Select image" width="150" height="150">`
         }
+        
         function cancelchanges() {
             document.getElementById('allcategoriesdiv').style.display = 'block'
             document.getElementById('edicategorydiv').style.display = 'none'
         }
-         async function savechanges (id, name, image) {
+
+        const input = document.querySelectorAll(".imageinput")
+        input.forEach(function(element) {
+            element.addEventListener("input", function() {
+            previewImage(element)
+            })
+            function previewImage(input) {
+                if (input.files && input.files[0]) {
+                    const reader = new FileReader()
+                    reader.onload = function (e) {
+                        let preview = document.getElementById('preview')
+                        preview.src = e.target.result;
+                    }
+                    reader.readAsDataURL(input.files[0]);
+                }
+                console.log('preview function   end..')
+            }
+        })
+        
+
+        async function savechanges () {
             const categoryid = document.getElementById('categoryid').innerText
             const categoryform = document.getElementById('categoryform')
-        // productform.addEventListener('submit', async (event) => {
-        //     event.preventDefault();    
             const formdata = new FormData()
             formdata.append('name', categoryform.name.value)
             
             if (categoryform.image.files[0]) {
-                console.log('helllooo1111')
                 console.log(categoryform.image.files)
-                console.log('helllooo2222')
                 formdata.append('image', categoryform.image.files[0])
-                console.log('helllooo3333')
-            
-            try {
-                const res = await fetch('/admin/editcategory?id='+category,
-                    {
-                        method: 'POST',
-                        body: formdata
-                    })
-                    console.log('helllooo4444')
-                const message = await res.json()
-                console.log(message)
-                if (message.succes) {
-                    window.alert(message.succes)
-                    // location.assign('/admin/category')
-                }
-                else if (message.failure) {
-                    window.alert(message.failure)
-                }
-            } catch (Error) {
-                console.log(Error)
+            } else {
+                formdata.append('image', category.image)
             }
-        }
+            if (categoryform.name.value) {
+                try {
+                    const res = await fetch('/admin/editcategory?id='+category.id,
+                        {
+                            method: 'POST',
+                            body: formdata
+                        })
+                        console.log('helllooo4444')
+                    const message = await res.json()
+                    console.log(message)
+                    if (message.succes) {
+                        window.alert(message.succes)
+                        location.reload()
+                    }
+                    else if (message.failure) {
+                        window.alert(message.failure)
+                    }
+                } catch (Error) {
+                    console.log(Error)
+                }
+            } else {
+                window.alert('categoryname cannot be empty..')
+            }
         }
     
     </script>
+    
+    
 
     <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
