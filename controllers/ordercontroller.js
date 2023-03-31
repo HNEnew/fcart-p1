@@ -76,7 +76,13 @@ module.exports.returnproduct_put = async (req, res) => {
         const timedifference = new Date().getTime() - orderdetails.delivery.getTime()
         const daysafterdelivery = Math.round(timedifference / (24 * 60 * 60 * 1000))
         if (daysafterdelivery <= 7) {
-            const result = await order.updateOne({ orderid: orderid, user: userdata._id }, { $set: { status: 'Returned' } })
+            console.log(orderdetails.finalamount)
+            const [result, wallet] = await Promise.all([
+                order.updateOne({ orderid: orderid, user: userdata._id }, { $set: { status: 'Returned' } }),
+                user.updateOne({user: userdata._id} , {$set: {wallet: orderdetails.finalamount}})
+            ])
+            console.log(wallet)
+            // const wallet = await user.updateOne({user: userdata._id} , {$set: {wallet: 0}})
             if (result.modifiedCount == 1) {
                 res.json({ succes: 'Your request for return is accepted . Product return is in process..' })
             } else {

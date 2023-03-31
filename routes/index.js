@@ -61,6 +61,9 @@ router.post('/addaddress', usermidware.check_token, addresscontroller.addaddress
 /* POST editaddress. */
 router.post('/editaddress', usermidware.check_token, addresscontroller.editaddress_post)
 
+/* DELETE deleteaddress. */
+router.delete('/deleteaddress', usermidware.check_token, checkoutcontroller.deleteaddress_delete)
+
 /* POST addtocart. */
 router.post('/addtocart', usermidware.check_token, cartcontroller.addtocart_post)
 
@@ -81,9 +84,6 @@ router.get('/checkout', usermidware.check_token, checkoutcontroller.checkout_get
 
 /* GET placeorder. */
 router.post('/placeorder', usermidware.check_token, checkoutcontroller.placeorder_post)
-
-/* DELETE deleteaddress. */
-router.delete('/deleteaddress', usermidware.check_token, checkoutcontroller.deleteaddress_delete)
 
 /* GET placeorder. */
 router.get('/ordercomplete', usermidware.check_token, ordercontroller.ordercomplete_get)
