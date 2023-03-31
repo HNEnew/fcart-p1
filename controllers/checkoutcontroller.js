@@ -16,7 +16,7 @@ const Environment = process.env.NODE_ENV === 'production'
     ? paypal.core.LiveEnvironment
     : paypal.core.SandboxEnvironment
 const paypalClient = new paypal.core.PayPalHttpClient(new Environment
-    (process.env.PAYPAL_CLIENT_ID, process.env.PAYPAL_CLIENT_SECRET))
+    ("AW4wqvXv2QJ7VVWzEtJhhtAIhZZ0DRPwzZLSbohfEi2j3buH6nEzhUmA_qMDUHS271FpEMnKYuzy_35q","EC7C-RUMihGUBqpNSPYKRzJNomryRS7G6W5zNwRU1xurtU9l0cCapX5WHdOknx3SNpQakAieHU-UA2BW"))
 
 
     module.exports.checkout_get = async (req, res) => {
