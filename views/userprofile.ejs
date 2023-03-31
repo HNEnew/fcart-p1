@@ -104,37 +104,48 @@
 									<p>
 										Account created on : <%= userdata.createdAt.toLocaleString() %>
 									</p>
-								</div>
+									<% if (userdata.wallet) { %>
+									<p>
+										Wallet : <%= userdata.wallet %>
+									</p>
+									<% } else { %>
+										Wallet : 0
+									<% } %>
+								</div><hr>
 
 								<h4>Address :</h4>
 
 								<div class="mleft">
-									<% if (useraddress) { %>
-
-										<p id="fnameandlname">
-											<%= useraddress.fname %>
-												<%= useraddress.lname %>
-										</p>
-										<p id="street">
-											<%= useraddress.street %>
-										</p>
-										<p id="cityandzip">
-											<%= useraddress.city %> , <%= useraddress.zip %>
-										</p>
-										<p id="stateandcountry">
-											<%= useraddress.state %> , <%= useraddress.country %>
-										</p>
-										<div class="col-md-12 text-center">
-											<button onclick="showeditform()" type="submit"
-												class="btn btn-primary">Edit</button>
+									<% if (useraddress[0]) { %>
+										<% for (let i=0 ; i<useraddress.length ; i++) { %>
+											<div id="address<%= i %>">
+												<p id="fname-lname-street<%= i %>">
+													<%= useraddress[i].fname %> <%= useraddress[i].lname %> , <%= useraddress[i].street %>
+												</p>
+												<p id="city-zip-state-country<%= i %>">
+													<%= useraddress[i].city %> , <%= useraddress[i].zip %> , <%= useraddress[i].state %> , <%= useraddress[i].country %>
+												</p>
+												<p id="stateandcountry">
+													<!-- <%= useraddress[i].state %> , <%= useraddress[i].country %> -->
+												</p>
+												<div class="col-md-12 text-center">
+													<button onclick="showeditform('editformdiv<%= i %>')" type="button"
+														class="btn btn-primary">Edit</button>
+													<button onclick="deleteaddress('<%= useraddress[i]._id %>','address<%= i %>')" type="button"
+														class="btn btn-primary">Delete</button>
+												</div><hr>
+											</div>
+										<% } %>
+										<div class="col-md-12 ">
+											<button onclick="showaddform()" type="submit"
+												class="btn btn-primary">Add address</button>
 										</div>
-
 										<% } else { %>
 
 											<p>You did not added address</p>
 											<div class="col-md-12 text-center">
 												<button onclick="showaddform()" type="submit"
-													class="btn btn-primary">Add Now</button>
+													class="btn btn-primary">Add address</button>
 											</div>
 
 										<% } %>
@@ -232,8 +243,9 @@
 						</div>
 						<!-- address edit form div-------------------------------------------------------- -->
 						<% if (useraddress) { %>
-						<div class="col-sm-8 mb-3" id="editformdiv">
-							<form id="editaddressform" class="colorlib-form">
+							<% for (let i=0 ; i<useraddress.length ; i++) { %>
+						<div class="col-sm-8 mb-3" style="display: none;" id="editformdiv<%= i %>">
+							<form id="editaddressform<%= i %>" class="colorlib-form">
 								<h2>Edit Address</h2>
 								<div class="row">
 									<div class="col-md-12">
@@ -242,7 +254,7 @@
 											<div class="form-field">
 												<i class="icon icon-arrow-down3"></i>
 												<select name="country" id="people" class="form-control">
-													<option><%= useraddress.country %></option>
+													<option><%= useraddress[i].country %></option>
 													<option>India</option>
 													<option>China</option>
 													<option>Japan</option>
@@ -255,69 +267,69 @@
 									<div class="col-md-6">
 										<div class="form-group">
 											<label for="fname">First Name</label>
-											<input name="firstname" type="text" id="<%= userdata._id %>"
-												class="form-control" value="<%= useraddress.fname %>" placeholder="Your firstname">
+											<input name="firstname" type="text" id="<%= useraddress[i]._id %>"
+												class="form-control" value="<%= useraddress[i].fname %>" placeholder="Your firstname">
 										</div>
 									</div>
 									<div class="col-md-6">
 										<div class="form-group">
 											<label for="lname">Last Name</label>
-											<input name="lname" type="text" id="lname" class="form-control" value="<%= useraddress.lname %>"
+											<input name="lname" type="text" id="lname" class="form-control" value="<%= useraddress[i].lname %>"
 												placeholder="Your lastname">
 										</div>
 									</div>
 									<div class="col-md-12">
 										<div class="form-group">
 											<label for="fname">Adress</label>
-											<input name="street" type="text" id="address" class="form-control" value="<%= useraddress.street %>"
+											<input name="street" type="text" id="address" class="form-control" value="<%= useraddress[i].street %>"
 												placeholder="Enter Your Address">
 										</div>
 									</div>
 									<div class="col-md-12">
 										<div class="form-group">
 											<label for="companyname">Town/City</label>
-											<input name="city" type="text" id="towncity" class="form-control" value="<%= useraddress.city %>"
+											<input name="city" type="text" id="towncity" class="form-control" value="<%= useraddress[i].city %>"
 												placeholder="Town or City">
 										</div>
 									</div>
 									<div class="col-md-6">
 										<div class="form-group">
 											<label for="stateprovince">State/Province</label>
-											<input name="state" type="text" id="fname" class="form-control" value="<%= useraddress.state %>"
+											<input name="state" type="text" id="fname" class="form-control" value="<%= useraddress[i].state %>"
 												placeholder="State Province">
 										</div>
 									</div>
 									<div class="col-md-6">
 										<div class="form-group">
 											<label for="lname">Zip/Postal Code</label>
-											<input name="zip" type="text" id="zippostalcode" class="form-control" value="<%= useraddress.zip %>"
+											<input name="zip" type="text" id="zippostalcode" class="form-control" value="<%= useraddress[i].zip %>"
 												placeholder="Zip / Postal">
 										</div>
 									</div>
 									<div class="col-md-6">
 										<div class="form-group">
 											<label for="email">E-mail Address</label>
-											<input name="email" type="text" id="email" class="form-control" value="<%= useraddress.email %>"
+											<input name="email" type="text" id="email" class="form-control" value="<%= useraddress[i].email %>"
 												placeholder="Email">
 										</div>
 									</div>
 									<div class="col-md-6">
 										<div class="form-group">
 											<label for="Phone">Phone Number</label>
-											<input name="phone" type="text" id="zippostalcode" class="form-control" value="<%= useraddress.phone %>"
+											<input name="phone" type="text" id="zippostalcode" class="form-control" value="<%= useraddress[i].phone %>"
 												placeholder="">
 										</div>
 									</div>
-									<p id="errmsg"></p>
+									<p id="errmsg<%= i %>"></p>
 									<div class="col-md-12 text-center">
-										<button onclick="cancelEditAddress()" type="button"
+										<button onclick="cancelEditAddress('editformdiv<%= i %>')" type="button"
 											class="btn btn-primary">Cancel</button>
-										<button onclick="editAddress()" type="submit"
+										<button onclick="editAddress('editaddressform<%= i %>','editformdiv<%= i %>','errmsg<%= i %>','fname-lname-street<%= i %>','city-zip-state-country<%= i %>')" type="button"
 											class="btn btn-primary">Save changes</button>
 									</div>
 								</div>
 							</form>
-						</div>
+						</div><% } %>
 						<% } %>
 					</div>
 				</div>
@@ -358,9 +370,9 @@
 		#addformdiv {
 			display: none;
 		}
-		#editformdiv {
+		/* #editformdiv {
 			display: none;
-		}
+		} */
 		#accdetailsdiv {
 			display: block;
 		}
@@ -401,10 +413,9 @@
 							body: JSON.stringify({ userid, fname, lname, street, city, country, state, zip, email, phone }),
 							headers: { 'Content-Type': 'application/json' }
 						})
-					const message = res.json()
+					const message = await res.json()
 					console.log(message)
 					if (message.succes) {
-
 						window.location.reload(true)
 					} else {
 						const errmsg = document.getElementById('errmsg')
@@ -420,48 +431,52 @@
 		
 		// edit addressform actions ========================================================
 
-		function showeditform(){
-			document.getElementById('editformdiv').style.display = 'block'
+		function showeditform(editformdivid){
+			document.getElementById(editformdivid).style.display = 'block'
 			document.getElementById('accdetailsdiv').style.display = 'none'	
 		} 
 		
-		function cancelEditAddress() {
-			document.getElementById('editformdiv').style.display = 'none'
+		function cancelEditAddress(editformdivid) {
+			document.getElementById(editformdivid).style.display = 'none'
 			document.getElementById('accdetailsdiv').style.display = 'block'
 		}
 		
-		function editAddress(){
-			const addressform = document.getElementById('editaddressform')
-			addressform.addEventListener('submit', async (event) => {
-				event.preventDefault()
-				const userid = addressform.firstname.id
-				const fname = addressform.firstname.value
-				const lname = addressform.lname.value
-				const street = addressform.street.value
-				const city = addressform.city.value
-				const country = addressform.country.value
-				const state = addressform.state.value
-				const zip = addressform.zip.value
-				const email = addressform.email.value
-				const phone = addressform.phone.value
+		async function editAddress(editaddressformid , editformdivid , editerrmsgid , fname_lname_street , city_zip_state_country){
+			const addressform = document.getElementById(editaddressformid)
+			const errmsg = document.getElementById(editerrmsgid)
 
-				console.log(userid, fname, lname, street, city, country, state, zip, email, phone);
+			const addressid = addressform.firstname.id
+			const fname = addressform.firstname.value
+			const lname = addressform.lname.value
+			const street = addressform.street.value
+			const city = addressform.city.value
+			const country = addressform.country.value
+			const state = addressform.state.value
+			const zip = addressform.zip.value
+			const email = addressform.email.value
+			const phone = addressform.phone.value
+			console.log(addressid, fname, lname, street, city, country, state, zip, email, phone);
+			if (fname==''||lname==''||street==''||city==''||country==''||state==''||zip==''||email==''||phone=='') {
+				errmsg.style.display = 'block'
+				errmsg.style.color = 'red'
+				errmsg.innerText = 'Please fill all the fields'
+			} else {
+				errmsg.style.display = 'none'
 				try {
+					console.log('editing...')
 					const res = await fetch('/editaddress',
 						{
 							method: 'POST',
-							body: JSON.stringify({ userid, fname, lname, street, city, country, state, zip, email, phone }),
+							body: JSON.stringify({ addressid, fname, lname, street, city, country, state, zip, email, phone }),
 							headers: { 'Content-Type': 'application/json' }
 						})
 					const message = await res.json()
 					console.log(message)
-					const errmsg = document.getElementById('errmsg')
+					
 					if (message.succes) {
-						document.getElementById('fnameandlname').innerText = fname +' '+ lname
-						document.getElementById('street').innerText = street
-						document.getElementById('cityandzip').innerText = city +','+ zip
-						document.getElementById('stateandcountry').innerText = state +','+ country
-						document.getElementById('editformdiv').style.display = 'none'
+						document.getElementById(fname_lname_street).innerText = fname +' '+ lname +' , '+ street
+						document.getElementById(city_zip_state_country).innerText = city +' , '+ zip +' , '+ state +' , '+ country
+						document.getElementById(editformdivid).style.display = 'none'
 						document.getElementById('accdetailsdiv').style.display = 'block'	
 						errmsg.style.display = 'none'
 					} else {
@@ -472,9 +487,28 @@
 				} catch (Error) {
 					console.log(Error)
 				}
-			})
+			}
 		}
 
+		async function deleteaddress(id , addressnumber) {
+			try {
+				const res = await fetch('/deleteaddress',
+				{
+					method: 'DELETE',
+					body: JSON.stringify({id}),
+					headers: {'Content-Type':'application/json'}
+				})
+				const message = await res.json()
+				console.log(message)
+				if (message.succes) {
+					document.getElementById(addressnumber).innerHTML = ''
+				} else {
+					window.alert(message.failure)
+				}
+			} catch (error) {
+				console.log(error)
+			}
+		}
 	</script>
 
 

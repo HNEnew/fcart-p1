@@ -31,6 +31,10 @@ const userSchema = new Schema({
     },
     terms: {
         required: false
+    },
+    wallet: {
+        type:Number,
+        default: 0
     }
 }, {timestamps: true}) 
 

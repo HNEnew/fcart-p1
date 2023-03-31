@@ -31,8 +31,8 @@ const paypalClient = new paypal.core.PayPalHttpClient(new Environment
             coupon.findOne({ code: couponcode }),
             cart.findOne({ owner: userdata._id })
                 .populate('items.product'),
-                category.find({})
-        ])
+            category.find({})
+        ]) 
         console.log(useraddress)
         console.log(coupondetails)
         if (coupondetails) {
@@ -132,9 +132,11 @@ const paypalClient = new paypal.core.PayPalHttpClient(new Environment
             discount = Number(coupondetails.discount)
         }
         try {
+            
             console.log('paypaltransaction started');
             const request = new paypal.orders.OrdersCreateRequest()
             const total = finalamount
+            console.log(total,cartdetails.cartTotal,discount)
             request.prefer('return=representation')
             request.requestBody({
                 intent: 'CAPTURE',
@@ -143,27 +145,7 @@ const paypalClient = new paypal.core.PayPalHttpClient(new Environment
                         amount: {
                             currency_code: 'USD',
                             value: total,
-                            breakdown: {
-                                item_total: {
-                                    currency_code: 'USD',
-                                    value: cartdetails.cartTotal
-                                },
-                                discount: {
-                                    currency_code: 'USD',
-                                    value: discount
-                                }
-                            }
-                        },
-                        items: cartdetails.items.map(item => {
-                            return {
-                                name: item.product.name,
-                                unit_amount: {
-                                    currency_code: 'USD',
-                                    value: item.product.cost
-                                },
-                                quantity: item.quantity
-                            }
-                        })
+                        }
                     }
                 ]
             })
@@ -195,6 +177,7 @@ const paypalClient = new paypal.core.PayPalHttpClient(new Environment
     module.exports.deleteaddress_delete = async (req, res) => {
         const addressid = req.body.id
         const userdata = req.userdata
+        console.log(req.body)
         try {
             const result = await address.deleteOne({_id: addressid })
             console.log(result)

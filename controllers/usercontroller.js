@@ -167,9 +167,10 @@ module.exports.userprofile_get = async (req, res) => {
         const userdata = req.userdata
         if (userdata) {
             const [useraddress, categories] = await Promise.all([
-                address.findOne({ user: userdata._id }),
+                address.find({ user: userdata._id }),
                 category.find({})
             ])
+            console.log(useraddress)
             res.render('userprofile', { categories, userdata, useraddress, cartquantity: req.cartquantity })
         } else {
             res.redirect('/login')
