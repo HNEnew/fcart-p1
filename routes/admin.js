@@ -36,6 +36,7 @@ router.post('/userblock', adminmidware.check_token, adminController.userblock_po
 router.post('/userunblock', adminmidware.check_token, adminController.userunblock_post)
 router.get('/coupons', adminmidware.check_token, couponcontroller.coupons_get)
 router.post('/addcoupon', adminmidware.check_token, couponcontroller.addcoupon_post)
+router.delete('/deletecoupon', adminmidware.check_token, couponcontroller.deletecoupon_delete)
 router.get('/orders', adminmidware.check_token, ordercontroller.orders_get)
 router.delete('/deleteorder', adminmidware.check_token , ordercontroller.order_delete)  
 router.get('/editorder', adminmidware.check_token, ordercontroller.editorder_get)

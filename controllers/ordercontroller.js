@@ -79,12 +79,14 @@ module.exports.returnproduct_put = async (req, res) => {
             console.log(orderdetails.finalamount)
             const [result, wallet] = await Promise.all([
                 order.updateOne({ orderid: orderid, user: userdata._id }, { $set: { status: 'Returned' } }),
-                user.updateOne({user: userdata._id} , {$set: {wallet: orderdetails.finalamount}})
+                user.updateOne({_id: userdata._id} , {$inc: {wallet: orderdetails.finalamount}})
             ])
+            console.log(result)
+            console.log(userdata._id)
             console.log(wallet)
             // const wallet = await user.updateOne({user: userdata._id} , {$set: {wallet: 0}})
             if (result.modifiedCount == 1) {
-                res.json({ succes: 'Your request for return is accepted . Product return is in process..' })
+                res.json({ succes: 'Your request for return is accepted . Product return is in process.. The amount will be added to your wallet' })
             } else {
                 res.json({ failure: 'Oops something wrong..' })
             }
