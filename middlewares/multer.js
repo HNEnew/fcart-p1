@@ -1,8 +1,7 @@
 const fs = require('fs')
 const multer = require('multer')
-// middleware to upload multiple image files
 
-console.log('helllooo5555')
+// middleware to upload multiple image files for products
 const storages = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, 'public/productimages/')
@@ -13,6 +12,7 @@ const storages = multer.diskStorage({
 })
 const upload = multer({ storage: storages })
 
+// middleware to upload multiple image files for category
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         const categorypath = 'public/categoryimages'
@@ -22,13 +22,10 @@ const storage = multer.diskStorage({
         cb(null, categorypath)
     },
     filename: (req, file, cb) => {
-        console.log('helllooo7777')
         cb(null, file.originalname)
-        console.log('helllooo888')
     }
 })
 const uploadcategory = multer({ storage: storage })
-console.log('multer.........')
 module.exports = { upload, uploadcategory }
 
 

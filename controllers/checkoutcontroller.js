@@ -160,12 +160,19 @@ const paypalClient = new paypal.core.PayPalHttpClient(new Environment
     module.exports.couponcheck_post = async (req, res) => {
         const { userid, couponcode } = req.body
         try {
-            const coupondetails = await coupon.findOne({ code: couponcode })
+            const [coupondetails , cartdetails] = await Promise.all([
+                coupon.findOne({ code: couponcode }),
+                cart.findOne({owner: req.userdata._id})
+            ])
+            const totalamount = cartdetails.cartTotal
+            console.log(totalamount)
             if (coupondetails) {
                 if (coupondetails.usedusers.includes(userid)) {
                     res.json({ failure: 'Coupon not added ... This coupon is not valid..' })
-                } else {
-                    res.json({ succes: 'coupon added succesfully', coupondetails })
+                } else if (coupondetails.minimumpurchase > totalamount) {
+                    res.json({ failure: 'Coupon not added ... You have to purchase a minimum amount to apply this coupon..' })
+                }else {
+                    res.json({ succes: 'coupon added succesfully', coupondetails,totalamount })
                 }
             } else {
                 res.json({ failure: 'Coupon not added ... This coupon is not valid..' })

@@ -58,11 +58,12 @@
 
 
 
-                    <!-- addcategory form start------->
+                    <!-- addcouon form start------->
+                    
 
                     <div class="container-fluid pt-4 px-4">
-
-                        <div class="col-sm-12 col-xl-12">
+                        <button type="button" id="formshowbutton" onclick="showcouponform()" class="btn btn-outline-primary">create new coupon</button><br>
+                        <div class="col-sm-12 col-xl-12" id="couponformdiv" style="display: none;">
                             <div class="bg-light rounded h-100 p-4">
                                 <h6 class="mb-4">Add new coupon</h6>
                                 <form id="couponform">
@@ -76,7 +77,7 @@
                                         <div class="row col-md-6 mb-3">
                                             <label for="inputPassword3" class="col-sm-2 col-form-label">Discount</label>
                                             <div class="col-sm-10">
-                                                <input type="text" name="discount" class="form-control" id="inputPassword3">
+                                                <input type="number" name="discount" class="form-control" id="inputPassword3">
                                             </div>
                                         </div>
                                         <div class="row col-md-6 mb-3">
@@ -86,17 +87,22 @@
                                             </div>
                                             <label for="inputPassword3" class="col-sm-2 col-form-label">days</label>
                                         </div>
+                                        <div class="row col-md-6 mb-3">
+                                            <label for="inputPassword3" class="col-sm-2 col-form-label">Minimum Purchase</label>
+                                            <div class="col-sm-10 col-lg-4">
+                                                <input type="number" name="minimumpurchase" class="form-control" id="inputPassword3">
+                                            </div>
+                                        </div>
                                     </div>
                                    
-                                    <button type="submit" class="btn btn-primary">create</button>
-                                    <button type="button" class="btn btn-secondary ">cancel</button>
+                                    <button type="button" onclick="addcoupon()" class="btn btn-primary">create</button>
+                                    <button type="button" onclick="hidecouponform()" class="btn btn-secondary ">cancel</button>
                                 </form>
                             </div>
                         </div>
-
-
                     </div>
-                    <!-- Recent Sales End -->
+                    <!-- addcoupon form End -->
+                    
                     <div class="container-fluid pt-4 px-4">
                         <div class="col-sm-12 col-xl-12">
                             <div class="bg-light rounded h-100 p-4">
@@ -109,6 +115,7 @@
                                                     <th scope="col">No.</th>
                                                     <th scope="col">Coupon Name</th>
                                                     <th scope="col">Coupon Amount</th>
+                                                    <th scope="col">Minimum Purchase</th>
                                                     <th scope="col">Coupon Expiry</th>
                                                     <th scope="col">Action</th>
                                                 </tr>
@@ -127,9 +134,12 @@
                                                         <td>
                                                             <%= coupons[i].discount %>
                                                         </td>
+                                                        <td>
+                                                            <%= coupons[i].minimumpurchase %>
+                                                        </td>
                                                         <td><%= coupons[i].expiryDate.toLocaleString() %></td>
                                                         <td><button id="<%= coupons[i].code %>"
-                                                                onclick="myFunction('<%= coupons[i].id %>')"
+                                                                onclick="coupondelete('<%= coupons[i]._id %>')"
                                                                 style="border: 0cm; color: gray;">Delete</button></td>
                                                     </tr>
             
@@ -180,36 +190,70 @@
 
     <!-- category form js -->
     <script>
-        const couponform = document.getElementById('couponform')
+        function showcouponform(){
+            document.getElementById('couponformdiv').style.display = 'block'
+            document.getElementById('formshowbutton').style.display = 'none'
+        }
+        function hidecouponform(){
+            document.getElementById('couponformdiv').style.display = 'none'
+            document.getElementById('formshowbutton').style.display = 'block'
+        }
+        
 
-        couponform.addEventListener('submit', async (event) => {
-            event.preventDefault()
+        async function addcoupon() {
+            const couponform = document.getElementById('couponform')
+            // event.preventDefault()
             const couponcode = couponform.couponcode.value
             const discount = couponform.discount.value
             const date = couponform.date.value
-
-            try {
-                const res = await fetch('/admin/addcoupon',
-                    {
-                        method: 'POST',
-                        body: JSON.stringify({couponcode,discount,date}),
-                        headers: {'Content-Type': 'application/json'}
-                    })
-                const message = await res.json()
-                console.log(res.json())
-                if (message.succes) {
-                    window.alert(message.succes)
-                    location.assign('/admin/coupons')
-                }
-                else if (message.failure) {
-                    console.log(message.failure);
-                    window.alert(message.failure)
-                }
-            } catch (Error) {
-                console.log(Error)
-                window.alert(Error)
+            const minimumpurchase = couponform.minimumpurchase.value
+            console.log(couponcode, discount, date, minimumpurchase)
+            if (couponcode == '' || discount == '' || date == '' || minimumpurchase == ''){
+                window.alert('Please fill all the fields..')
+            } else if (minimumpurchase <=0 || discount<=0) { 
+                window.alert('Discount amount and minimum purchase amount must be Positive..')
+            } else if (minimumpurchase<=discount) {
+                window.alert('Discount amount must be less than minimum purchase amount..')
+            } else {
+                console.log('fetching..')
+                try {
+                    const res = await fetch('/admin/addcoupon',
+                        {
+                            method: 'POST',
+                            body: JSON.stringify({couponcode,discount,date,minimumpurchase}),
+                            headers: {'Content-Type': 'application/json'}
+                        })
+                    const message = await res.json()
+                    console.log(message)
+                    if (message.succes) {
+                        window.alert(message.succes)
+                        location.assign('/admin/coupons')
+                    }else if (message.failure) {
+                        console.log(message.failure);
+                        window.alert(message.failure)
+                    }
+                } catch (Error) {
+                    console.log(Error)
+                    window.alert(Error)
+                }   
             }
-        })
+        }
+        
+        async function coupondelete(couponid) {
+            const res = await fetch('/admin/deletecoupon',
+            {
+                method: 'DELETE',
+                body: JSON.stringify({couponid}),
+                headers: {'Content-Type':'application/json'}
+            })
+            const message = await res.json()
+            console.log(message)
+            if (message.succes) {
+                location.reload()
+            }else{
+                window.alert(message.failure)
+            }
+        }
     </script>
 
 </body>

@@ -105,7 +105,7 @@
 									<% if (useraddress[0]) { %>
 										<% for(var i=0 ; i<useraddress.length ; i++) { %>
 											
-											<label><input onclick="showaddress()" type="radio" name="optaddress"
+											<label><input onclick="showaddress()" type="radio" name="optaddress" checked
 												value="<%= useraddress[i]._id %>"> address <%= i+1 %></label>
 											<div>
 												<p id="fnameandlname">

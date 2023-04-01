@@ -415,6 +415,7 @@
 								}
 									minusbutton.disabled = false
 							}
+							
 							async function quantityplus(productid,i) {
 									const plusbutton = document.getElementById('plusbutton'+i)
 									plusbutton.disabled = true
@@ -469,6 +470,7 @@
 								const couponcode = couponform.couponcode.value
 								console.log(couponcode)
 								try {
+									console.log(totalamount)
 									const res = await fetch('/couponcheck',
 										{
 											method: 'POST',
@@ -479,7 +481,7 @@
 									var message = await res.json()
 									console.log(message)
 									if (message.succes) {
-										finalamount = parseInt(totalamount) - parseInt(message.coupondetails.discount)
+										finalamount = parseInt(message.totalamount) - parseInt(message.coupondetails.discount)
 										document.getElementById('discount').innerHTML = message.coupondetails.discount
 										document.getElementById('carttotal').innerHTML = finalamount
 									} else {
