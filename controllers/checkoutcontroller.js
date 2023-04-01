@@ -100,6 +100,22 @@ const paypalClient = new paypal.core.PayPalHttpClient(new Environment
             } catch (Error) {
                 console.log(Error);
             }
+        } else if (paymentmethod == 'wallet') {
+            try {
+                const result = await neworder.save(err => {
+                    if (err) {
+                        res.json({ failure: 'Something error..Order not placed' })
+                    } else {
+                        res.json({ succes: 'New Order placed succesfully' })
+                    }
+                })
+                const removeitemsfromcart = await cart.updateOne({ _id: cartdetails._id }, { $set: { items: [], cartTotal: 0 } })
+                const walletbalance = await user.updateOne({_id: userdata._id},{$inc: {wallet: -finalamount}})
+                console.log(removeitemsfromcart);
+                console.log(walletbalance)
+            } catch (Error) {
+                console.log(Error);
+            }
         } else if (paymentmethod == 'paypal') {
             console.log('paypal order');
             try {
