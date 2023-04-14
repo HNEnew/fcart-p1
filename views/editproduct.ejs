@@ -162,23 +162,27 @@
                                             </div>
                                             <hr>
                                             <div class="form-group row">
-                                                <label for="lastName" class="col-sm-6 col-form-label">
+                                                <label for="lastName" class="col-sm-5 col-form-label">
                                                     Images
                                                 </label>
-                                                <div class="col-sm-6 col-form-label">
+                                                <div class="col-sm-7 col-form-label row">
                                                     <% for(var i=0 ; i<productdetails.image.length ; i++) { %>
-                                                        <label for="<%= i %>" id="productimage">
-                                                            <img src="/productimages/<%= productdetails.image[i] %>" id="preview<%= i %>" alt="Select image" width="80" height="80">
-                                                        </label>
-                                                        <input class="imageinput" type="file" name="image" id="<%= i %>" onchange="previewImage(this)" style="display: none;" accept=".jpg, .jpeg, .png" >
-                                                        
-                                                        <% } %>
-                                                        <% if (productdetails.image.length<5) { %>
+                                                        <div style="width: 115px;" id="productpic<%= i %>">
+                                                            <button onclick="deleteimage('productpic<%= i %>','<%= i %>')" type="button">x</button>
+                                                            <label for="<%= i %>" id="productimage">
+                                                                <img src="/productimages/<%= productdetails.image[i] %>" id="preview<%= i %>" alt="Select image" width="100" height="">
+                                                            </label>
+                                                            <input class="imageinput" type="file" name="image" id="<%= i %>" onchange="previewImage(this)" style="display: none;" accept=".jpg, .jpeg, .png" >
+                                                        </div>
+                                                    <% } %>
+                                                    <% if (productdetails.image.length<5) { %>
+                                                        <div style="width: 100px;">
                                                             <label for="image-input" id="productimage">
                                                                 <img src="/otherimages/addbutton.jpg" id="preview<%= productdetails.image.length %>" alt="Select image" width="80" height="80">
                                                             </label>
                                                             <input class="imageinput" type="file" name="image" id="image-input" onchange="previewImage(this)" style="display: none;" accept=".jpg, .jpeg, .png" >
-                                                        <% } %>
+                                                        </div>
+                                                    <% } %>
                                                 </div>
                                                 <output></output>
                                                 <hr>
@@ -304,6 +308,14 @@
                 }
                 reader.readAsDataURL(input.files[0]);
             }
+        }
+        function deleteimage(imagedivid, imageindex){
+            const productpic = document.getElementById(imagedivid)
+            console.log(imagedivid, imageindex)
+            imagesArray.splice(imageindex, 1);
+            console.log(imagesArray)
+            productpic.innerHTML = ''
+            productpic.style.width = '0'
         }
         const productform = document.getElementById('formAwesome')
         productform.addEventListener('submit', async (event) => {
