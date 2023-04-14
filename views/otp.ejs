@@ -34,7 +34,12 @@ https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.0/js/bootstrap.min.js -->
                     <input class="m-2 text-center form-control rounded" type="text" id="sixth" maxlength="1" />
 
                 </div>
-                <div class="mt-4"> <button onclick="otpverify()" class="btn btn-danger px-4 validate">Validate</button>
+                <p id="countdown"></p>
+                <div class="mt-4"> 
+                    <button id="validatebtn" style="display: block;" type="button" onclick="otpverify()" class="btn btn-danger px-4 validate">Validate</button>
+                </div>
+                <div class="mt-4"> 
+                    <button id="resendbtn" style="display: none;" type="button" onclick="resendotp()" class="btn btn-danger px-4 validate">Resend otp</button>
                 </div>
             </div>
         </div>
@@ -143,11 +148,65 @@ https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.0/js/bootstrap.min.js -->
                     location.assign('/')
                 } else {
                     window.alert(message.failure)
+                    location.assign('/logout')
                 }
             } catch (Error) {
                 console.log(Error);
             }
         }
+        async function resendotp() {
+            const phone = `<%=phone%>`
+            console.log(phone)
+            if (phone) {
+                const res = await fetch('/resendotp',
+                {
+                    method: 'POST',
+                    body: JSON.stringify({phone}),
+                    headers: {'Content-Type':'application/json'}
+                })
+                const message = await res.json()
+                console.log(message)
+                document.getElementById('validatebtn').style.display = 'block'
+                document.getElementById('resendbtn').style.display = 'none'
+                if (message.otp) {
+                    window.alert(message.otp)
+                }
+                let countdown = 120;
+                function updateCountdown() {
+                    if (countdown > 0) {
+                        countdown--;
+                        document.getElementById("countdown").innerHTML = countdown + " seconds remaining"; // update the display
+                        setTimeout(updateCountdown, 1000); // call the function again after 1 second
+                    } else {
+                        document.getElementById('validatebtn').style.display = 'none'
+                        document.getElementById('resendbtn').style.display = 'block'
+                        document.getElementById("countdown").innerHTML = "Time's up! Please request a new OTP."; // display message when countdown is over
+                    }
+                }
+                updateCountdown();
+            } else {
+                window.alert('something wrong..please try again..')
+                location.assign('/logout')
+            }
+        }
+        let countdown = 120; // set the countdown time in seconds
+
+        // function to update the countdown display
+        function updateCountdown() {
+        if (countdown > 0) {
+            countdown--;
+            document.getElementById("countdown").innerHTML = countdown + " seconds remaining"; // update the display
+            setTimeout(updateCountdown, 1000); // call the function again after 1 second
+        } else {
+            document.getElementById('validatebtn').style.display = 'none'
+            document.getElementById('resendbtn').style.display = 'block'
+            document.getElementById("countdown").innerHTML = "Time's up! Please request a new OTP."; // display message when countdown is over
+        }
+        }
+
+        // call the function to start the countdown
+        updateCountdown();
+
     </script>
 </body>
 

@@ -1,17 +1,19 @@
 
- const accountSid = "AC80815df9fb1dcbd548a3db59b8f58c7d"
- const authToken = "f9112b9676a11a19e77e9736d6eefb31"
+ const accountSid = "AC1a55837f2d1450c60adda04e88fcf905"
+ const authToken = "aee7eefac93472ab6e335835c48a2a95"
 
 let userphone
-const verifySid = "VA4fd96d19d8a0ded60b863c490ece9914";
+const verifySid = "VA841fee427989aad85960b5358b9ba3b3";
 const client = require("twilio")(accountSid,authToken);
 module.exports.senduser_otp = (req, res, next) => {
-    userphone = req.userphone
+    userphone = req.userphone || req.body.phone
     console.log(userphone)
     client.verify.v2
         .services(verifySid)
         .verifications.create({ to: "+91"+userphone, channel: "sms" })
         .then((verification) => console.log(verification.status))
+        .then(res.json({otp:'An otp has send to your number'}))
+        .catch(err=>console.log(err))
 }
 
 module.exports.verifyuserlogin_otp = async (req, res, next) => {

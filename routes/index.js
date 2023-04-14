@@ -17,9 +17,12 @@ router.get('/login', usercontroller.login_get)
 router.get('/otp', usercontroller.otp_get)
 
 /* POST login form. */ 
-// router.post('/login', usercontroller.login_post)
 router.post('/login', usercontroller.login_post, otpverify.senduser_otp)
 
+/* POST resendotp. */ 
+router.post('/resendotp', otpverify.senduser_otp)
+
+/* POST otpverify. */ 
 router.post('/verify', otpverify.verifyuserlogin_otp)
 
 /* GET logout . */

@@ -21,8 +21,16 @@ const paypalClient = new paypal.core.PayPalHttpClient(new Environment
 module.exports.login_get = (req, res) => {
     res.render('userlogin')
 }
-module.exports.otp_get = (req, res) => {
-    res.render('otp')
+module.exports.otp_get = async (req, res) => {
+    const token = req.cookies.usertoken
+    // console.log(token)
+    let userdata
+    if(token) {
+        const decoded = jwt.verify(token, "mysecretkey");
+        email = decoded.userid
+        userdata = await user.findOne({email})
+    }
+    res.render('otp', {phone: userdata.phone})
 }
 
 
