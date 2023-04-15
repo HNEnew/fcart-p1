@@ -1,6 +1,6 @@
 
  const accountSid = "AC1a55837f2d1450c60adda04e88fcf905"
- const authToken = "aee7eefac93472ab6e335835c48a2a95"
+ const authToken = "845091ecfd98d0934e3c65e5c4cd375f"
 
 let userphone
 const verifySid = "VA841fee427989aad85960b5358b9ba3b3";
