@@ -44,8 +44,8 @@ module.exports.categoryadd_post = async (req, res) => {
     })
     const result = await newcategory.save((err) => {
         if (err) {
-            console.log(err)
-            const errors = heandleErrors(err)
+                console.log(err)
+                const errors = heandleErrors(err)
             console.log(errors)
             console.log(err.message)
             res.json({ failure: err.message })

@@ -28,14 +28,11 @@
 
                   <form id="signupform" class="mx-1 mx-md-4">
 
-                    <div class="form-outline flex-fill mb-0">
-                      <p id="errmsg">please enter your details..</p>
-                    </div>
                     <div class="d-flex flex-row align-items-center mb-4">
                       <i class="fas fa-user fa-lg me-3 fa-fw"></i>
                       <div class="form-outline flex-fill mb-0">
                         <input type="text" id="form3Example1c" class="form-control" name="uname" />
-                        <label class="form-label" for="form3Example1c">Your Name</label>
+                        <label class="form-label" for="form3Example1c">Your Name</label><span style="color: red;font-size: smaller;">*required</span>
                       </div>
                     </div>
 
@@ -43,15 +40,15 @@
                       <i class="fas fa-envelope fa-lg me-3 fa-fw"></i>
                       <div class="form-outline flex-fill mb-0">
                         <input type="email" id="form3Example3c" class="form-control" name="email" />
-                        <label class="form-label" for="form3Example3c">Your Email</label>
+                        <label class="form-label" for="form3Example3c">Your Email</label><span style="color: red;font-size: smaller;">*required</span>
                       </div>
                     </div>
 
                     <div class="d-flex flex-row align-items-center mb-4">
                       <i class="fas fa-envelope fa-lg me-3 fa-fw"></i>
                       <div class="form-outline flex-fill mb-0">
-                        <input type="text" id="form3Example3c" class="form-control" name="phone" />
-                        <label class="form-label" for="form3Example3c">Your Mobile No.</label>
+                        <input type="text" id="form3Example3c1" class="form-control" name="phone" />
+                        <label class="form-label" for="form3Example3c">Your Mobile No.</label><span style="color: red;font-size: smaller;">*required</span>
                       </div>
                     </div>
 
@@ -59,7 +56,7 @@
                       <i class="fas fa-lock fa-lg me-3 fa-fw"></i>
                       <div class="form-outline flex-fill mb-0">
                         <input type="password" id="form3Example4c" class="form-control" name="password" />
-                        <label class="form-label" for="form3Example4c">Password</label>
+                        <label class="form-label" for="form3Example4c">Password</label><span style="color: red;font-size: smaller;">*required</span>
                       </div>
                     </div>
 
@@ -67,15 +64,19 @@
                       <i class="fas fa-key fa-lg me-3 fa-fw"></i>
                       <div class="form-outline flex-fill mb-0">
                         <input type="password" id="form3Example4cd" class="form-control" name="repassword" />
-                        <label class="form-label" for="form3Example4cd">Repeat your password</label>
+                        <label class="form-label" for="form3Example4cd">Repeat your password</label><span style="color: red;font-size: smaller;">*required</span>
                       </div>
                     </div>
 
-                    <div class="form-check d-flex justify-content-center mb-5">
+                    <!-- <div class="form-check d-flex justify-content-center mb-5">
                       <input class="form-check-input me-2" type="checkbox" value="" id="form2Example3c" name="terms" />
                       <label class="form-check-label" for="form2Example3">
                         I agree all statements in <a href="#!">Terms of service</a>
                       </label>
+                    </div> -->
+
+                    <div class="form-outline flex-fill mb-0">
+                      <p id="errmsg">please enter your details..</p>
                     </div>
 
                     <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
@@ -142,12 +143,14 @@
           errmsg.style.display = 'none' 
           signupform.reset()
         } 
-        // else {
-        //   errmsg.innerHTML = data.message
-        // }
+        else {
+          errmsg.innerHTML = data.failure.uname+data.failure.email+data.failure.password+data.failure.phone
+          errmsg.style.display = 'block'
+        }
       } catch (Error) {
         console.log(Error)
         errmsg.innerHTML = 'An error occured, please try again later'
+        errmsg.style.display = 'block'
       }
     })
   </script>

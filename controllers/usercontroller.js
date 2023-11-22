@@ -18,6 +18,23 @@ const Environment = process.env.NODE_ENV === 'production'
 const paypalClient = new paypal.core.PayPalHttpClient(new Environment
     (process.env.PAYPAL_CLIENT_ID, process.env.PAYPAL_CLIENT_SECRET))
 
+    // handle errors
+const handleErrors = (err) => {
+    console.log(err.message , err.code)
+    let errors = { uname: '' , email: '' , password: '' , phone: '' }
+
+    // validation errors
+    if (err.message.includes('user validation failed')) {
+        Object.values(err.errors).forEach(({properties}) => {
+            console.log(properties);
+            errors[properties.path] = properties.message
+        })
+    } else if (err.code == 11000){
+        errors.email = 'An account already exists with this mail id...'
+    }
+    return errors
+}
+
 module.exports.login_get = (req, res) => {
     res.render('userlogin')
 }
@@ -38,13 +55,15 @@ module.exports.login_post = async (req, res, next) => {
     const { email, password } = await req.body
     console.log(req.body)
     const usercheck = await user.findOne({ email })
-    req.userphone = usercheck.phone
-    console.log(usercheck.phone)
+    // req.userphone = usercheck.phone
+    // console.log(usercheck.phone)
     if (!usercheck) {
         console.log('no user found')
         res.json({ message: 'invalid email or password' })
     } else {
         console.log('user found : ' + usercheck)
+        req.userphone = usercheck.phone
+        console.log(usercheck.phone)
         if (usercheck.status) {
             if (usercheck.password == password) {
                 const payload = {
@@ -83,6 +102,10 @@ module.exports.signup_post = async (req, res) => {
     const result = await newuser.save(err => {
         if (err) {
             console.log(err)
+            const errors = handleErrors(err)
+            console.log(errors)
+            console.log(err.code);
+            res.json({ failure: errors })
         } else {
             console.log('user saved succesfully...')
             res.json({ succes: 'Account registered succesfully..' })
