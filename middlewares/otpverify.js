@@ -1,9 +1,9 @@
 
- const accountSid = "AC1a55837f2d1450c60adda04e88fcf905"
- const authToken = "845091ecfd98d0934e3c65e5c4cd375f"
+ const accountSid = process.env.TWILIO_ACCOUNT_SID
+ const authToken = process.env.TWILIO_AUTH_TOKEN
 
 let userphone
-const verifySid = "VA841fee427989aad85960b5358b9ba3b3";
+const verifySid = process.env.ServiceSID;
 const client = require("twilio")(accountSid,authToken);
 module.exports.senduser_otp = (req, res, next) => {
     userphone = req.userphone || req.body.phone
