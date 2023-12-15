@@ -12,7 +12,7 @@ const order = require('../models/order')
 const payload = {
     userid: 'test@123'
 }
-const secretkey = 'mysecretkey'
+const secretkey = process.env.SECRET_KEY
 
 const Ademail = 'test@123'
 const Adpassword = '123456'

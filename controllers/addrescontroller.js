@@ -41,7 +41,7 @@ module.exports.editaddress_post = async (req, res) => {
     const { addressid, fname, lname, street, city, state, country, zip, email, phone } = req.body
     try {
         const result = await address.updateOne({ _id: addressid }, { $set: { fname: fname, lname: lname, street: street, city: city, state: state, country: country, zip: zip, email: email, phone: phone } })
-        console.log(result)
+        
         if (result.modifiedCount == 1) {
             res.json({ succes: 'Data updated succesfully' })
         } else {
