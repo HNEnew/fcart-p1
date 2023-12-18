@@ -414,7 +414,7 @@
 							headers: { 'Content-Type': 'application/json' }
 						})
 					const message = await res.json()
-					console.log(message)
+					
 					if (message.succes) {
 						window.location.reload(true)
 					} else {
@@ -463,7 +463,7 @@
 			} else {
 				errmsg.style.display = 'none'
 				try {
-					console.log('editing...')
+					
 					const res = await fetch('/editaddress',
 						{
 							method: 'POST',
@@ -471,7 +471,7 @@
 							headers: { 'Content-Type': 'application/json' }
 						})
 					const message = await res.json()
-					console.log(message)
+					
 					
 					if (message.succes) {
 						document.getElementById(fname_lname_street).innerText = fname +' '+ lname +' , '+ street
@@ -499,7 +499,7 @@
 					headers: {'Content-Type':'application/json'}
 				})
 				const message = await res.json()
-				console.log(message)
+				
 				if (message.succes) {
 					document.getElementById(addressnumber).innerHTML = ''
 				} else {

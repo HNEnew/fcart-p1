@@ -104,17 +104,7 @@
                                                     <p onclick="unblock('<%= userdetails[i].id %>')" style="cursor: pointer; color: green; background-color: aquamarine;">Unblock</p>
                                                 <% } %>
                                                 
-                                                <!-- <div class="w3-dropdown-click">
-                                                    <button onclick="myFunction('<%= i %>')"
-                                                        class="w3-button w3-grey">Options</button>
-                                                    <div id="Demo<%= i %>"
-                                                        class="w3-dropdown-content w3-bar-block w3-border">
-                                                        <a href="" onclick="block('<%= userdetails[i].id %>')"
-                                                            class="w3-bar-item w3-button">Block</a>
-                                                        <a href="" onclick="unblock('<%= userdetails[i].id %>')"
-                                                            class="w3-bar-item w3-button">Unblock</a>
-                                                        <a href="" class="w3-bar-item w3-button" >Delete</a>    
-                                                    </div> -->
+                                                
                                                 </div>
                                             </div>
                                         </td>
@@ -180,11 +170,11 @@
                 const message = await res.json()
                 if(message.succes) {
                     window.alert(message.succes)
-                    console.log(message)
+                    
                     location.reload()
                 }else{
                     window.alert(message.failure)
-                    console.log(message)
+                    
                 }
             } catch (Error) {
                 console.log(Error);
@@ -201,11 +191,11 @@
                 const message = await res.json()
                 if(message.succes) {
                     window.alert(message.succes)
-                    console.log(message)
+                    
                     location.reload()
                 }else{
                     window.alert(message.failure)
-                    console.log(message)
+                    
                 }
             } catch (Error) {
                 console.log(Error);

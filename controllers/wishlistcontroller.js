@@ -15,7 +15,7 @@ module.exports.wishlist_get = async (req, res) => {
         cart.findOne({ owner: userdata._id })
             .populate('items.product')
     ])
-    console.log(wishlistdetails)
+    
     if (wishlistdetails==null) {
         wishlistdetails = false
     }
@@ -24,21 +24,21 @@ module.exports.wishlist_get = async (req, res) => {
 module.exports.addtowishlist_post = async (req, res) => {
     const productid = req.body.productid
     const userdata = req.userdata
-    console.log(req.body)
+   
     const wishlistexist = await wishlist.findOne({ user: userdata._id })
-    console.log(wishlistexist)
+    
     const newWishlist = new wishlist({
         user: userdata._id,
         items: [productid]
     })
     try {
         if (wishlistexist) {
-            console.log(wishlistexist)
+            
             if (wishlistexist.items.includes(productid)) {
                 res.json({ failure: 'Item exist in wishlist..' })
             } else {
                 const result = await wishlist.updateOne({ user: userdata._id }, { $push: { items: productid } })
-                console.log(result)
+                
                 if (result.modifiedCount == 0) {
                     res.json({ failure: 'Something error...' })
                 } else {

@@ -17,7 +17,7 @@ module.exports.products_get = async (req, res) => {
     }
 }
 module.exports.addproducts_get = async (req, res) => {
-    console.log("addproduct page...")
+    
     try {
         const categories = await category.find({})
         res.render('addproduct', { categories })
@@ -27,9 +27,9 @@ module.exports.addproducts_get = async (req, res) => {
 }
 module.exports.addproducts_post = async (req, res) => {
     const { name, code, cost, profit, size, stock, category } = req.body
-    console.log(req.body)
+    
     const image = req.files.map(file => file.originalname)
-    console.log(image);
+   
     const newproduct = new product({
         name: name,
         code: code,
@@ -42,21 +42,21 @@ module.exports.addproducts_post = async (req, res) => {
     })
     const result = await newproduct.save(err => {
         if (err) {
-            console.log('hello again cannot enter new products - error.........');
+            
             console.log(err)
             res.json({ failure: 'something wrong...' })
         } else {
-            console.log('product entered succesfullly..')
+            
             res.json({ succes: 'product entered...' })
         }
     })
 }
 module.exports.productdetails_get = async (req, res) => {
     const productcode = req.query.code
-    console.log(productcode);
+    
     try {
         const productdetails = await product.findOne({ code: productcode })
-        console.log(productdetails);
+    
         res.render('admin-productdetails', { productdetails })
     } catch (error) {
         console.log(error)
@@ -65,27 +65,27 @@ module.exports.productdetails_get = async (req, res) => {
 module.exports.productedit_get = async (req, res) => {
     try {
         const productcode = req.query.code
-        console.log(productcode);
+        
         const [productdetails, categories] = await Promise.all([
             product.findOne({ code: productcode }),
             category.find({})
         ])
         res.render('editproduct', { productdetails, categories })
-        console.log(productdetails);
+        
     } catch (Error) {
         console.log(Error);
     }
 }
 module.exports.editproducts_post = async (req, res) => {
     const { id, name, code, cost, profit, size, stock, category } = req.body
-    console.log(req.body)
+    
     const image = req.files.map(file => file.originalname)
-    console.log(image)
+    
     const imagesArray = (req.query.imagearr).split(',')
-    console.log(imagesArray);
+    
     try {
         const result = await product.updateMany({ _id: id }, { $set: { name: name, code: code, cost: cost, profit: profit, size: size, stock: stock, category: category, image: imagesArray } })
-        console.log(result)
+       
         if (result.modifiedCount == 1) {
             res.json({ succes: 'productdetails updated...' })
         } else {
@@ -96,18 +96,18 @@ module.exports.editproducts_post = async (req, res) => {
     }
 }
 module.exports.product_delete = async (req, res) => {
-    console.log(req.body);
+    
     const id = req.body.id
     try {
         const productdetails = await product.findOne({ _id: id })
-        console.log(productdetails);
+        
         let result
         if (productdetails.deleted) {
             result = await product.updateOne({ _id: id },{$set: {deleted: false}});    
         } else {
             result = await product.updateOne({ _id: id },{$set: {deleted: true}});
         }
-        console.log(result);
+        
         if (result.modifiedCount == 1) {
             res.json({ succes: 'product status updated succesfully..' })
         }

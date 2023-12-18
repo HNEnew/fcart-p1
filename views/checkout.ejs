@@ -89,17 +89,6 @@
 						<div class="col-lg-8">
 							<form method="post" class="colorlib-form">
 								<h2>Billing Details</h2>
-								<!-- <div class="col-md-12">
-									<div class="form-group">
-										<div class="radio">
-											
-											<label><input onclick="showaddressform()" type="radio" name="optaddress"
-													value="newaddress">
-												Ship to different address</label>
-										</div>
-									</div>
-								</div>
-								<hr> -->
 
 								<div class="mleft" id="mainaddress">
 									<% if (useraddress[0]) { %>
@@ -137,8 +126,7 @@
 											<p id="cityandzip2"></p>
 											<p id="stateandcountry2"></p>
 											<div class="col-md-12 text-center">
-												<!-- <button onclick="showeditform()" type="button"
-													class="btn btn-primary">Delete</button> -->
+												
 											</div>
 											<hr>
 										</div>
@@ -471,17 +459,17 @@
 	<!-- button actions ------------------------>
 
 	<script>
-		console.log(`<%= userdata.wallet %>`)
+		
 		const totalamount = document.getElementById('totalamount').textContent
 		const discount = document.getElementById('discount').textContent
-		console.log(discount);
+		
 		if (discount) {
 			const finalamount = parseInt(totalamount) - parseInt(discount)
-			console.log(finalamount);
+			
 			document.getElementById('ordertotal').innerText = '$' + finalamount
 		} else {
 			const finalamount = parseInt(totalamount)
-			console.log(finalamount);
+			
 			document.getElementById('ordertotal').innerText = '$' + finalamount
 		}
 
@@ -530,7 +518,7 @@
 					headers: {'Content-Type': 'application/json'}
 				})
 				const message = await res.json()
-				console.log(message)
+				
 				if (message.succes) {
 					window.alert(message.succes)
 					location.reload()
@@ -557,7 +545,7 @@
 			const email = addressform.email.value
 			const phone = addressform.phone.value
 
-			console.log(addressid, fname, lname, street, city, state, country, zip, email, phone);
+			
 			if (fname==''||lname==''||street==''||city==''||country==''||state==''||zip==''||email==''||phone=='') {
 				errmsg.style.display = 'block'
 				errmsg.style.color = 'red'
@@ -571,15 +559,10 @@
 							headers: { 'Content-Type': 'application/json' }
 						})
 					const message = await res.json()
-					console.log(message)
+					
 					if (message.succes) {
 						location.reload()
-						// document.getElementById('fnameandlname').innerText = fname +' '+ lname
-						// document.getElementById('street').innerText = street
-						// document.getElementById('cityandzip').innerText = city +','+ zip
-						// document.getElementById('stateandcountry').innerText = state +','+ country
-						// document.getElementById('editformdiv').style.display = 'none'
-						// document.getElementById('mainaddress').style.display = 'block'	
+							
 						errmsg.style.display = 'none'
 					} else {
 						errmsg.style.display = 'block'
@@ -607,13 +590,12 @@
 				const phone = addressform.phone.value
 
 			if (userid==''||fname==''||lname==''||street==''||city==''||country==''||state==''||zip==''||email==''||phone=='') {
-					console.log('fields are empty....')
-					console.log(userid, fname, lname, street, city, country, state, zip, email, phone);
+					
 					errmsg.style.display = 'block'
 						errmsg.style.color = 'red'
 						errmsg.innerText = 'Please fill all the fields'
 			}else{
-					console.log(userid, fname, lname, street, city, country, state, zip, email, phone);
+					
 				try {
 					const res = await fetch('/addaddress',
 						{
@@ -622,18 +604,11 @@
 							headers: { 'Content-Type': 'application/json' }
 						})
 					const message = await res.json()
-					console.log(message)
+					
 					if (message.succes) {
 						window.alert(message.succes)
 						location.reload()
-						// errmsg.style.display = 'none'
-						// document.getElementById('mainaddress').style.display = 'block'
-						// document.getElementById('newaddress').style.display = 'none'
-						// document.getElementById('addedaddress').style.display = 'block'
-						// document.getElementById('fnameandlname2').innerText = fname+' '+lname
-						// document.getElementById('street2').innerText = street
-						// document.getElementById('cityandzip2').innerText = city+' , '+zip
-						// document.getElementById('stateandcountry2').innerText = state+' , '+country
+						
 					} else {
 						errmsg.style.display = 'block'
 						errmsg.style.color = 'red'
@@ -654,9 +629,7 @@
 			} else {
 				couponid = false
 			}
-			console.log(couponid);
-			console.log(paymentmethod);
-			console.log(addressid)
+			
 			if (addressid=='newaddress') {
 				return window.alert('Please enter enter the addres..')
 			}else if (paymentmethod == 'COD'|| paymentmethod == 'wallet') {
@@ -667,7 +640,7 @@
 						headers: { 'Content-Type': 'application/json' }
 					})
 				const message = await res.json()
-				console.log(message);
+				
 				if (message.succes) {
 					location.assign('/ordercomplete')
 				} else {
@@ -689,9 +662,7 @@
 				} else {
 					couponid = false
 				}
-				console.log(couponid);
-				console.log(paymentmethod);
-				console.log(addressid)
+				
 				if (addressid=='newaddress') {
 					return window.alert('Please enter enter the addres..')
 				} else {
@@ -710,7 +681,7 @@
 			},
 			// Finalize the transaction on the server after payer approval
 			async onApprove(data) {
-				console.log(data)
+				
 				const paymentmethod = document.querySelector('input[name="optpaymethod"]:checked').value
 				const addressid = document.querySelector('input[name="optaddress"]:checked').value
 				let couponid = ''
@@ -719,9 +690,7 @@
 				} else {
 					couponid = false
 				}
-				console.log(couponid);
-				console.log(paymentmethod);
-				console.log(addressid)
+				
 				const res = await  fetch("/placeorder", {
 					method: "POST",
 					headers: {
@@ -730,7 +699,7 @@
 					body: JSON.stringify({ paymentmethod, addressid, couponid }),
 				})
 				const message = await res.json()
-				console.log(message)
+				
 				// return location.assign('/paypalorder')
 				return location.assign('/ordercomplete')
 			}

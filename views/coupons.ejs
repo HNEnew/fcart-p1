@@ -202,12 +202,12 @@
 
         async function addcoupon() {
             const couponform = document.getElementById('couponform')
-            // event.preventDefault()
+            
             const couponcode = couponform.couponcode.value
             const discount = couponform.discount.value
             const date = couponform.date.value
             const minimumpurchase = couponform.minimumpurchase.value
-            console.log(couponcode, discount, date, minimumpurchase)
+            
             if (couponcode == '' || discount == '' || date == '' || minimumpurchase == ''){
                 window.alert('Please fill all the fields..')
             } else if (minimumpurchase <=0 || discount<=0) { 
@@ -215,7 +215,7 @@
             } else if (minimumpurchase<=discount) {
                 window.alert('Discount amount must be less than minimum purchase amount..')
             } else {
-                console.log('fetching..')
+                
                 try {
                     const res = await fetch('/admin/addcoupon',
                         {
@@ -224,7 +224,7 @@
                             headers: {'Content-Type': 'application/json'}
                         })
                     const message = await res.json()
-                    console.log(message)
+                   
                     if (message.succes) {
                         window.alert(message.succes)
                         location.assign('/admin/coupons')
@@ -247,7 +247,7 @@
                 headers: {'Content-Type':'application/json'}
             })
             const message = await res.json()
-            console.log(message)
+            
             if (message.succes) {
                 location.reload()
             }else{

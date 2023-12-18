@@ -135,7 +135,7 @@
             const formdata = new FormData()
 
             formdata.append('name', categoryform.name.value)
-                console.log(categoryform.image.files)
+                
                 formdata.append('image', categoryform.image.files[0])
             try {
                 const res = await fetch('/admin/addcategory',
@@ -144,14 +144,14 @@
                         body: formdata
                     })
                 const message = await res.json()
-                console.log(message)
+                
                 if (message.succes) {
                     window.alert(message.succes)
                     location.assign('/admin/category')
                 }
                 else if (message.failure) {
                     window.alert(message.failure)
-                    console.log(message.failure)
+                    
                 }
             } catch (Error) {
                 console.log(Error)
@@ -172,7 +172,7 @@
                     }
                     reader.readAsDataURL(input.files[0]);
                 }
-                console.log('preview function   end..')
+                
             }
         })
         

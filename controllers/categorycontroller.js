@@ -21,23 +21,22 @@ const heandleErrors = (err) => {
 
 module.exports.category_get = async (req, res) => {
     const categories = await category.find({})
-    console.log(categories)
+    
     res.render('category', { categories })
 }
 module.exports.categoryadd_get = (req, res) => {
-    console.log("category add page...")
+    
     res.render('addcategory')
 }
 module.exports.categoryadd_post = async (req, res) => {
 
-    console.log("image saved")
-    console.log(req.body);
+    
     let image =''
     if (req.file){
         image = req.file.originalname
     }
     const name = req.body.name
-    console.log(image)
+    
     const newcategory = new category({
         name: name,
         image: image
@@ -50,26 +49,26 @@ module.exports.categoryadd_post = async (req, res) => {
             console.log(err.message)
             res.json({ failure: err.message })
         } else {
-            console.log('category added succesfully...')
+            
             res.json({ succes: 'category added succesfully...' })
         }
     })
 }
 module.exports.editcategory_put = async (req, res) => {
-    console.log(req.body);
+    
     const id = req.query.id
-    console.log(id)
+    
     let image
     if(req.file) {
         image = req.file.originalname
     } else {
         image = req.body.image
     }
-    console.log(image)
+    
     const name = req.body.name
     try {
         const result = await category.updateOne({ _id: id } , {$set: {name: name , image: image } });
-        console.log(result)
+        
         if (result) {
             res.json({ succes: 'category edited succesfully..' })
         }
@@ -78,6 +77,6 @@ module.exports.editcategory_put = async (req, res) => {
         console.log(errors)
         console.log(err.message)
         res.json({ failure: err.message })
-        // res.json({ failure: 'Oops...Something went wrong..' })
+       
     }
 }

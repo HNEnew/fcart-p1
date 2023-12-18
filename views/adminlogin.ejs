@@ -152,7 +152,7 @@
             headers: { 'Content-Type': 'application/json' }
           })
         const data = await res.json()
-        console.log(data)
+        
         if (data.succes) {
           location.assign('/admin/home')
           errmsg.innerHTML.style = { display: none }

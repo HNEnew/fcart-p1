@@ -135,7 +135,7 @@ https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.0/js/bootstrap.min.js -->
         async function otpverify() {
             const inputs = document.querySelectorAll('#otp input');
             const otpcode = Array.from(inputs).map(input => input.value).join('');
-            console.log(otpcode)
+            
             try {
                 const res = await fetch('/verify',
                     {
@@ -156,7 +156,7 @@ https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.0/js/bootstrap.min.js -->
         }
         async function resendotp() {
             const phone = `<%=phone%>`
-            console.log(phone)
+            
             if (phone) {
                 const res = await fetch('/resendotp',
                 {
@@ -165,7 +165,7 @@ https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.0/js/bootstrap.min.js -->
                     headers: {'Content-Type':'application/json'}
                 })
                 const message = await res.json()
-                console.log(message)
+               
                 document.getElementById('validatebtn').style.display = 'block'
                 document.getElementById('resendbtn').style.display = 'none'
                 if (message.otp) {

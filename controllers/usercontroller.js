@@ -26,7 +26,7 @@ const handleErrors = (err) => {
     // validation errors
     if (err.message.includes('user validation failed')) {
         Object.values(err.errors).forEach(({properties}) => {
-            console.log(properties);
+            
             errors[properties.path] = properties.message
         })
     } else if (err.code == 11000){
@@ -40,7 +40,7 @@ module.exports.login_get = (req, res) => {
 }
 module.exports.otp_get = async (req, res) => {
     const token = req.cookies.usertoken
-    // console.log(token)
+    
     let userdata
     if(token) {
         const decoded = jwt.verify(token, "mysecretkey");
@@ -53,17 +53,16 @@ module.exports.otp_get = async (req, res) => {
 
 module.exports.login_post = async (req, res, next) => {
     const { email, password } = await req.body
-    console.log(req.body)
+    
     const usercheck = await user.findOne({ email })
-    // req.userphone = usercheck.phone
-    // console.log(usercheck.phone)
+    
     if (!usercheck) {
-        console.log('no user found')
+        
         res.json({ message: 'invalid email or password' })
     } else {
-        console.log('user found : ' + usercheck)
+        
         req.userphone = usercheck.phone
-        console.log(usercheck.phone)
+        
         if (usercheck.status) {
             if (usercheck.password == password) {
                 const payload = {
@@ -107,7 +106,7 @@ module.exports.signup_post = async (req, res) => {
             console.log(err.code);
             res.json({ failure: errors })
         } else {
-            console.log('user saved succesfully...')
+            
             res.json({ succes: 'Account registered succesfully..' })
         }
     })
@@ -134,16 +133,16 @@ module.exports.categorycollection_get = async (req, res) => {
         if (categorydoc) {
             categoryname = categorydoc.name
         }
-        console.log(page)
+        
         const limit = 8
         const count = await product.countDocuments({ category: categoryname })
-        console.log(count)
+        
         let totalpages = Math.ceil(count / limit)
-        console.log(totalpages)
+        
         const categorycollection = await product.find({ category: categoryname , deleted: false})
             .skip((page - 1) * limit)
             .limit(limit)
-        console.log(categorycollection)
+        
         const userdata = req.userdata
         res.render('categorycollection', { categories, categoryid, categoryname, categorycollection, userdata, totalpages, page, cartquantity: req.cartquantity })
     } catch (err) {
@@ -153,9 +152,9 @@ module.exports.categorycollection_get = async (req, res) => {
 module.exports.searchresult_get = async (req, res) => {
     try {
         const text = req.query.text
-        console.log(text)
+        
         const result = await product.find({$or : [ { name: { $regex: text } } , { category: { $regex: text } } ] });
-        console.log(result)
+        
         res.json({result})
     } catch (error) {
         console.log(error)
@@ -201,7 +200,7 @@ module.exports.userprofile_get = async (req, res) => {
                 address.find({ user: userdata._id }),
                 category.find({})
             ])
-            console.log(useraddress)
+            
             res.render('userprofile', { categories, userdata, useraddress, cartquantity: req.cartquantity })
         } else {
             res.redirect('/login')
@@ -221,4 +220,4 @@ module.exports.pageunderconstruction_get = (req, res) => {
 
 
 
-// module.exports.login_get = (req,res) => {}
+

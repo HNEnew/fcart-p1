@@ -115,8 +115,7 @@
                     <!-- Widgets Start -->
 
                     <%- include ('partials/admin-footer.ejs') %>
-                    <!-- <div style="float: left;">
-                    </div> -->
+                    
                     <!-- Footer  ----------------------------------------->
                     
 
@@ -130,50 +129,15 @@
             <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
     </div>
 
-    <!-- <style>
-        .dropbtn {
-          background-color: #717272;
-          color: white;
-          font-size: 16px;
-          border: none;
-        }
-        
-        .dropdown {
-          position: relative;
-          display: inline-block;
-        }
-        
-        .dropdown-content {
-          display: none;
-          position: absolute;
-          background-color: #f1f1f1;
-          /* min-width: 120px; */
-          box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-          z-index: 1;
-        }
-        
-        .dropdown-content a {
-          color: rgb(32, 32, 32);
-          padding: 6px 16px;
-          text-decoration: none;
-          display: block;
-        }
-        
-        .dropdown-content a:hover {background-color: #ddd;}
-        
-        .dropdown:hover .dropdown-content {display: block;}
-        
-        .dropdown:hover .dropbtn {background-color: #292b29;}
-    </style> -->
 
     <script>
         function redirectBack(){
-            console.log('clicked');
+            
             location.assign('/admin/orders')
         }
         async function updatestatus(orderid){
             const newstatus = document.getElementById('selectstatus').value
-            console.log(newstatus,orderid)
+            
             try {
                 const res = await fetch('/admin/updatestatus',
             {
@@ -182,7 +146,7 @@
                 headers: {'Content-Type':'application/json'}
             })
             const message = await res.json()
-            console.log(message)
+            
             if(message.succes){
                 window.alert(message.succes)    
             }else{
@@ -211,7 +175,7 @@
     <!--  js -->
     <script>
         async function deleteorder(orderid){
-            console.log(orderid);
+            
             try {
                 const res = await fetch('/admin/deleteorder',
             {
@@ -220,7 +184,7 @@
                 headers: {'Content-Type':'application/json'}
             })
             const message = await res.json()
-            console.log(message);
+            
             if(message.succes){
                 location.reload()
             }else{

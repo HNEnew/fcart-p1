@@ -127,18 +127,9 @@
                                         <img src="/otherimages/addbutton.jpg" id="preview" alt="Select image" width="80" height="80">
                                     </label>
                                     <input class="imageinput" type="file" name="image" id="0"  style="display: none;" accept=".jpg, .jpeg, .png">
-                                    <!-- <label for="image-input" id="categoryimage">
-                                        <imga src="" id="previewimg" alt="Select image" width="150" height="150">
-                                    </label>
-                                    <input type="file" name="image" id="image-input" style="display: block;"  accept=".jpg, .jpeg, .png" required> -->
+                                    
                                 </div>
-                                <!-- <div class="row col-md-6 mb-3">
-                                    <label for="inputPassword3" class="col-sm-2 col-form-label">Exipires After</label>
-                                    <div class="col-sm-10 col-lg-4">
-                                        <input type="datetime-local" name="date" class="form-control" id="inputPassword3">
-                                    </div>
-                                    <label for="inputPassword3" class="col-sm-2 col-form-label">days</label>
-                                </div> -->
+                                
                             </div>
                            
                             <button onclick="savechanges()" type="button" class="btn btn-primary">Save changes</button>
@@ -205,7 +196,7 @@
                     }
                     reader.readAsDataURL(input.files[0]);
                 }
-                console.log('preview function   end..')
+                
             }
         })
         
@@ -217,7 +208,7 @@
             formdata.append('name', categoryform.name.value)
             
             if (categoryform.image.files[0]) {
-                console.log(categoryform.image.files)
+                
                 formdata.append('image', categoryform.image.files[0])
             } else {
                 formdata.append('image', category.image)
@@ -229,9 +220,9 @@
                             method: 'POST',
                             body: formdata
                         })
-                        console.log('helllooo4444')
+                        
                     const message = await res.json()
-                    console.log(message)
+                    
                     if (message.succes) {
                         window.alert(message.succes)
                         location.reload()

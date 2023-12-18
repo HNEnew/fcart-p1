@@ -178,7 +178,7 @@
 					headers: { 'Content-Type': 'application/json' }
 				})
 			const message = await res.json()
-			console.log(message)
+			
 			window.alert(message.succes)
 			if (message.succes) {
 				location.assign('/cart')
@@ -193,7 +193,7 @@
 						headers: { 'Content-Type': 'application/json' }
 					})
 				const message = await res.json()
-				console.log(message)
+				
 				if (message.succes) {
 					window.alert(message.succes)
 					location.reload()

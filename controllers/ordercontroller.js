@@ -43,21 +43,21 @@ module.exports.orderhistory_get = async (req, res) => {
 module.exports.invoice_get = async (req, res) => {
     const userdata = req.userdata
     const orderid = req.query.orderid
-    console.log(orderid)
+    
     const [useraddress, orderdetails] = await Promise.all([
         address.findOne({ user: userdata._id }),
         order.findOne({ user: userdata._id, orderid: orderid }).populate('items.product').populate('user')
     ])
-    console.log(orderdetails)
+    
     res.render('invoice', { useraddress, orderdetails })
 }
 module.exports.cancelorder_put = async (req, res) => {
     const orderid = req.body.orderid
     const userdata = req.userdata
-    console.log(req.body)
+    
     try {
         const result = await order.updateOne({ orderid: orderid, user: userdata._id }, { $set: { status: 'Cancelled' } })
-        console.log(result)
+        
         if (result.modifiedCount == 1) {
             res.json({ succes: 'Order cancelled succesfully..' })
         } else {
@@ -70,21 +70,19 @@ module.exports.cancelorder_put = async (req, res) => {
 module.exports.returnproduct_put = async (req, res) => {
     const orderid = req.body.orderid
     const userdata = req.userdata
-    console.log(req.body)
+    
     try {
         const orderdetails = await order.findOne({ orderid: orderid, user: userdata._id })
         const timedifference = new Date().getTime() - orderdetails.delivery.getTime()
         const daysafterdelivery = Math.round(timedifference / (24 * 60 * 60 * 1000))
         if (daysafterdelivery <= 7) {
-            console.log(orderdetails.finalamount)
+            
             const [result, wallet] = await Promise.all([
                 order.updateOne({ orderid: orderid, user: userdata._id }, { $set: { status: 'Returned' } }),
                 user.updateOne({_id: userdata._id} , {$inc: {wallet: orderdetails.finalamount}})
             ])
-            console.log(result)
-            console.log(userdata._id)
-            console.log(wallet)
-            // const wallet = await user.updateOne({user: userdata._id} , {$set: {wallet: 0}})
+            
+            
             if (result.modifiedCount == 1) {
                 res.json({ succes: 'Your request for return is accepted . Product return is in process.. The amount will be added to your wallet' })
             } else {
@@ -99,7 +97,7 @@ module.exports.returnproduct_put = async (req, res) => {
 }
 module.exports.updatestatus_post = async (req, res) => {
     const { newstatus, orderid } = req.body
-    console.log(req.body)
+    
     try {
         let result = ''
         let deliverydate = null
@@ -109,7 +107,7 @@ module.exports.updatestatus_post = async (req, res) => {
         } else {
             result = await order.updateOne({ _id: orderid }, { $set: { status: newstatus } })
         }
-        console.log(result)
+       
         if (result.modifiedCount == 1) {
             res.json({ succes: 'Status updated succesfully ...' })
         } else {
@@ -120,7 +118,7 @@ module.exports.updatestatus_post = async (req, res) => {
     }
 }
 module.exports.order_delete = async (req, res) => {
-    console.log(req.body);
+    
     const orderid = req.body.orderid
     try {
         const result = await order.deleteOne({ _id: orderid });
@@ -132,9 +130,9 @@ module.exports.order_delete = async (req, res) => {
     }
 }
 module.exports.editorder_get = async (req, res) => {
-    console.log("orderdetails-admin page...")
+    
     const orderid = req.query.orderid
-    console.log(orderid)
+    
     try {
         const [coupons, orderdetails] = await Promise.all([
             coupon.find(),
@@ -142,14 +140,14 @@ module.exports.editorder_get = async (req, res) => {
                 .populate('user')
                 .populate('items.product')
         ])
-        console.log(orderdetails)
+        
         res.render('orderdetails-admin', { coupons, orderdetails })
     } catch (error) {
         console.log(error)
     }
 }
 module.exports.orders_get = async (req, res) => {
-    console.log("orders page...")
+    
     const [coupons, orders] = await Promise.all([
         coupon.find(),
         order.find({})

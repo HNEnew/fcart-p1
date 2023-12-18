@@ -33,34 +33,33 @@ const paypalClient = new paypal.core.PayPalHttpClient(new Environment
                 .populate('items.product'),
             category.find({})
         ]) 
-        console.log(useraddress)
-        console.log(coupondetails)
+        
         if (coupondetails) {
-            console.log(coupondetails.usedusers.includes(userdata._id))
+            
             if (coupondetails.usedusers.includes(userdata._id)) {
-                console.log('1111111111111111111111')
+               
                 res.render('checkout', { categories, userdata, useraddress, cartdetails, cartquantity: req.cartquantity })
             } else {
                 res.render('checkout', { categories, userdata, useraddress, cartdetails, coupondetails, cartquantity: req.cartquantity })
-                console.log('2222222222222222222222')
+                
             }
         } else {
             const coupondetails = false
             res.render('checkout', { categories, userdata, useraddress, cartdetails, coupondetails, cartquantity: req.cartquantity })
-            console.log('33333333333333333333333333')
+            
         }
     }
     module.exports.placeorder_post = async (req, res) => {
-        console.log('reached checkout')
+        
         const userdata = req.userdata
         const { paymentmethod, addressid, couponid } = req.body
-        console.log(req.body)
+        
         const cartdetails = await cart.findOne({ owner: userdata._id })
             .populate('items.product')
-        console.log('checking1')
+        
         let billingaddress =  await address.findOne({ user: userdata._id , _id: addressid})
         let coupondetails = ''
-        console.log('checking2')
+       
         let finalamount = cartdetails.cartTotal
         let discount = 0
         if (couponid) {
@@ -68,12 +67,12 @@ const paypalClient = new paypal.core.PayPalHttpClient(new Environment
             finalamount = cartdetails.cartTotal - Number(coupondetails.discount)
             discount = Number(coupondetails.discount)
         }
-        console.log('checking3')
+        
         // making a rendom orderid
         let min = 100000;
         let max = 999999;
         let randomInt = Math.floor(Math.random() * (max - min + 1)) + min;
-        console.log(randomInt);
+        
         // ---------------------
         const neworder = new order({
             user: userdata._id,
@@ -96,7 +95,7 @@ const paypalClient = new paypal.core.PayPalHttpClient(new Environment
                     }
                 })
                 const removeitemsfromcart = await cart.updateOne({ _id: cartdetails._id }, { $set: { items: [], cartTotal: 0 } })
-                console.log(removeitemsfromcart);
+                
             } catch (Error) {
                 console.log(Error);
             }
@@ -111,13 +110,12 @@ const paypalClient = new paypal.core.PayPalHttpClient(new Environment
                 })
                 const removeitemsfromcart = await cart.updateOne({ _id: cartdetails._id }, { $set: { items: [], cartTotal: 0 } })
                 const walletbalance = await user.updateOne({_id: userdata._id},{$inc: {wallet: -finalamount}})
-                console.log(removeitemsfromcart);
-                console.log(walletbalance)
+                
             } catch (Error) {
                 console.log(Error);
             }
         } else if (paymentmethod == 'paypal') {
-            console.log('paypal order');
+            
             try {
                 const result = await neworder.save(err => {
                     if (err) {
@@ -127,7 +125,7 @@ const paypalClient = new paypal.core.PayPalHttpClient(new Environment
                     }
                 })
                 const removeitemsfromcart = await cart.updateOne({ _id: cartdetails._id }, { $set: { items: [], cartTotal: 0 } })
-                console.log(removeitemsfromcart);
+                
             } catch (e) {
                 res.status(500).json({ error: e.message })
                 console.log(e);
@@ -149,10 +147,10 @@ const paypalClient = new paypal.core.PayPalHttpClient(new Environment
         }
         try {
             
-            console.log('paypaltransaction started');
+            
             const request = new paypal.orders.OrdersCreateRequest()
             const total = finalamount
-            console.log(total,cartdetails.cartTotal,discount)
+           
             request.prefer('return=representation')
             request.requestBody({
                 intent: 'CAPTURE',
@@ -165,7 +163,7 @@ const paypalClient = new paypal.core.PayPalHttpClient(new Environment
                     }
                 ]
             })
-            console.log('000000000000')
+           
             const order = await paypalClient.execute(request)
             res.json({ succes: 'Payment succesful', id: order.result.id })
         } catch (e) {
@@ -181,7 +179,7 @@ const paypalClient = new paypal.core.PayPalHttpClient(new Environment
                 cart.findOne({owner: req.userdata._id})
             ])
             const totalamount = cartdetails.cartTotal
-            console.log(totalamount)
+            
             if (coupondetails) {
                 if (coupondetails.usedusers.includes(userid)) {
                     res.json({ failure: 'Coupon not added ... This coupon is not valid..' })
@@ -200,10 +198,10 @@ const paypalClient = new paypal.core.PayPalHttpClient(new Environment
     module.exports.deleteaddress_delete = async (req, res) => {
         const addressid = req.body.id
         const userdata = req.userdata
-        console.log(req.body)
+        
         try {
             const result = await address.deleteOne({_id: addressid })
-            console.log(result)
+            
             if (result.deletedCount==1) {
                 res.json({ succes: 'address deleted succesfully'})
             } else {

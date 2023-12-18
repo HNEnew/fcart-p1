@@ -43,8 +43,7 @@ router.get('/editorder', adminmidware.check_token, ordercontroller.editorder_get
 router.post('/updatestatus', adminmidware.check_token, ordercontroller.updatestatus_post)
 
 
-// router.post('/addtocart', adminmidware.check_token, adminController.addtocart_post)
-// router.delete('/deletecategory', adminmidware.check_token , categorycontroller.category_delete)
+
 
 
 router.get('/logout', function (req, res) {

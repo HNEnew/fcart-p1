@@ -7,7 +7,7 @@ const verifySid = process.env.ServiceSID;
 const client = require("twilio")(accountSid,authToken);
 module.exports.senduser_otp = (req, res, next) => {
     userphone = req.userphone || req.body.phone
-    console.log(userphone)
+    
     client.verify.v2
         .services(verifySid)
         .verifications.create({ to: "+91"+userphone, channel: "sms" })
@@ -18,13 +18,13 @@ module.exports.senduser_otp = (req, res, next) => {
 
 module.exports.verifyuserlogin_otp = async (req, res, next) => {
     const otpcode = await req.body.otpcode
-    console.log(otpcode)
+    
     try{
         const verifiedresponse = await client.verify.v2
         .services(verifySid)
         .verificationChecks.create({ to: "+91"+userphone, code: otpcode })
         .then((verification_check) => {
-            console.log(verification_check.status)
+            
             if(verification_check.status == 'approved'){
                 res.json({ succes: 'authentication succes..' })
             }else{

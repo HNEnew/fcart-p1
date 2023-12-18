@@ -271,7 +271,7 @@
         const output = document.querySelector("output")
         let imagesArray = ('<%= productdetails.image %>').split(',')
         let files = []
-        console.log(imagesArray)
+        
         const input = document.querySelectorAll(".imageinput")
         input.forEach(function(element) {
             element.addEventListener("input", function() {
@@ -284,7 +284,7 @@
                 } else{
                     updateImage(index, value)
                 }
-                console.log(imagesArray)
+                
                 previewImage(element , index)
             })
         })
@@ -295,7 +295,7 @@
             if (input.files && input.files[0]) {
                 const reader = new FileReader();
                 const previewid = 'preview'+index
-                console.log('preview function..')
+                
                 reader.onload = function (e) {
                     let preview = document.getElementById(previewid);
                     // Create the img element if it doesn't exist
@@ -311,9 +311,9 @@
         }
         function deleteimage(imagedivid, imageindex){
             const productpic = document.getElementById(imagedivid)
-            console.log(imagedivid, imageindex)
+           
             imagesArray.splice(imageindex, 1);
-            console.log(imagesArray)
+            
             productpic.innerHTML = ''
             productpic.style.width = '0'
         }
@@ -321,7 +321,7 @@
         productform.addEventListener('submit', async (event) => {
             event.preventDefault();
             const formData = new FormData();
-            console.log(formData.getAll('image'))
+            
             formData.append('id', productform.name.id)
             formData.append('name', productform.name.value);
             formData.append('code', productform.code.value);
@@ -350,7 +350,7 @@
                             body: formData
                         });
                     const message = await res.json()
-                    console.log(message);
+                   
                     if (message.succes) {
                         location.assign('/admin/products')
                     } else {

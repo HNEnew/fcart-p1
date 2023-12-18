@@ -56,48 +56,7 @@
             <%- include ('partials/admin-navbar.ejs') %>
 
 
-            <!-- Sale & Revenue Start -->
-            <!-- <div class="container-fluid pt-4 px-4">
-                <div class="row g-4">
-                    <div class="col-sm-6 col-xl-3">
-                        <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
-                            <i class="fa fa-chart-line fa-3x text-primary"></i>
-                            <div class="ms-3">
-                                <p class="mb-2">Today Sale</p>
-                                <h6 class="mb-0">$1234</h6>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-6 col-xl-3">
-                        <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
-                            <i class="fa fa-chart-bar fa-3x text-primary"></i>
-                            <div class="ms-3">
-                                <p class="mb-2">Total Sale</p>
-                                <h6 class="mb-0">$1234</h6>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-6 col-xl-3">
-                        <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
-                            <i class="fa fa-chart-area fa-3x text-primary"></i>
-                            <div class="ms-3">
-                                <p class="mb-2">Today Revenue</p>
-                                <h6 class="mb-0">$1234</h6>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-6 col-xl-3">
-                        <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
-                            <i class="fa fa-chart-pie fa-3x text-primary"></i>
-                            <div class="ms-3">
-                                <p class="mb-2">Total Revenue</p>
-                                <h6 class="mb-0">$1234</h6>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div> -->
-            <!-- Sale & Revenue End -->
+           
 
 
 
@@ -126,7 +85,7 @@
                                 <% if(salesdetails) { %>
                                     <% for(var i=0 ; i<sales.length ; i++) { %>
                                         <tr>
-                                            <!-- <td><input class="form-check-input" type="checkbox"></td> -->
+                                            
                                             <td><%= i+1 %></td>
                                             <td><%= date[i] %></td>
                                             <td><%= salesdetails[i].orderid %></td>
@@ -172,10 +131,7 @@
     <script src="/admin/lib/tempusdominus/js/moment-timezone.min.js"></script>
     <script src="/admin/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
 
-    <!-- graph js and cdn link -->
-    <!-- <script src="https://code.jscharting.com/2.9.0/jscharting.js"></script> -->
-    <!-- <script src="/admin/js/graph.js"></script> -->
-    <!-- Template Javascript -->
+    
     <script src="/admin/js/main.js"></script>
 </body>
 
